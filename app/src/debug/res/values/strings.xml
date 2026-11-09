@@ -1,0 +1,4 @@
+<resources>
+    <!-- En un teléfono USB, adb reverse tcp:8080 tcp:8080 conecta con la PC. -->
+    <string name="api_base_url">http://127.0.0.1:8080</string>
+</resources>
