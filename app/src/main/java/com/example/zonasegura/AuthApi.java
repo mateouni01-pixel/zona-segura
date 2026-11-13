@@ -125,9 +125,11 @@ final class AuthApi {
             String role = roles != null && roles.length() > 0 ? roles.optString(0) : "";
             if (roles != null) {
                 for (int i = 0; i < roles.length(); i++) {
-                    if ("PERSONAL_ALCALDIA".equals(roles.optString(i))) {
-                        role = "PERSONAL_ALCALDIA";
+                    if ("ADMINISTRADOR".equals(roles.optString(i))) {
+                        role = "ADMINISTRADOR";
                         break;
+                    } else if ("PERSONAL_ALCALDIA".equals(roles.optString(i))) {
+                        role = "PERSONAL_ALCALDIA";
                     }
                 }
             }
@@ -168,6 +170,23 @@ final class AuthApi {
                     response.optString("cargo", ""), response.optString("rolAcceso", ""));
         } catch (org.json.JSONException exception) {
             throw new IOException("Respuesta inválida del servidor.", exception);
+        } finally {
+            connection.disconnect();
+        }
+    }
+
+    static int adminAccess(String baseUrl, String token) throws IOException {
+        if (baseUrl == null || baseUrl.isEmpty()) {
+            return -1;
+        }
+        HttpURLConnection connection = (HttpURLConnection)
+                new URL(baseUrl + "/api/admin/acceso").openConnection();
+        connection.setRequestMethod("GET");
+        connection.setConnectTimeout(8000);
+        connection.setReadTimeout(8000);
+        connection.setRequestProperty("Authorization", "Bearer " + token);
+        try {
+            return connection.getResponseCode();
         } finally {
             connection.disconnect();
         }

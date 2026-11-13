@@ -33,5 +33,12 @@
     <string name="municipal_authorized">Acceso municipal autorizado</string>
     <string name="municipal_description">Consulta los reportes comunitarios y coordina la atención de zonas de riesgo.</string>
     <string name="municipal_error">No se pudo consultar el perfil municipal. Revisa la conexión.</string>
+    <string name="admin_title">Panel de administración</string>
+    <string name="admin_subtitle">Gestión de Zona Segura</string>
+    <string name="admin_welcome">Bienvenido, %1$s</string>
+    <string name="admin_role">Rol: Administrador</string>
+    <string name="admin_authorized">Acceso de administrador autorizado</string>
+    <string name="admin_description">Desde este espacio podrás moderar reportes, gestionar usuarios y configurar roles cuando esas funciones estén disponibles.</string>
+    <string name="admin_error">No se pudo comprobar el acceso de administrador. Revisa la conexión.</string>
     <string name="login_footer">Reportes ciudadanos para cuidar nuestra comunidad.</string>
 </resources>

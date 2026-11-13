@@ -11,4 +11,8 @@
     <color name="municipal_surface">#173B5E</color>
     <color name="municipal_accent">#9ED9F5</color>
     <color name="municipal_muted">#D4E5F1</color>
+    <color name="admin_background">#201B2E</color>
+    <color name="admin_surface">#342D46</color>
+    <color name="admin_accent">#E2C690</color>
+    <color name="admin_muted">#E7DFEF</color>
 </resources>

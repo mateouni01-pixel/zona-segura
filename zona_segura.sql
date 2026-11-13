@@ -178,3 +178,5 @@ GO
 -- MapaGeoespacial y CapaTermica representan vistas/cálculos sobre reportes y zonas;
 -- no se guardan como tablas hasta definir cómo el backend genera esas capas.
 -- Los reportes de cada historial se obtienen mediante Reportes.id_ciudadano.
+
+SELECT @@SERVERNAME AS servidor, DB_NAME() AS base_actual;

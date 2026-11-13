@@ -58,6 +58,11 @@ public class HomeActivity extends AppCompatActivity {
                     return;
                 }
                 if (result.status == 200) {
+                    if ("ADMINISTRADOR".equals(result.role)) {
+                        startActivity(new Intent(this, AdminActivity.class));
+                        finish();
+                        return;
+                    }
                     if ("PERSONAL_ALCALDIA".equals(result.role)) {
                         startActivity(new Intent(this, MunicipalActivity.class));
                         finish();
