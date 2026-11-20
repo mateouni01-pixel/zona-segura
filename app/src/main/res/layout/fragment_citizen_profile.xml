@@ -1,0 +1,18 @@
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent" android:fillViewport="true">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="20dp">
+        <TextView style="@style/Zs.Heading" android:text="@string/zs_profile_title"/>
+        <com.google.android.material.card.MaterialCardView style="@style/Zs.Card" android:layout_marginTop="20dp">
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="20dp">
+                <ImageView android:layout_width="56dp" android:layout_height="56dp" android:padding="12dp" android:background="@drawable/zs_badge" android:src="@drawable/zs_ic_profile" android:importantForAccessibility="no"/>
+                <TextView style="@style/Zs.Section" android:layout_marginTop="16dp" android:text="@string/zs_demo_citizen"/>
+                <TextView style="@style/Zs.Body" android:layout_marginTop="6dp" android:text="@string/zs_demo_identity"/>
+                <TextView android:id="@+id/citizenProfileCounts" style="@style/Zs.Body" android:layout_marginTop="16dp" android:textColor="@color/zs_green" android:textStyle="bold"/>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+        <TextView style="@style/Zs.Section" android:layout_marginTop="24dp" android:text="@string/zs_privacy_title"/>
+        <TextView style="@style/Zs.Body" android:layout_marginTop="8dp" android:text="@string/zs_privacy_body"/>
+        <TextView style="@style/Zs.Body" android:layout_marginTop="20dp" android:padding="16dp" android:background="@drawable/zs_badge" android:text="@string/zs_demo_info"/>
+        <com.google.android.material.button.MaterialButton android:id="@+id/citizenResetDemo" style="@style/Widget.Material3.Button.OutlinedButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="56dp" android:layout_marginTop="20dp" android:text="@string/zs_reset_demo"/>
+        <com.google.android.material.button.MaterialButton android:id="@+id/citizenExitDemo" style="@style/Widget.Material3.Button.TextButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="52dp" android:text="@string/zs_exit_demo"/>
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

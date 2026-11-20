@@ -47,6 +47,12 @@ public class MainActivity extends AppCompatActivity {
         loginButton = findViewById(R.id.loginButton);
 
         loginButton.setOnClickListener(view -> submitLogin());
+        findViewById(R.id.citizenRegisterEntry).setOnClickListener(view -> startActivity(
+                new Intent(this, RegisterActivity.class)));
+        findViewById(R.id.citizenDemoEntry).setOnClickListener(view -> startActivity(
+                new Intent(this, com.example.zonasegura.citizen.CitizenActivity.class)));
+        findViewById(R.id.citizenRecoverEntry).setOnClickListener(view -> startActivity(
+                new Intent(this, com.example.zonasegura.citizen.RecoverAccessActivity.class)));
         passwordInput.setOnEditorActionListener((view, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 submitLogin();

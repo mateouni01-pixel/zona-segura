@@ -1,0 +1,11 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/citizenRoot" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:background="@color/zs_canvas">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:paddingStart="20dp" android:paddingEnd="20dp" android:paddingTop="12dp" android:paddingBottom="10dp">
+        <ImageView android:layout_width="32dp" android:layout_height="32dp" android:src="@drawable/ic_shield" android:importantForAccessibility="no"/>
+        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginStart="10dp" android:text="@string/zs_brand" android:textSize="20sp" android:textStyle="bold" android:textColor="@color/zs_ink"/>
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="SCZ" android:textSize="12sp" android:textStyle="bold" android:textColor="@color/zs_green" android:background="@drawable/zs_badge"/>
+    </LinearLayout>
+    <TextView style="@style/Zs.Eyebrow" android:layout_marginStart="20dp" android:layout_marginEnd="20dp" android:layout_marginBottom="4dp" android:background="@drawable/zs_badge" android:text="@string/zs_demo_badge"/>
+    <FrameLayout android:id="@+id/citizenContent" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1"/>
+    <com.google.android.material.bottomnavigation.BottomNavigationView android:id="@+id/citizenNavigation" android:layout_width="match_parent" android:layout_height="wrap_content" android:background="@color/white" app:menu="@menu/citizen_navigation" app:labelVisibilityMode="labeled" app:itemIconTint="@color/zs_green"/>
+</LinearLayout>

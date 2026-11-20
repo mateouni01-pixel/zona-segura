@@ -3,6 +3,7 @@ package com.example.zonasegura;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,6 +17,7 @@ public class AdminActivity extends AppCompatActivity {
     private TextView welcome;
     private TextView status;
     private View retry;
+    private LinearLayout functions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +31,7 @@ public class AdminActivity extends AppCompatActivity {
         welcome = findViewById(R.id.adminWelcome);
         status = findViewById(R.id.adminStatus);
         retry = findViewById(R.id.adminRetry);
+        functions = findViewById(R.id.adminFunctions);
         retry.setOnClickListener(view -> checkAccess());
         findViewById(R.id.adminLogout).setOnClickListener(view -> logout());
         checkAccess();
@@ -41,6 +44,7 @@ public class AdminActivity extends AppCompatActivity {
             return;
         }
         status.setText(R.string.home_checking);
+        functions.setVisibility(View.GONE);
         retry.setVisibility(View.GONE);
         new Thread(() -> {
             AuthApi.Profile profile;
@@ -62,6 +66,7 @@ public class AdminActivity extends AppCompatActivity {
                 if (result.status == 200 && accessResult == 200) {
                     welcome.setText(getString(R.string.admin_welcome, result.name));
                     status.setText(R.string.admin_authorized);
+                    functions.setVisibility(View.VISIBLE);
                 } else if (result.status == 401 || result.status == 403
                         || (result.status == 200 && (accessResult == 401 || accessResult == 403
                         || !"ADMINISTRADOR".equals(result.role)))) {

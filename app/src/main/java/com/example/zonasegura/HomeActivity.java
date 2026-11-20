@@ -34,6 +34,8 @@ public class HomeActivity extends AppCompatActivity {
         retryButton = findViewById(R.id.retryButton);
         retryButton.setOnClickListener(view -> checkSession());
         findViewById(R.id.logoutButton).setOnClickListener(view -> logout());
+        findViewById(R.id.homeCitizenDemo).setOnClickListener(view -> startActivity(
+                new Intent(this, com.example.zonasegura.citizen.CitizenActivity.class)));
         checkSession();
     }
 

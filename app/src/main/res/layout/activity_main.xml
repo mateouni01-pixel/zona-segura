@@ -101,6 +101,32 @@
             app:backgroundTint="@color/login_primary"
             app:cornerRadius="16dp" />
 
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/citizenRegisterEntry"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:text="@string/register_entry" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/citizenRecoverEntry"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:text="@string/zs_forgot" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/citizenDemoEntry"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="56dp"
+            android:layout_marginTop="12dp"
+            android:text="@string/zs_demo_entry"
+            app:cornerRadius="16dp" />
+
         <TextView
             android:id="@+id/loginStatus"
             android:layout_width="match_parent"

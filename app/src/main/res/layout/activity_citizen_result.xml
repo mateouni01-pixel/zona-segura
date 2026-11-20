@@ -1,0 +1,21 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/resultRoot" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:background="@color/zs_canvas">
+    <com.google.android.material.appbar.MaterialToolbar android:id="@+id/resultToolbar" android:layout_width="match_parent" android:layout_height="wrap_content" app:navigationIcon="@drawable/zs_ic_back" app:navigationContentDescription="@string/zs_back" app:title="@string/zs_brand"/>
+    <androidx.core.widget.NestedScrollView android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:fillViewport="true">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="24dp" android:gravity="center_vertical">
+            <TextView style="@style/Zs.Eyebrow" android:background="@drawable/zs_badge" android:text="@string/zs_demo_badge"/>
+            <ImageView android:layout_width="88dp" android:layout_height="88dp" android:layout_marginTop="28dp" android:padding="18dp" android:background="@drawable/zs_badge" android:src="@drawable/zs_ic_check" android:importantForAccessibility="no"/>
+            <TextView android:id="@+id/resultTitle" style="@style/Zs.Heading" android:layout_marginTop="24dp"/>
+            <TextView android:id="@+id/resultBody" style="@style/Zs.Body" android:layout_marginTop="12dp"/>
+            <com.google.android.material.card.MaterialCardView style="@style/Zs.Card" android:layout_marginTop="24dp">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="18dp">
+                    <TextView android:id="@+id/resultReference" style="@style/Zs.Eyebrow"/>
+                    <TextView android:id="@+id/resultType" style="@style/Zs.Section" android:layout_marginTop="8dp"/>
+                    <TextView android:id="@+id/resultState" style="@style/Zs.Body" android:layout_marginTop="8dp"/>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+            <TextView android:id="@+id/resultNote" style="@style/Zs.Body" android:layout_marginTop="16dp" android:textSize="13sp"/>
+            <com.google.android.material.button.MaterialButton android:id="@+id/resultOpen" style="@style/Zs.Button" android:layout_marginTop="24dp" android:text="@string/zs_open_report"/>
+            <com.google.android.material.button.MaterialButton android:id="@+id/resultMap" style="@style/Widget.Material3.Button.TextButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="52dp" android:text="@string/zs_back_map"/>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</LinearLayout>

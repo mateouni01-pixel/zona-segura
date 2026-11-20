@@ -1,0 +1,27 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/detailRoot" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:background="@color/zs_canvas">
+    <com.google.android.material.appbar.MaterialToolbar android:id="@+id/detailToolbar" android:layout_width="match_parent" android:layout_height="wrap_content" app:navigationIcon="@drawable/zs_ic_back" app:navigationContentDescription="@string/zs_back" app:title="@string/zs_detail_title"/>
+    <androidx.core.widget.NestedScrollView android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="20dp">
+            <TextView style="@style/Zs.Eyebrow" android:text="@string/zs_demo_badge" android:background="@drawable/zs_badge"/>
+            <TextView android:id="@+id/detailReference" style="@style/Zs.Eyebrow" android:layout_marginTop="24dp"/>
+            <TextView android:id="@+id/detailType" style="@style/Zs.Heading" android:layout_marginTop="8dp"/>
+            <TextView android:id="@+id/detailState" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="14dp" android:background="@drawable/zs_status" android:textColor="@color/zs_amber"/>
+            <TextView android:id="@+id/detailDescription" style="@style/Zs.Body" android:textColor="@color/zs_ink" android:layout_marginTop="20dp" android:textSize="17sp"/>
+            <ImageView android:id="@+id/detailPhoto" android:layout_width="match_parent" android:layout_height="200dp" android:layout_marginTop="16dp" android:scaleType="centerCrop" android:contentDescription="@string/zs_photo_preview" android:visibility="gone"/>
+            <TextView android:id="@+id/detailDistance" style="@style/Zs.Body" android:layout_marginTop="20dp"/>
+            <TextView android:id="@+id/detailCoordinates" style="@style/Zs.Body" android:textSize="12sp" android:layout_marginTop="8dp"/>
+            <TextView style="@style/Zs.Body" android:text="@string/zs_public_author" android:layout_marginTop="8dp" android:textSize="12sp"/>
+            <com.google.android.material.card.MaterialCardView style="@style/Zs.Card" android:layout_marginTop="24dp">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp">
+                    <TextView android:id="@+id/detailVeracity" style="@style/Zs.Body" android:textStyle="bold" android:textColor="@color/zs_green"/>
+                    <com.google.android.material.progressindicator.LinearProgressIndicator android:id="@+id/detailProgress" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="14dp" android:max="100" app:indicatorColor="@color/zs_green" app:trackColor="@color/zs_soft" app:trackThickness="8dp" app:trackCornerRadius="4dp"/>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+            <TextView style="@style/Zs.Section" android:layout_marginTop="24dp" android:text="@string/zs_vote_title"/>
+            <TextView style="@style/Zs.Body" android:layout_marginTop="8dp" android:text="@string/zs_vote_body"/>
+            <TextView android:id="@+id/detailVoteStatus" style="@style/Zs.Body" android:layout_marginTop="14dp" android:padding="14dp" android:background="@drawable/zs_badge" android:accessibilityLiveRegion="polite"/>
+            <com.google.android.material.button.MaterialButton android:id="@+id/detailConfirmVote" style="@style/Zs.Button" android:layout_marginTop="16dp" android:text="@string/zs_vote_yes"/>
+            <com.google.android.material.button.MaterialButton android:id="@+id/detailRejectVote" style="@style/Widget.Material3.Button.OutlinedButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="56dp" android:text="@string/zs_vote_no"/>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</LinearLayout>

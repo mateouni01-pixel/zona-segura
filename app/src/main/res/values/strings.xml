@@ -38,7 +38,16 @@
     <string name="admin_welcome">Bienvenido, %1$s</string>
     <string name="admin_role">Rol: Administrador</string>
     <string name="admin_authorized">Acceso de administrador autorizado</string>
-    <string name="admin_description">Desde este espacio podrás moderar reportes, gestionar usuarios y configurar roles cuando esas funciones estén disponibles.</string>
+    <string name="admin_description">Acceso central a las herramientas de moderación y gestión de cuentas de Zona Segura.</string>
+    <string name="admin_functions_title">Funciones de administración</string>
+    <string name="admin_moderation_title">Moderación de reportes</string>
+    <string name="admin_moderation_description">Revisar reportes sospechosos o rechazados, mantenerlos pendientes o rechazarlos por incumplimiento.</string>
+    <string name="admin_users_title">Gestión de usuarios</string>
+    <string name="admin_users_description">Consultar cuentas, estado, reputación y actividad de los ciudadanos.</string>
+    <string name="admin_roles_title">Roles y permisos</string>
+    <string name="admin_roles_description">Asignar roles de ciudadano, administrador o personal de Alcaldía y controlar el nivel de acceso.</string>
+    <string name="admin_sanctions_title">Sanciones e historial</string>
+    <string name="admin_sanctions_description">Aplicar sanciones por reportes falsos reiterados y consultar los cambios en la reputación.</string>
     <string name="admin_error">No se pudo comprobar el acceso de administrador. Revisa la conexión.</string>
     <string name="login_footer">Reportes ciudadanos para cuidar nuestra comunidad.</string>
 </resources>

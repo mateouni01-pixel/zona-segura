@@ -2,6 +2,8 @@
 
 Aplicación Android del proyecto Zona Segura. Este repositorio contiene el código de la app, sus pruebas y el esquema inicial de SQL Server (`zona_segura.sql`).
 
+El prototipo ciudadano ya permite explorar pantallas con datos locales sin backend. Entrar desde **Explorar pantallas de demostración** en el acceso. Recorridos, límites y conexión futura: [PANTALLAS_ANDROID.md](PANTALLAS_ANDROID.md).
+
 ## Abrir el proyecto
 
 1. Abre esta carpeta en Android Studio.

@@ -12,6 +12,30 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
 final class AuthApi {
+    static int register(String baseUrl, String name, String email, String password) throws IOException {
+        if (baseUrl == null || baseUrl.isEmpty()) return -1;
+        HttpURLConnection connection = (HttpURLConnection)
+                new URL(baseUrl + "/api/auth/register").openConnection();
+        connection.setRequestMethod("POST");
+        connection.setConnectTimeout(8000);
+        connection.setReadTimeout(8000);
+        connection.setRequestProperty("Content-Type", "application/json; charset=utf-8");
+        connection.setDoOutput(true);
+        try {
+            JSONObject body = new JSONObject();
+            body.put("nombre", name);
+            body.put("correo", email);
+            body.put("password", password);
+            try (OutputStream output = connection.getOutputStream()) {
+                output.write(body.toString().getBytes(StandardCharsets.UTF_8));
+            }
+            return connection.getResponseCode();
+        } catch (org.json.JSONException exception) {
+            throw new IOException("No se pudo preparar el registro.", exception);
+        } finally {
+            connection.disconnect();
+        }
+    }
     static final class Profile {
         final int status;
         final String name;

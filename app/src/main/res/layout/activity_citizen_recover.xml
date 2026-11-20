@@ -1,0 +1,16 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/recoverRoot" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:background="@color/zs_canvas">
+    <com.google.android.material.appbar.MaterialToolbar android:id="@+id/recoverToolbar" android:layout_width="match_parent" android:layout_height="wrap_content" app:navigationIcon="@drawable/zs_ic_back" app:navigationContentDescription="@string/zs_back"/>
+    <androidx.core.widget.NestedScrollView android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:padding="24dp" android:orientation="vertical">
+            <TextView style="@style/Zs.Eyebrow" android:background="@drawable/zs_badge" android:text="@string/zs_demo_badge"/>
+            <ImageView android:layout_width="64dp" android:layout_height="64dp" android:layout_marginTop="32dp" android:src="@drawable/ic_shield" android:importantForAccessibility="no"/>
+            <TextView style="@style/Zs.Heading" android:layout_marginTop="24dp" android:text="@string/zs_recover_title"/>
+            <TextView style="@style/Zs.Body" android:layout_marginTop="12dp" android:text="@string/zs_recover_body"/>
+            <com.google.android.material.textfield.TextInputLayout android:id="@+id/recoverEmailLayout" style="@style/Widget.Material3.TextInputLayout.OutlinedBox" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="28dp" android:hint="@string/login_email" app:errorEnabled="true">
+                <com.google.android.material.textfield.TextInputEditText android:id="@+id/recoverEmail" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="textEmailAddress" android:autofillHints="emailAddress" android:maxLines="1"/>
+            </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.button.MaterialButton android:id="@+id/recoverSubmit" style="@style/Zs.Button" android:layout_marginTop="18dp" android:text="@string/zs_recover_action"/>
+            <TextView style="@style/Zs.Body" android:layout_marginTop="24dp" android:text="@string/zs_demo_info" android:textSize="13sp"/>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</LinearLayout>

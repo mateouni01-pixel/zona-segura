@@ -49,6 +49,15 @@
             android:textSize="16sp" />
 
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/homeCitizenDemo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="56dp"
+            android:layout_marginTop="20dp"
+            android:text="@string/zs_demo_entry"
+            app:cornerRadius="16dp" />
+
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/retryButton"
             android:layout_width="match_parent"
             android:layout_height="52dp"

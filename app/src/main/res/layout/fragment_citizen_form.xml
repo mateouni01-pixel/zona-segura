@@ -1,0 +1,28 @@
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent" android:layout_height="match_parent" android:fillViewport="true">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="20dp">
+        <TextView style="@style/Zs.Heading" android:text="@string/zs_new_report"/>
+        <TextView style="@style/Zs.Body" android:layout_marginTop="8dp" android:text="@string/zs_new_subtitle"/>
+        <TextView style="@style/Zs.Eyebrow" android:layout_marginTop="24dp" android:text="@string/zs_step_location"/>
+        <com.google.android.material.card.MaterialCardView style="@style/Zs.Card" android:layout_marginTop="12dp" app:cardBackgroundColor="@color/zs_soft">
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp">
+                <TextView android:id="@+id/formLocationName" style="@style/Zs.Section"/>
+                <TextView android:id="@+id/formCoordinates" style="@style/Zs.Body" android:layout_marginTop="6dp"/>
+                <TextView style="@style/Zs.Body" android:textSize="12sp" android:layout_marginTop="8dp" android:text="@string/zs_location_explanation"/>
+                <com.google.android.material.button.MaterialButton android:id="@+id/formChangeLocation" style="@style/Widget.Material3.Button.TextButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/zs_change_location"/>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+        <TextView style="@style/Zs.Eyebrow" android:layout_marginTop="24dp" android:text="@string/zs_step_details"/>
+        <com.google.android.material.textfield.TextInputLayout android:id="@+id/formTypeLayout" style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="14dp" android:hint="@string/zs_type_hint" app:errorEnabled="true">
+            <com.google.android.material.textfield.MaterialAutoCompleteTextView android:id="@+id/formType" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="none" android:importantForAutofill="no"/>
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout android:id="@+id/formDescriptionLayout" style="@style/Widget.Material3.TextInputLayout.OutlinedBox" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="10dp" android:hint="@string/zs_description" app:helperText="@string/zs_description_helper" app:counterEnabled="true" app:counterMaxLength="2000" app:errorEnabled="true">
+            <com.google.android.material.textfield.TextInputEditText android:id="@+id/formDescription" android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="top" android:minLines="4" android:inputType="textMultiLine|textCapSentences" android:maxLength="2000" android:importantForAutofill="no"/>
+        </com.google.android.material.textfield.TextInputLayout>
+        <TextView style="@style/Zs.Section" android:layout_marginTop="20dp" android:text="@string/zs_photo_title"/>
+        <ImageView android:id="@+id/formPhotoPreview" android:layout_width="match_parent" android:layout_height="180dp" android:layout_marginTop="12dp" android:scaleType="centerCrop" android:contentDescription="@string/zs_photo_preview" android:visibility="gone"/>
+        <com.google.android.material.button.MaterialButton android:id="@+id/formAttach" style="@style/Widget.Material3.Button.OutlinedButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="52dp" android:layout_marginTop="10dp" android:text="@string/zs_attach"/>
+        <com.google.android.material.button.MaterialButton android:id="@+id/formRemovePhoto" style="@style/Widget.Material3.Button.TextButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/zs_remove_photo" android:visibility="gone"/>
+        <TextView style="@style/Zs.Body" android:layout_marginTop="18dp" android:textSize="13sp" android:text="@string/zs_save_hint"/>
+        <com.google.android.material.button.MaterialButton android:id="@+id/formSave" style="@style/Zs.Button" android:layout_marginTop="14dp" android:text="@string/zs_save_report"/>
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>
