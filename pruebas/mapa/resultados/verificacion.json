@@ -1,0 +1,10 @@
+{
+  "renderizado": true,
+  "popup": true,
+  "capa": true,
+  "zoom": true,
+  "desplazamiento": true,
+  "estadoVacio": true,
+  "erroresJavascript": [],
+  "teselas": "simuladas; sin peticiones a OpenStreetMap"
+}

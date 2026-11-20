@@ -19,6 +19,7 @@ final class SessionStore {
     private static final String KEY_ALIAS = "zona_segura_session_key_v1";
     private static final String TOKEN = "token";
     private static final String IV = "iv";
+    private static final String BACKEND = "backend";
 
     static void save(Context context, String token) throws Exception {
         Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
@@ -27,11 +28,16 @@ final class SessionStore {
         context.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit()
                 .putString(TOKEN, Base64.encodeToString(encrypted, Base64.NO_WRAP))
                 .putString(IV, Base64.encodeToString(cipher.getIV(), Base64.NO_WRAP))
+                .putString(BACKEND, context.getString(R.string.backend_base_url))
                 .apply();
     }
 
     static String load(Context context) {
         SharedPreferences prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE);
+        if (!context.getString(R.string.backend_base_url).equals(prefs.getString(BACKEND, null))) {
+            clear(context);
+            return null;
+        }
         String encrypted = prefs.getString(TOKEN, null);
         String iv = prefs.getString(IV, null);
         if (encrypted == null || iv == null) {

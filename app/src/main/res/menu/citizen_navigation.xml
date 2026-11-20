@@ -1,6 +1,0 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/navCitizenMap" android:icon="@drawable/zs_ic_map" android:title="@string/zs_map"/>
-    <item android:id="@+id/navCitizenReport" android:icon="@drawable/zs_ic_add" android:title="@string/zs_report"/>
-    <item android:id="@+id/navCitizenValidate" android:icon="@drawable/zs_ic_check" android:title="@string/zs_validate"/>
-    <item android:id="@+id/navCitizenProfile" android:icon="@drawable/zs_ic_profile" android:title="@string/zs_profile"/>
-</menu>

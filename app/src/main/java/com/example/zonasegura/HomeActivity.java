@@ -34,8 +34,6 @@ public class HomeActivity extends AppCompatActivity {
         retryButton = findViewById(R.id.retryButton);
         retryButton.setOnClickListener(view -> checkSession());
         findViewById(R.id.logoutButton).setOnClickListener(view -> logout());
-        findViewById(R.id.homeCitizenDemo).setOnClickListener(view -> startActivity(
-                new Intent(this, com.example.zonasegura.citizen.CitizenActivity.class)));
         checkSession();
     }
 
@@ -46,6 +44,8 @@ public class HomeActivity extends AppCompatActivity {
             return;
         }
         status.setText(R.string.home_checking);
+        findViewById(R.id.createReportButton).setVisibility(View.GONE);
+        findViewById(R.id.reportsButton).setVisibility(View.GONE);
         retryButton.setVisibility(View.GONE);
         new Thread(() -> {
             AuthApi.Profile profile;
@@ -72,6 +72,17 @@ public class HomeActivity extends AppCompatActivity {
                     }
                     welcome.setText(getString(R.string.home_welcome, result.name));
                     status.setText(getString(R.string.home_role, result.role));
+                    if ("CIUDADANO".equalsIgnoreCase(result.role)) {
+                        View reports = findViewById(R.id.reportsButton);
+                        View create = findViewById(R.id.createReportButton);
+                        create.setVisibility(View.VISIBLE);
+                        create.setOnClickListener(view -> startActivity(new Intent(this, ReportsActivity.class)
+                                .putExtra(ReportsActivity.EXTRA_CREATE_REPORT, true)));
+                        CommunityActivity.addActions(this, R.id.reportsButton, "citizen");
+                        reports.setVisibility(View.VISIBLE);
+                        reports.setOnClickListener(view -> startActivity(
+                                new Intent(this, ReportsActivity.class)));
+                    }
                 } else if (result.status == 401 || result.status == 403) {
                     SessionStore.clear(this);
                     openLogin();

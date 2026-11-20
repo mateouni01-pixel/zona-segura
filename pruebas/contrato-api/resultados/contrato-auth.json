@@ -1,0 +1,578 @@
+[
+  {
+    "api": "Spring",
+    "prueba": "sesión sin token",
+    "resultado": "OK",
+    "http": 401
+  },
+  {
+    "api": "Spring",
+    "prueba": "correo inválido",
+    "resultado": "OK",
+    "http": 400
+  },
+  {
+    "api": "Spring",
+    "prueba": "contraseña corta",
+    "resultado": "OK",
+    "http": 400
+  },
+  {
+    "api": "Spring",
+    "prueba": "contraseña UTF-8 mayor de 72 bytes",
+    "resultado": "OK",
+    "http": 400
+  },
+  {
+    "api": "Spring",
+    "prueba": "registro ciudadano y normalización",
+    "resultado": "OK",
+    "http": 201
+  },
+  {
+    "api": "Spring",
+    "prueba": "correo duplicado",
+    "resultado": "OK",
+    "http": 409
+  },
+  {
+    "api": "Spring",
+    "prueba": "login incorrecto",
+    "resultado": "OK",
+    "http": 401
+  },
+  {
+    "api": "Spring",
+    "prueba": "login válido",
+    "resultado": "OK",
+    "http": 200
+  },
+  {
+    "api": "Spring",
+    "prueba": "sesión con ciudadano real",
+    "resultado": "OK",
+    "http": 200
+  },
+  {
+    "api": "Spring",
+    "prueba": "reportes sin sesión",
+    "resultado": "OK",
+    "http": 401
+  },
+  {
+    "api": "Spring",
+    "prueba": "catálogo autenticado",
+    "resultado": "OK",
+    "http": 200
+  },
+  {
+    "api": "Spring",
+    "prueba": "consulta de categoría",
+    "resultado": "OK",
+    "http": 200
+  },
+  {
+    "api": "Spring",
+    "prueba": "crear sin sesión",
+    "resultado": "OK",
+    "http": 401
+  },
+  {
+    "api": "Spring",
+    "prueba": "descripción inválida",
+    "resultado": "OK",
+    "http": 400
+  },
+  {
+    "api": "Spring",
+    "prueba": "GPS obligatorio",
+    "resultado": "OK",
+    "http": 400
+  },
+  {
+    "api": "Spring",
+    "prueba": "GPS fuera de rango",
+    "resultado": "OK",
+    "http": 400
+  },
+  {
+    "api": "Spring",
+    "prueba": "rechazo de autor falsificado",
+    "resultado": "OK",
+    "http": 400
+  },
+  {
+    "api": "Spring",
+    "prueba": "categoría inexistente",
+    "resultado": "OK",
+    "http": 400
+  },
+  {
+    "api": "Spring",
+    "prueba": "categoría inactiva",
+    "resultado": "OK",
+    "http": 400
+  },
+  {
+    "api": "Spring",
+    "prueba": "crear reporte real",
+    "resultado": "OK",
+    "http": 201
+  },
+  {
+    "api": "Spring",
+    "prueba": "consultar reporte creado",
+    "resultado": "OK",
+    "http": 200
+  },
+  {
+    "api": "Spring",
+    "prueba": "historial del ciudadano",
+    "resultado": "OK",
+    "http": 200
+  },
+  {
+    "api": "Spring",
+    "prueba": "segunda cuenta de prueba",
+    "resultado": "OK",
+    "http": 201
+  },
+  {
+    "api": "Spring",
+    "prueba": "sesión de segunda cuenta",
+    "resultado": "OK",
+    "http": 200
+  },
+  {
+    "api": "Spring",
+    "prueba": "otra cuenta no puede consultar el reporte",
+    "resultado": "OK",
+    "http": 404
+  },
+  {
+    "api": "Spring",
+    "prueba": "historial separado por cuenta",
+    "resultado": "OK",
+    "http": 200
+  },
+  {
+    "api": "Spring",
+    "prueba": "mapa sin sesión",
+    "resultado": "OK",
+    "http": 401
+  },
+  {
+    "api": "Spring",
+    "prueba": "mapa de incidentes confirmados",
+    "resultado": "OK",
+    "http": 200
+  },
+  {
+    "api": "Spring",
+    "prueba": "contrato de zonas compatible",
+    "resultado": "OK",
+    "http": 200
+  },
+  {
+    "api": "Spring",
+    "prueba": "mapa por tipo de incidente",
+    "resultado": "OK",
+    "http": 200
+  },
+  {
+    "api": "Spring",
+    "prueba": "mapa sin datos recientes",
+    "resultado": "OK",
+    "http": 200
+  },
+  {
+    "api": "Spring",
+    "prueba": "mapa amplía el período",
+    "resultado": "OK",
+    "http": 200
+  },
+  {
+    "api": "Spring",
+    "prueba": "conteo estable al desplazar dentro de una zona",
+    "resultado": "OK",
+    "http": 200
+  },
+  {
+    "api": "Spring",
+    "prueba": "mapa rechaza límites incompletos",
+    "resultado": "OK",
+    "http": 400
+  },
+  {
+    "api": "Spring",
+    "prueba": "mapa rechaza límites invertidos",
+    "resultado": "OK",
+    "http": 400
+  },
+  {
+    "api": "Spring",
+    "prueba": "mapa rechaza área demasiado amplia",
+    "resultado": "OK",
+    "http": 400
+  },
+  {
+    "api": "Spring",
+    "prueba": "mapa rechaza NaN",
+    "resultado": "OK",
+    "http": 400
+  },
+  {
+    "api": "Spring",
+    "prueba": "mapa rechaza período inválido",
+    "resultado": "OK",
+    "http": 400
+  },
+  {
+    "api": "Spring",
+    "prueba": "mapa rechaza categoría inválida",
+    "resultado": "OK",
+    "http": 400
+  },
+  {
+    "api": "Spring",
+    "prueba": "token malformado",
+    "resultado": "OK",
+    "http": 401
+  },
+  {
+    "api": "Spring",
+    "prueba": "firma alterada",
+    "resultado": "OK",
+    "http": 401
+  },
+  {
+    "api": "Spring",
+    "prueba": "token vencido",
+    "resultado": "OK",
+    "http": 401
+  },
+  {
+    "api": "Spring",
+    "prueba": "audiencia incorrecta",
+    "resultado": "OK",
+    "http": 401
+  },
+  {
+    "api": "Spring",
+    "prueba": "identificador inválido",
+    "resultado": "OK",
+    "http": 401
+  },
+  {
+    "api": "Spring",
+    "prueba": "cuenta desactivada con token vigente",
+    "resultado": "OK",
+    "http": 401
+  },
+  {
+    "api": "Spring",
+    "prueba": "cuenta reactivada",
+    "resultado": "OK",
+    "http": 200
+  },
+  {
+    "api": "Csharp",
+    "prueba": "sesión sin token",
+    "resultado": "OK",
+    "http": 401
+  },
+  {
+    "api": "Csharp",
+    "prueba": "correo inválido",
+    "resultado": "OK",
+    "http": 400
+  },
+  {
+    "api": "Csharp",
+    "prueba": "contraseña corta",
+    "resultado": "OK",
+    "http": 400
+  },
+  {
+    "api": "Csharp",
+    "prueba": "contraseña UTF-8 mayor de 72 bytes",
+    "resultado": "OK",
+    "http": 400
+  },
+  {
+    "api": "Csharp",
+    "prueba": "registro ciudadano y normalización",
+    "resultado": "OK",
+    "http": 201
+  },
+  {
+    "api": "Csharp",
+    "prueba": "correo duplicado",
+    "resultado": "OK",
+    "http": 409
+  },
+  {
+    "api": "Csharp",
+    "prueba": "login incorrecto",
+    "resultado": "OK",
+    "http": 401
+  },
+  {
+    "api": "Csharp",
+    "prueba": "login válido",
+    "resultado": "OK",
+    "http": 200
+  },
+  {
+    "api": "Csharp",
+    "prueba": "sesión con ciudadano real",
+    "resultado": "OK",
+    "http": 200
+  },
+  {
+    "api": "Csharp",
+    "prueba": "reportes sin sesión",
+    "resultado": "OK",
+    "http": 401
+  },
+  {
+    "api": "Csharp",
+    "prueba": "catálogo autenticado",
+    "resultado": "OK",
+    "http": 200
+  },
+  {
+    "api": "Csharp",
+    "prueba": "consulta de categoría",
+    "resultado": "OK",
+    "http": 200
+  },
+  {
+    "api": "Csharp",
+    "prueba": "crear sin sesión",
+    "resultado": "OK",
+    "http": 401
+  },
+  {
+    "api": "Csharp",
+    "prueba": "descripción inválida",
+    "resultado": "OK",
+    "http": 400
+  },
+  {
+    "api": "Csharp",
+    "prueba": "GPS obligatorio",
+    "resultado": "OK",
+    "http": 400
+  },
+  {
+    "api": "Csharp",
+    "prueba": "GPS fuera de rango",
+    "resultado": "OK",
+    "http": 400
+  },
+  {
+    "api": "Csharp",
+    "prueba": "rechazo de autor falsificado",
+    "resultado": "OK",
+    "http": 400
+  },
+  {
+    "api": "Csharp",
+    "prueba": "categoría inexistente",
+    "resultado": "OK",
+    "http": 400
+  },
+  {
+    "api": "Csharp",
+    "prueba": "categoría inactiva",
+    "resultado": "OK",
+    "http": 400
+  },
+  {
+    "api": "Csharp",
+    "prueba": "crear reporte real",
+    "resultado": "OK",
+    "http": 201
+  },
+  {
+    "api": "Csharp",
+    "prueba": "consultar reporte creado",
+    "resultado": "OK",
+    "http": 200
+  },
+  {
+    "api": "Csharp",
+    "prueba": "historial del ciudadano",
+    "resultado": "OK",
+    "http": 200
+  },
+  {
+    "api": "Csharp",
+    "prueba": "segunda cuenta de prueba",
+    "resultado": "OK",
+    "http": 201
+  },
+  {
+    "api": "Csharp",
+    "prueba": "sesión de segunda cuenta",
+    "resultado": "OK",
+    "http": 200
+  },
+  {
+    "api": "Csharp",
+    "prueba": "otra cuenta no puede consultar el reporte",
+    "resultado": "OK",
+    "http": 404
+  },
+  {
+    "api": "Csharp",
+    "prueba": "historial separado por cuenta",
+    "resultado": "OK",
+    "http": 200
+  },
+  {
+    "api": "Csharp",
+    "prueba": "otra cuenta no puede modificar el reporte",
+    "resultado": "OK",
+    "http": 404
+  },
+  {
+    "api": "Csharp",
+    "prueba": "otra cuenta no puede eliminar el reporte",
+    "resultado": "OK",
+    "http": 404
+  },
+  {
+    "api": "Csharp",
+    "prueba": "mapa sin sesión",
+    "resultado": "OK",
+    "http": 401
+  },
+  {
+    "api": "Csharp",
+    "prueba": "mapa de incidentes confirmados",
+    "resultado": "OK",
+    "http": 200
+  },
+  {
+    "api": "Csharp",
+    "prueba": "contrato de zonas compatible",
+    "resultado": "OK",
+    "http": 200
+  },
+  {
+    "api": "Csharp",
+    "prueba": "mapa por tipo de incidente",
+    "resultado": "OK",
+    "http": 200
+  },
+  {
+    "api": "Csharp",
+    "prueba": "mapa sin datos recientes",
+    "resultado": "OK",
+    "http": 200
+  },
+  {
+    "api": "Csharp",
+    "prueba": "mapa amplía el período",
+    "resultado": "OK",
+    "http": 200
+  },
+  {
+    "api": "Csharp",
+    "prueba": "conteo estable al desplazar dentro de una zona",
+    "resultado": "OK",
+    "http": 200
+  },
+  {
+    "api": "Csharp",
+    "prueba": "mapa rechaza límites incompletos",
+    "resultado": "OK",
+    "http": 400
+  },
+  {
+    "api": "Csharp",
+    "prueba": "mapa rechaza límites invertidos",
+    "resultado": "OK",
+    "http": 400
+  },
+  {
+    "api": "Csharp",
+    "prueba": "mapa rechaza área demasiado amplia",
+    "resultado": "OK",
+    "http": 400
+  },
+  {
+    "api": "Csharp",
+    "prueba": "mapa rechaza NaN",
+    "resultado": "OK",
+    "http": 400
+  },
+  {
+    "api": "Csharp",
+    "prueba": "mapa rechaza período inválido",
+    "resultado": "OK",
+    "http": 400
+  },
+  {
+    "api": "Csharp",
+    "prueba": "mapa rechaza categoría inválida",
+    "resultado": "OK",
+    "http": 400
+  },
+  {
+    "api": "Csharp",
+    "prueba": "token malformado",
+    "resultado": "OK",
+    "http": 401
+  },
+  {
+    "api": "Csharp",
+    "prueba": "firma alterada",
+    "resultado": "OK",
+    "http": 401
+  },
+  {
+    "api": "Csharp",
+    "prueba": "token vencido",
+    "resultado": "OK",
+    "http": 401
+  },
+  {
+    "api": "Csharp",
+    "prueba": "audiencia incorrecta",
+    "resultado": "OK",
+    "http": 401
+  },
+  {
+    "api": "Csharp",
+    "prueba": "identificador inválido",
+    "resultado": "OK",
+    "http": 401
+  },
+  {
+    "api": "Csharp",
+    "prueba": "cuenta desactivada con token vigente",
+    "resultado": "OK",
+    "http": 401
+  },
+  {
+    "api": "Csharp",
+    "prueba": "cuenta reactivada",
+    "resultado": "OK",
+    "http": 200
+  },
+  {
+    "api": "Csharp",
+    "prueba": "rechazar token de Spring",
+    "resultado": "OK",
+    "http": 401
+  },
+  {
+    "api": "Spring",
+    "prueba": "rechazar token de Csharp",
+    "resultado": "OK",
+    "http": 401
+  }
+]

@@ -78,6 +78,7 @@ IF OBJECT_ID(N'dbo.TiposIncidente', N'U') IS NULL
 CREATE TABLE dbo.TiposIncidente (
     id_tipo INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
     nombre NVARCHAR(100) NOT NULL,
+    activo BIT NOT NULL CONSTRAINT DF_TiposIncidente_activo DEFAULT (1),
     CONSTRAINT UQ_TiposIncidente_nombre UNIQUE (nombre)
 );
 GO
@@ -120,6 +121,10 @@ CREATE TABLE dbo.Reportes (
     CONSTRAINT CK_Reportes_estado CHECK (estado IN (
         N'PENDIENTE_VALIDACION', N'VALIDADO', N'RECHAZADO', N'EN_ATENCION', N'ATENDIDO'))
 );
+GO
+
+IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name=N'IX_Reportes_Mapa' AND object_id=OBJECT_ID(N'dbo.Reportes'))
+    CREATE INDEX IX_Reportes_Mapa ON dbo.Reportes(estado, fecha_hora, id_tipo) INCLUDE(id_ubicacion);
 GO
 
 IF OBJECT_ID(N'dbo.ValidacionesComunitarias', N'U') IS NULL

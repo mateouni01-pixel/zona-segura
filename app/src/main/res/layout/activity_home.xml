@@ -10,15 +10,11 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
+        android:gravity="top"
         android:orientation="vertical"
         android:padding="24dp">
 
-        <ImageView
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            android:contentDescription="@string/app_logo_description"
-            android:src="@drawable/ic_shield" />
+        <include layout="@layout/civic_brand" />
 
         <TextView
             android:id="@+id/homeWelcome"
@@ -26,9 +22,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:text="@string/home_welcome_loading"
-            android:textColor="@color/login_text"
-            android:textSize="30sp"
-            android:textStyle="bold" />
+            style="@style/CivicHeading"
+            android:accessibilityHeading="true" />
 
         <TextView
             android:id="@+id/homeStatus"
@@ -37,42 +32,43 @@
             android:layout_marginTop="12dp"
             android:accessibilityLiveRegion="polite"
             android:text="@string/home_checking"
-            android:textColor="@color/login_secondary_text"
-            android:textSize="16sp" />
+            style="@style/CivicBody" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="36dp"
-            android:text="@string/home_next"
-            android:textColor="@color/login_text"
-            android:textSize="16sp" />
+
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/homeCitizenDemo"
+            android:id="@+id/createReportButton"
+            android:layout_marginTop="24dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="56dp"
-            android:layout_marginTop="20dp"
-            android:text="@string/zs_demo_entry"
-            app:cornerRadius="16dp" />
+            android:text="@string/report_create"
+            android:visibility="gone"
+            app:cornerRadius="14dp" />
 
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/reportsButton"
+            style="?attr/materialButtonOutlinedStyle"
+            android:layout_marginTop="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/reports_title"
+            android:visibility="gone" />
         <com.google.android.material.button.MaterialButton
             android:id="@+id/retryButton"
             android:layout_width="match_parent"
-            android:layout_height="52dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:text="@string/home_retry"
             android:visibility="gone"
-            app:cornerRadius="16dp" />
+            app:cornerRadius="14dp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/logoutButton"
-            style="@style/Widget.Material3.Button.OutlinedButton"
+            style="@style/Widget.ZonaSegura.Button.Text"
             android:layout_width="match_parent"
-            android:layout_height="52dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:text="@string/home_logout"
-            app:cornerRadius="16dp" />
+            app:cornerRadius="14dp" />
     </LinearLayout>
 </ScrollView>

@@ -64,6 +64,7 @@ public class MunicipalActivity extends AppCompatActivity {
                     welcome.setText(getString(R.string.municipal_welcome, result.name));
                     cargo.setText(getString(R.string.municipal_cargo, result.cargo));
                     access.setText(getString(R.string.municipal_access, result.accessRole));
+                    CommunityActivity.addActions(this, R.id.municipalStatus, "municipal");
                     status.setText(R.string.municipal_authorized);
                 } else if (result.status == 401 || result.status == 403 || result.status == 404) {
                     SessionStore.clear(this);

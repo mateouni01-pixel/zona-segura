@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         }
         setContentView(R.layout.activity_main);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (view, insets) -> {
-            Insets bars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            Insets bars = insets.getInsets(WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.ime());
             view.setPadding(bars.left, bars.top, bars.right, bars.bottom);
             return insets;
         });
@@ -46,13 +46,11 @@ public class MainActivity extends AppCompatActivity {
         loginStatus = findViewById(R.id.loginStatus);
         loginButton = findViewById(R.id.loginButton);
 
+        findViewById(R.id.registerAccount).setOnClickListener(v ->
+                startActivity(new Intent(this, CommunityActivity.class).putExtra("page", "Crear cuenta")));
+        findViewById(R.id.recoverAccount).setOnClickListener(v ->
+                startActivity(new Intent(this, CommunityActivity.class).putExtra("page", "Recuperar contraseña")));
         loginButton.setOnClickListener(view -> submitLogin());
-        findViewById(R.id.citizenRegisterEntry).setOnClickListener(view -> startActivity(
-                new Intent(this, RegisterActivity.class)));
-        findViewById(R.id.citizenDemoEntry).setOnClickListener(view -> startActivity(
-                new Intent(this, com.example.zonasegura.citizen.CitizenActivity.class)));
-        findViewById(R.id.citizenRecoverEntry).setOnClickListener(view -> startActivity(
-                new Intent(this, com.example.zonasegura.citizen.RecoverAccessActivity.class)));
         passwordInput.setOnEditorActionListener((view, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 submitLogin();

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/riskMapRoot" android:layout_width="match_parent" android:layout_height="match_parent"
+    android:background="@color/login_background" android:fillViewport="true">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:orientation="vertical" android:padding="16dp">
+        <com.google.android.material.button.MaterialButton android:id="@+id/riskMapBack"
+            style="?attr/materialButtonOutlinedStyle" android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="@string/map_back" />
+        <TextView style="@style/CivicHeading" android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:text="@string/map_title" android:accessibilityHeading="true" android:layout_marginTop="8dp" />
+        <TextView style="@style/CivicBody" android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:text="@string/map_description" android:layout_marginTop="8dp" />
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal"
+            android:layout_marginTop="12dp">
+            <LinearLayout android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:orientation="vertical">
+                <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/map_type"
+                    android:labelFor="@id/riskMapType" android:textColor="@color/login_text" />
+                <Spinner android:id="@+id/riskMapType" android:layout_width="match_parent" android:layout_height="52dp" />
+            </LinearLayout>
+            <LinearLayout android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:orientation="vertical">
+                <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/map_period"
+                    android:labelFor="@id/riskMapPeriod" android:textColor="@color/login_text" />
+                <Spinner android:id="@+id/riskMapPeriod" android:layout_width="match_parent" android:layout_height="52dp" />
+            </LinearLayout>
+        </LinearLayout>
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal">
+            <com.google.android.material.button.MaterialButton android:id="@+id/riskMapRefresh"
+                android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:text="@string/map_refresh" />
+            <com.google.android.material.button.MaterialButton android:id="@+id/riskMapCity"
+                style="?attr/materialButtonOutlinedStyle" android:layout_width="0dp" android:layout_weight="1"
+                android:layout_height="wrap_content" android:layout_marginStart="8dp" android:text="@string/map_city" />
+        </LinearLayout>
+        <TextView android:id="@+id/riskMapStatus" style="@style/CivicBody" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:accessibilityLiveRegion="polite" android:layout_marginVertical="8dp" />
+        <WebView android:id="@+id/riskMapWeb" android:layout_width="match_parent" android:layout_height="420dp"
+            android:contentDescription="@string/map_content_description" />
+        <TextView android:id="@+id/riskMapTilesNotice" style="@style/CivicBody" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:visibility="gone" android:text="@string/map_tiles_offline"
+            android:accessibilityLiveRegion="polite" android:layout_marginTop="8dp" />
+        <com.google.android.material.checkbox.MaterialCheckBox android:id="@+id/riskMapHeat"
+            android:layout_width="match_parent" android:layout_height="wrap_content" android:checked="true" android:text="@string/map_heat" />
+        <TextView style="@style/CivicBody" android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:text="@string/map_legend" android:layout_marginTop="4dp" />
+        <TextView style="@style/CivicBody" android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:text="@string/map_privacy" android:layout_marginTop="12dp" />
+    </LinearLayout>
+</ScrollView>

@@ -17,4 +17,7 @@
 .env
 .env.*
 google-services.json
+**/resultados/*.log
+**/resultados/*.png
+**/resultados/*.html
 local.properties

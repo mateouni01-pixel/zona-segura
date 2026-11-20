@@ -1,0 +1,20 @@
+<resources>
+    <string name="map_back">Volver</string>
+    <string name="map_title">Mapa de riesgo</string>
+    <string name="map_description">Consulta incidentes confirmados en el área visible. Desliza el mapa o usa los botones de zoom. Se actualiza automáticamente mientras está abierto.</string>
+    <string name="map_type">Tipo de incidente</string>
+    <string name="map_period">Período</string>
+    <string name="map_all_types">Todos los tipos</string>
+    <string name="map_refresh">Actualizar</string>
+    <string name="map_city">Santa Cruz</string>
+    <string name="map_heat">Mostrar capa de riesgo</string>
+    <string name="map_loading">Consultando el área visible…</string>
+    <string name="map_empty">No hay incidentes confirmados en esta área y período. Los reportes pendientes todavía no aparecen.</string>
+    <string name="map_summary">%1$d incidentes confirmados · %2$d zonas · últimos %3$d días</string>
+    <string name="map_error">No se pudo actualizar el mapa. Revisa tu conexión y pulsa Actualizar.</string>
+    <string name="map_types_error">No se pudo cargar el filtro de tipos. Puedes consultar todos los tipos o pulsar Actualizar.</string>
+    <string name="map_legend">Verde · bajo: 1–2 reportes\nÁmbar · medio: 3–4 reportes\nRojo · alto: 5 o más reportes\nSin color · sin reportes confirmados en la consulta</string>
+    <string name="map_privacy">Zonas aproximadas de 500 m. Solo se muestran cantidades agrupadas, sin nombres ni ubicaciones exactas. La ausencia de reportes no garantiza seguridad.</string>
+    <string name="map_tiles_offline">No se pudo cargar el mapa de calles. Revisa el acceso a internet del dispositivo.</string>
+    <string name="map_content_description">Mapa de calles y zonas de riesgo. Puedes acercar, alejar y tocar una zona para consultar su cantidad de incidentes.</string>
+</resources>
