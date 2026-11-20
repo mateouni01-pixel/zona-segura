@@ -61,6 +61,7 @@ public class AdminActivity extends AppCompatActivity {
                 }
                 if (result.status == 200 && accessResult == 200) {
                     welcome.setText(getString(R.string.admin_welcome, result.name));
+                    CommunityActivity.addActions(this, R.id.adminStatus, "admin");
                     status.setText(R.string.admin_authorized);
                 } else if (result.status == 401 || result.status == 403
                         || (result.status == 200 && (accessResult == 401 || accessResult == 403

@@ -2,11 +2,11 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="login_primary">#176B54</color>
-    <color name="login_background">#F4F8F6</color>
+    <color name="login_primary">#106454</color>
+    <color name="login_background">#F3F7F6</color>
     <color name="login_field_background">#FFFFFF</color>
-    <color name="login_text">#17312B</color>
-    <color name="login_secondary_text">#547067</color>
+    <color name="login_text">#132D29</color>
+    <color name="login_secondary_text">#435F58</color>
     <color name="municipal_navy">#102A43</color>
     <color name="municipal_surface">#173B5E</color>
     <color name="municipal_accent">#9ED9F5</color>
@@ -15,4 +15,5 @@
     <color name="admin_surface">#342D46</color>
     <color name="admin_accent">#E2C690</color>
     <color name="admin_muted">#E7DFEF</color>
+    <color name="civic_border">#899E98</color>
 </resources>

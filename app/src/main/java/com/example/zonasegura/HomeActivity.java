@@ -70,6 +70,13 @@ public class HomeActivity extends AppCompatActivity {
                     }
                     welcome.setText(getString(R.string.home_welcome, result.name));
                     status.setText(getString(R.string.home_role, result.role));
+                    if ("CIUDADANO".equalsIgnoreCase(result.role)) {
+                        View reports = findViewById(R.id.reportsButton);
+                        CommunityActivity.addActions(this, R.id.reportsButton, "citizen");
+                    reports.setVisibility(View.VISIBLE);
+                        reports.setOnClickListener(view -> startActivity(
+                                new Intent(this, ReportsActivity.class)));
+                    }
                 } else if (result.status == 401 || result.status == 403) {
                     SessionStore.clear(this);
                     openLogin();

@@ -17,7 +17,14 @@ final class AuthApi {
         final String name;
         final String role;
 
+        final int citizenId;
+
         Profile(int status, String name, String role) {
+            this(status, name, role, 0);
+        }
+
+        Profile(int status, String name, String role, int citizenId) {
+            this.citizenId = citizenId;
             this.status = status;
             this.name = name;
             this.role = role;
@@ -133,7 +140,7 @@ final class AuthApi {
                     }
                 }
             }
-            return new Profile(200, response.optString("nombre", ""), role);
+            return new Profile(200, response.optString("nombre", ""), role, response.optInt("ciudadanoId"));
         } catch (org.json.JSONException exception) {
             throw new IOException("Respuesta inválida del servidor.", exception);
         } finally {

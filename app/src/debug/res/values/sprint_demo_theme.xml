@@ -1,0 +1,11 @@
+<resources>
+    <style name="Theme.ZonaSegura.Demo" parent="Theme.Material3.Light.NoActionBar">
+        <item name="colorPrimary">#185E51</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorSurface">#F2F6F5</item>
+        <item name="colorOnSurface">#182E34</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightNavigationBar">true</item>
+        <item name="android:windowBackground">#F2F6F5</item>
+    </style>
+</resources>

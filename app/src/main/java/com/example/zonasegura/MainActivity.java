@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         }
         setContentView(R.layout.activity_main);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (view, insets) -> {
-            Insets bars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            Insets bars = insets.getInsets(WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.ime());
             view.setPadding(bars.left, bars.top, bars.right, bars.bottom);
             return insets;
         });
@@ -46,6 +46,10 @@ public class MainActivity extends AppCompatActivity {
         loginStatus = findViewById(R.id.loginStatus);
         loginButton = findViewById(R.id.loginButton);
 
+        findViewById(R.id.registerAccount).setOnClickListener(v ->
+                startActivity(new Intent(this, CommunityActivity.class).putExtra("page", "Crear cuenta")));
+        findViewById(R.id.recoverAccount).setOnClickListener(v ->
+                startActivity(new Intent(this, CommunityActivity.class).putExtra("page", "Recuperar contraseña")));
         loginButton.setOnClickListener(view -> submitLogin());
         passwordInput.setOnEditorActionListener((view, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_DONE) {

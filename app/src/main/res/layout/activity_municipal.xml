@@ -4,44 +4,38 @@
     android:id="@+id/municipalRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/municipal_navy"
+    android:background="@color/login_background"
     android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
+        android:gravity="top"
         android:orientation="vertical"
         android:padding="24dp">
 
-        <ImageView
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            android:contentDescription="@string/app_logo_description"
-            android:src="@drawable/ic_municipal" />
+        <include layout="@layout/civic_brand" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:text="@string/municipal_title"
-            android:textColor="@color/white"
-            android:textSize="30sp"
-            android:textStyle="bold" />
+            style="@style/CivicHeading"
+            android:accessibilityHeading="true" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="@string/municipal_subtitle"
-            android:textColor="@color/municipal_muted"
-            android:textSize="16sp" />
+            android:text="@string/municipal_description"
+            style="@style/CivicBody" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
-            android:background="@color/municipal_surface"
+            android:background="@drawable/civic_card"
             android:orientation="vertical"
             android:padding="20dp">
 
@@ -49,8 +43,8 @@
                 android:id="@+id/municipalWelcome"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/home_checking"
-                android:textColor="@color/white"
+                android:text="@string/civic_profile"
+                android:textColor="@color/login_text"
                 android:textSize="22sp"
                 android:textStyle="bold" />
 
@@ -59,16 +53,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:textColor="@color/municipal_muted"
-                android:textSize="16sp" />
+                style="@style/CivicBody" />
 
             <TextView
                 android:id="@+id/municipalAccess"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:textColor="@color/municipal_muted"
-                android:textSize="16sp" />
+                style="@style/CivicBody" />
         </LinearLayout>
 
         <TextView
@@ -78,36 +70,25 @@
             android:layout_marginTop="24dp"
             android:accessibilityLiveRegion="polite"
             android:text="@string/home_checking"
-            android:textColor="@color/municipal_accent"
-            android:textSize="15sp" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="@string/municipal_description"
-            android:textColor="@color/municipal_muted"
+            android:textColor="@color/login_secondary_text"
             android:textSize="15sp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/municipalRetry"
             android:layout_width="match_parent"
-            android:layout_height="52dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:text="@string/home_retry"
-            android:textColor="@color/municipal_navy"
             android:visibility="gone"
-            app:backgroundTint="@color/municipal_accent"
-            app:cornerRadius="16dp" />
+            app:cornerRadius="14dp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/municipalLogout"
+            style="@style/Widget.ZonaSegura.Button.Text"
             android:layout_width="match_parent"
-            android:layout_height="52dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:text="@string/home_logout"
-            android:textColor="@color/municipal_navy"
-            app:backgroundTint="@color/municipal_accent"
-            app:cornerRadius="16dp" />
+            app:cornerRadius="14dp" />
     </LinearLayout>
 </ScrollView>

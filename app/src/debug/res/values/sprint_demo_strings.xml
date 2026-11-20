@@ -1,0 +1,96 @@
+<resources>
+    <string name="demo_title">Zona Segura · Sprint 2</string>
+    <string name="demo_banner">Modo demostración · datos ficticios y base local</string>
+    <string name="demo_login">Acceso ciudadano</string>
+    <string name="demo_email">Correo de prueba</string>
+    <string name="demo_password">Contraseña</string>
+    <string name="demo_name">Nombre</string>
+    <string name="demo_enter">Iniciar sesión</string>
+    <string name="demo_create">Crear cuenta</string>
+    <string name="demo_recover">Recuperar contraseña</string>
+    <string name="demo_recovery_code">Código de recuperación</string>
+    <string name="demo_recovery_help">Usa el código recibido al crear la cuenta de prueba. La recuperación local no envía correo.</string>
+    <string name="demo_created">Guarda este código de recuperación: %1$s</string>
+    <string name="demo_reset">Cambiar contraseña</string>
+    <string name="demo_recovered">Contraseña actualizada.</string>
+    <string name="demo_auth_error">Revisa el correo y la contraseña.</string>
+    <string name="demo_account_error">Ingresa un nombre, un correo válido y al menos 8 caracteres en la contraseña.</string>
+    <string name="demo_duplicate">Ya existe una cuenta con ese correo.</string>
+    <string name="demo_recovery_error">Revisa el correo, el código y la nueva contraseña.</string>
+    <string name="demo_citizen">Entrar como ciudadano de prueba</string>
+    <string name="demo_municipal">Entrar como personal de Alcaldía</string>
+    <string name="demo_admin">Entrar como administrador de prueba</string>
+    <string name="demo_switch_voter">Entrar como segundo ciudadano</string>
+    <string name="demo_home">Menú ciudadano</string>
+    <string name="demo_back">Volver</string>
+    <string name="demo_logout">Cerrar sesión</string>
+    <string name="demo_map">Mapa de zonas de riesgo</string>
+    <string name="demo_report">Registrar incidente</string>
+    <string name="demo_nearby">Validar reportes cercanos</string>
+    <string name="demo_mine">Mis reportes</string>
+    <string name="demo_moderate">Moderar reportes</string>
+    <string name="demo_resources">Asignar recurso preventivo</string>
+    <string name="demo_roles">Permisos de cada rol</string>
+    <string name="demo_roles_help">Ciudadanía: registrar incidentes, votar y consultar el mapa.\nAlcaldía: consultar el mapa y gestionar órdenes.\nAdministración: moderar reportes y sancionar en esta demo. La gestión de roles depende del servidor.</string>
+    <string name="demo_municipal_home">Menú de Alcaldía</string>
+    <string name="demo_admin_home">Menú de administración</string>
+    <string name="demo_signed">Sesión de prueba: %1$s</string>
+    <string name="demo_map_help">Plano ilustrativo de Santa Cruz de la Sierra. Las zonas A y B son de riesgo alto; la zona C es de riesgo bajo. Los límites son ficticios.</string>
+    <string name="demo_map_accessibility">Plano ilustrativo con zonas A y B en rojo y zona C en verde.</string>
+    <string name="demo_map_count">Reportes validados en los datos de demostración: %1$d</string>
+    <string name="demo_heat_on">Mostrar capa térmica</string>
+    <string name="demo_heat_off">Ocultar capa térmica</string>
+    <string name="demo_type">Seleccionar tipo de incidente</string>
+    <string name="demo_description">Descripción del incidente</string>
+    <string name="demo_gps">Capturar ubicación GPS</string>
+    <string name="demo_sample">Usar ubicación de prueba</string>
+    <string name="demo_location_set">Ubicación lista.</string>
+    <string name="demo_location_wait">Buscando ubicación del dispositivo…</string>
+    <string name="demo_location_error">No se pudo obtener la ubicación. Revisa el permiso y el GPS o usa la ubicación de prueba.</string>
+    <string name="demo_attach">Adjuntar fotografía</string>
+    <string name="demo_attached">Fotografía adjunta</string>
+    <string name="demo_photo_error">No se pudo adjuntar la fotografía.</string>
+    <string name="demo_save">Guardar reporte local</string>
+    <string name="demo_invalid_report">Selecciona un tipo, escribe una descripción de hasta 2000 caracteres y captura la ubicación.</string>
+    <string name="demo_saved">Reporte guardado y pendiente de sincronización.</string>
+    <string name="demo_pending_sync">Pendiente de sincronización</string>
+    <string name="demo_sync">Simular sincronización</string>
+    <string name="demo_synced">Reportes sincronizados localmente: %1$d</string>
+    <string name="demo_empty">No hay reportes disponibles.</string>
+    <string name="demo_nearby_help">Se muestran los reportes pendientes a 500 m o menos de tu ubicación. En la demo, dos votos del mismo tipo resuelven el reporte.</string>
+    <string name="demo_report_card">%1$s · #%2$d</string>
+    <string name="demo_distance">Distancia aproximada: %1$d m</string>
+    <string name="demo_yes">Confirmar reporte</string>
+    <string name="demo_no">Marcar como falso o spam</string>
+    <string name="demo_vote_saved">Voto registrado.</string>
+    <string name="demo_vote_error">Ya votaste o el reporte dejó de estar disponible.</string>
+    <string name="demo_resource_help">Una brigada de prueba. Se libera cuando se cierra su orden de intervención.</string>
+    <string name="demo_assign">Generar orden de intervención</string>
+    <string name="demo_complete">Marcar como atendido</string>
+    <string name="demo_order_ok">Orden actualizada.</string>
+    <string name="demo_resource_error">El recurso está ocupado o el estado cambió.</string>
+    <string name="demo_moderation_help">Los reportes marcados como falsos se muestran aquí para revisión. La sanción impide que esa cuenta de prueba registre reportes o vote.</string>
+    <string name="demo_reject">Rechazar reporte</string>
+    <string name="demo_sanction">Sancionar cuenta de prueba</string>
+    <string name="demo_moderated">Moderación aplicada.</string>
+    <string name="demo_action_error">El estado del reporte cambió.</string>
+    <string name="demo_sanctioned">Esta cuenta de prueba está sancionada.</string>
+    <string name="demo_labeled_state">Estado: %1$s</string>
+    <string name="demo_flagged">Marcado como posible spam.</string>
+    <string name="demo_report_has_photo">Incluye evidencia fotográfica</string>
+    <string name="demo_view_photo">Ver fotografía</string>
+    <string-array name="demo_incident_types">
+        <item>Selecciona un tipo</item>
+        <item>Alumbrado</item>
+        <item>Riesgo vial</item>
+        <item>Otro riesgo</item>
+    </string-array>
+    <string name="demo_pdf">Exportar PDF</string>
+    <string name="demo_excel">Exportar Excel</string>
+    <string name="demo_notices">Avisos de intervención</string>
+    <string name="demo_recipient">Bandeja simulada de Fuerzas del Orden. Cada orden genera un aviso local.</string>
+    <string name="demo_notice_item">Orden del reporte #%1$d · Brigada preventiva</string>
+    <string name="demo_export_ok">Archivo guardado.</string>
+    <string name="demo_export_error">No se pudo guardar el archivo.</string>
+</resources>
+
