@@ -1,0 +1,5 @@
+@model List<Unidad>
+@{ViewData["Title"]="Unidades operativas";}
+<div class="eyebrow">Organización de equipos</div><h1>Unidades operativas</h1><p class="muted">Asocia únicamente cuentas que ya tengan el rol de unidad operativa.</p>
+<form asp-action="CrearUnidad" method="post" class="surface d-flex flex-wrap gap-3 mb-4"><div class="flex-grow-1"><label for="nombre" class="form-label">Nombre de la unidad</label><input id="nombre" name="nombre" class="form-control" maxlength="150" required/></div><button class="btn btn-primary align-self-end">Registrar unidad</button></form>
+<div class="review-grid">@foreach(var u in Model){<section class="surface"><h2>@u.Nombre</h2><p class="muted">Unidad #@u.Id · @(u.Activo?"Activa":"Inactiva")</p><form asp-action="AsociarMiembro" method="post"><input type="hidden" name="id" value="@u.Id"/><label for="usuario-@u.Id" class="form-label">ID de usuario operativo</label><input id="usuario-@u.Id" name="usuarioId" type="number" min="1" class="form-control" required/><button class="btn btn-outline-primary mt-3">Asociar cuenta</button></form></section>}</div>

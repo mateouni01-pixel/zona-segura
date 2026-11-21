@@ -1,5 +1,5 @@
 <resources>
     <!-- En un teléfono USB, adb reverse tcp:8080 tcp:8080 conecta con la PC. -->
     <!-- Spring Boot es el backend principal. Para probar C#, cambiar SOLO este puerto a 5080. -->
-    <string name="backend_base_url" translatable="false">http://127.0.0.1:8080</string>
+    <!-- URL generada por Gradle. HTTPS local: -PzonaApiUrl=https://localhost:8443 -->
 </resources>

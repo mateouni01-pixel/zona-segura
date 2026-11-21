@@ -9,6 +9,28 @@
   }).addTo(map);
   tiles.on('tileerror',()=>{if(window.ZonaMap)window.ZonaMap.tilesUnavailable();});
   const layer=L.layerGroup().addTo(map);
+  const districts=L.geoJSON(null,{style:{color:'#64748b',weight:1.2,dashArray:'4 4',fill:false},interactive:false}).addTo(map);
+  window.showDistricts=function(data){if(data&&data.type==='FeatureCollection'){districts.clearLayers();districts.addData(data);districts.bringToBack();}};
+  map.attributionControl.addAttribution('Distritos 1–12: capa municipal publicada en <a href="https://github.com/YoViajo/geodatos/blob/master/gsc/scz_distritos_municipales_planif.geojson">YoViajo/geodatos</a>');
+  map.createPane('citizen');map.getPane('citizen').style.zIndex='450';
+  const citizenLayer=L.layerGroup().addTo(map);
+  const citizenRenderer=L.svg({pane:'citizen'});
+  let citizenMarker,accuracyCircle;
+  window.clearCitizenLocation=function(){
+    citizenLayer.clearLayers();citizenMarker=null;accuracyCircle=null;
+  };
+  window.showCitizenLocation=function(lat,lng,accuracy,center){
+    if(![lat,lng,accuracy].every(Number.isFinite) || lat < -90 || lat > 90 || lng < -180 || lng > 180 || accuracy < 0)return;
+    const point=[lat,lng];
+    if(!citizenMarker){
+      accuracyCircle=L.circle(point,{renderer:citizenRenderer,pane:'citizen',radius:accuracy,color:'#2563eb',weight:1,fillColor:'#2563eb',fillOpacity:0.12,interactive:false,className:'citizen-accuracy'}).addTo(citizenLayer);
+      citizenMarker=L.circleMarker(point,{renderer:citizenRenderer,pane:'citizen',radius:9,color:'#ffffff',weight:3,fillColor:'#2563eb',fillOpacity:1,className:'citizen-location'}).bindPopup('Tu ubicación').addTo(citizenLayer);
+    }else{
+      citizenMarker.setLatLng(point);accuracyCircle.setLatLng(point).setRadius(accuracy);
+    }
+    citizenMarker.bringToFront();
+    if(center)map.setView(point,Math.max(map.getZoom(),15));
+  };
   let enabled=true;
   const colors={BAJO:'#15805f',MEDIO:'#b57408',ALTO:'#b6293f'};
   const names={BAJO:'Bajo',MEDIO:'Medio',ALTO:'Alto'};

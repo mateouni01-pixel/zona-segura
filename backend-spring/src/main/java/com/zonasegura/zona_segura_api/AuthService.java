@@ -105,15 +105,16 @@ public class AuthService {
         Account account;
         try {
             account = jdbc.queryForObject(
-                    "SELECT u.id_usuario, u.nombre, u.activo, c.id_usuario AS ciudadano_id "
+                    "SELECT u.id_usuario, u.nombre, u.activo, c.id_usuario AS ciudadano_id, "
+                            + "CASE WHEN EXISTS(SELECT 1 FROM dbo.SancionesCuenta s WHERE s.id_usuario=u.id_usuario AND s.levantada_utc IS NULL) THEN 1 ELSE 0 END AS sancionado "
                             + "FROM dbo.Usuarios u LEFT JOIN dbo.Ciudadanos c ON c.id_usuario = u.id_usuario "
                             + "WHERE u.id_usuario = ?",
                     (rs, row) -> new Account(rs.getInt("id_usuario"), rs.getString("nombre"),
-                            rs.getBoolean("activo"), rs.getInt("ciudadano_id")), id);
+                            rs.getBoolean("activo"), rs.getInt("ciudadano_id"), rs.getBoolean("sancionado")), id);
         } catch (EmptyResultDataAccessException exception) {
             throw unauthorized();
         }
-        if (account == null || !account.active()) throw unauthorized();
+        if (account == null || !account.active() || account.sanctioned()) throw unauthorized();
         List<String> roles = jdbc.query(
                 "SELECT r.nombre FROM dbo.UsuarioRoles ur JOIN dbo.Roles r ON ur.id_rol = r.id_rol WHERE ur.id_usuario = ?",
                 (rs, row) -> rs.getString("nombre"), id);
@@ -126,6 +127,6 @@ public class AuthService {
     }
 
     private record User(int id, String name, String passwordHash, boolean active) { }
-    private record Account(int id, String name, boolean active, int citizenId) { }
+    private record Account(int id, String name, boolean active, int citizenId, boolean sanctioned) { }
     public record Profile(int idUsuario, String nombre, List<String> roles, int ciudadanoId) { }
 }

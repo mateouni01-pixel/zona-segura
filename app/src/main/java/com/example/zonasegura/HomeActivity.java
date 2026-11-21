@@ -54,12 +54,18 @@ public class HomeActivity extends AppCompatActivity {
             } catch (IOException exception) {
                 profile = new AuthApi.Profile(0, null, null);
             }
+            boolean offline=profile.status==0 || profile.status>=500;
+            if(offline)profile=SessionStore.offlineProfile(this);
             AuthApi.Profile result = profile;
             runOnUiThread(() -> {
                 if (isFinishing() || isDestroyed()) {
                     return;
                 }
                 if (result.status == 200) {
+                    if(!offline)SessionStore.remember(this,result);
+                    if ("UNIDAD_OPERATIVA".equals(result.role)) {
+                        startActivity(new Intent(this, OperationsActivity.class).putExtra("page","Bandeja operativa"));finish();return;
+                    }
                     if ("ADMINISTRADOR".equals(result.role)) {
                         startActivity(new Intent(this, AdminActivity.class));
                         finish();
@@ -73,6 +79,8 @@ public class HomeActivity extends AppCompatActivity {
                     welcome.setText(getString(R.string.home_welcome, result.name));
                     status.setText(getString(R.string.home_role, result.role));
                     if ("CIUDADANO".equalsIgnoreCase(result.role)) {
+                        ReportSyncWorker.resume(this,false);
+                        if(offline)status.setText("Sin conexión. Puedes guardar reportes pendientes y consultar el historial local.");
                         View reports = findViewById(R.id.reportsButton);
                         View create = findViewById(R.id.createReportButton);
                         create.setVisibility(View.VISIBLE);

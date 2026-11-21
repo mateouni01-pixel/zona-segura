@@ -1,5 +1,37 @@
 # Zona Segura (Android)
 
+## Estructura incluida en Git
+
+Este repositorio incluye Android (`app`), la API Spring (`backend-spring`), el panel MVC (`ZonaSegura.Panel`), certificados públicos (`Certificados`), lanzadores HTTPS y documentos de verificación (`docs/verificacion-v2.2`). Las claves privadas, bases de datos y respaldos no se incluyen. El panel incluido es la copia preparada para esta publicación del proyecto que se desarrolló junto a Android en el espacio de trabajo.
+
+Desde la raíz del repositorio: `configurar-https-local.ps1` prepara los certificados privados de cada equipo; `iniciar-https-local.ps1 -Componente Spring` inicia la API y `iniciar-https-local.ps1 -Componente Panel` inicia MVC. Regenerar la configuración local antes de compilar Android en otro equipo para usar su propia CA. Para compilar MVC: `dotnet build ZonaSegura.Panel/ZonaSegura.Panel.csproj`. La API C# independiente y sus migraciones permanecen en el repositorio `Zona-Segura-Api`, rama `sprint-2/Mateo`; su opción de lanzamiento requiere conservar la estructura de carpetas de ese proyecto junto al repositorio principal.
+
+## Actualización de implementación y ajustes — 20/11/2026
+
+- Administración de cuentas, roles, moderación, sanciones y levantamiento auditados en Spring y C#, con interfaz completa en el panel MVC. Android conserva su acceso a moderación y exige motivo. Suspender una cuenta bloquea su sesión; esta entrega no modifica puntajes de reputación.
+- El formulario captura GPS automáticamente. Reutiliza una posición de hasta 30 segundos cuando es precisa, espera como máximo 20 segundos y ofrece reintento. Antes de guardar exige posición de hasta 2 minutos y precisión reportada de hasta 100 m. No certifica la autenticidad física del GPS ni garantiza un tiempo de captura de 2 segundos.
+- Cobertura local y del servidor mediante polígonos MultiPolygon de los distritos urbanos 1–12. Incluye bordes y respeta huecos; rechaza nuevas ubicaciones fuera del alcance. Los reportes históricos se conservan y los reintentos idempotentes existentes siguen devolviendo su reporte original. El mapa muestra contornos distritales.
+- Fuente de geometría: capa de planificación municipal publicada en [YoViajo/geodatos](https://github.com/YoViajo/geodatos/blob/master/gsc/scz_distritos_municipales_planif.geojson), consultada el 20/11/2026 y filtrada por identificadores 1–12, sin simplificación adicional. Es una copia publicada de la capa; no se presenta como delimitación catastral certificada. El archivo incluye procedencia y se distribuye igual en Android, Spring y C#.
+- Migraciones de operaciones y administración aplicadas en `MateoMS`, bases `ZonaSegura` y `ZonaSeguraEntregaApi`, después de respaldarlas en `06_Archivos_de_trabajo/backups/cierre-20261120-195716`. Se conservaron las 3 cuentas/3 reportes de Spring y las 2 cuentas/2 reportes de C#. No se crearon cuentas ni se concedieron permisos a usuarios existentes.
+
+### HTTPS local y compilación
+
+Desde `04_Codigo`, `configurar-https-local.ps1` prepara una CA de desarrollo y un certificado servidor para localhost/127.0.0.1. Las claves y contraseña quedan bajo ACL privada en `.https-local`, excluida de Git; los certificados públicos se copian a `Certificados` y Android debug. No instala confianza global en Windows. La versión release bloquea HTTP y usa certificados del sistema; la confianza en la CA local se limita a debug y a localhost/127.0.0.1.
+
+Desde este proyecto, el APK HTTPS se compila sin ejecutar:
+
+```powershell
+.\gradlew.bat :app:assembleDebug --offline -PzonaApiUrl=https://localhost:8443
+```
+
+Para usarlo posteriormente con un teléfono USB: iniciar Spring mediante `04_Codigo/iniciar-https-local.ps1 -Componente Spring`, configurar `adb reverse tcp:8443 tcp:8443` en el equipo y volver a iniciar sesión. No se ejecutó ADB ni se instaló el APK durante esta entrega. La compilación debug sin propiedad `zonaApiUrl` conserva el HTTP de desarrollo en 127.0.0.1:8080; no mezclar sesiones ni colas entre URLs.
+
+La validación de código de este bloque es compilación de Android, Spring, API C# y MVC, revisión estática de permisos y sintaxis JavaScript/PowerShell. Las actualizaciones de esquema son preparación real de las bases, no pruebas de los flujos. GPS físico, TLS entre clientes, moderación, concurrencia y aceptación visual quedan sin prueba funcional por la indicación del usuario. Los resultados anteriores de 176 comprobaciones no certifican este bloque.
+
+## Implementación local de almacenamiento y operaciones
+
+Los puntos 1 al 6 están implementados en código: SQLite para reportes pendientes, sincronización automática con WorkManager, recursos y unidades, órdenes con reserva, bandeja operativa y avisos de órdenes. Android, Spring y C# comparten el contrato. Consultar [instalación y alcance](IMPLEMENTACION-PUNTOS-1-A-6.md). La verificación solicitada fue únicamente de compilación; las nuevas migraciones están preparadas pero no aplicadas, y no se ejecutaron emuladores ni pruebas funcionales. No se enviaron cambios a Git.
+
 Proyecto Zona Segura: aplicación Android, API principal Spring Boot en `backend-spring`, pruebas de integración y esquema de SQL Server (`zona_segura.sql`). La implementación equivalente en C# se conserva en [Zona-Segura-Api, rama sprint-2/Mateo](https://github.com/mateouni01-pixel/Zona-Segura-Api/tree/sprint-2/Mateo).
 
 ## Backend incluido
@@ -8,7 +40,7 @@ Proyecto Zona Segura: aplicación Android, API principal Spring Boot en `backend
 
 Configurar SQL Server y su esquema, instalar JDK 21 y compilar desde `backend-spring` con `gradlew.bat test bootJar`. Para iniciar en este equipo usar `backend-spring/iniciar-backend.cmd`. Si la instancia de SQL Server es distinta, configurar `SPRING_DATASOURCE_URL` antes de iniciar. Nunca guardar contraseñas o claves JWT en archivos versionados.
 
-Las [pruebas reproducibles](pruebas/README.md) incluyen el contrato HTTP de ambas APIs y la interacción del mapa. Los resultados guardados registran 96 comprobaciones HTTP correctas; no certifican el sprint completo. Votación comunitaria, sincronización offline y recursos municipales continúan pendientes.
+Las [pruebas reproducibles](pruebas/README.md) conservan 176 comprobaciones de la versión 2.2: autenticación, reportes, mapa y validación. Son anteriores a almacenamiento offline y operaciones y no certifican estos módulos nuevos. Su verificación en ejecución queda pendiente; recuperación, evidencia fotográfica en servidor y moderación general continúan fuera de estos seis puntos.
 
 ## Abrir el proyecto
 
@@ -47,6 +79,8 @@ El servicio de sesión identifica al ciudadano mediante el rol `CIUDADANO` y `ci
 
 **Mapa de riesgo** abre calles de OpenStreetMap con zoom y desplazamiento. Al mover el mapa consulta el área visible; permite filtrar por tipo de incidente y por los últimos 7, 30 o 90 días. La capa se puede ocultar y tocar cada zona muestra su nivel y cantidad de incidentes. Actualiza los datos cada 30 segundos mientras la pantalla está visible; se detiene al salir y no vuelve a descargar las calles por ese refresco.
 
+**Mi ubicación** solicita permiso de ubicación y centra el mapa en el ciudadano, con un punto azul y un círculo que representa la precisión. Si ya existe permiso, busca y centra la ubicación al abrir el mapa. Admite ubicación aproximada por red o precisa por GPS, según el permiso y los proveedores disponibles. Actualiza el punto mientras el mapa está visible sin volver a centrarlo en cada movimiento; el botón permite centrarlo de nuevo. La ubicación permanece visible al ocultar las zonas de riesgo y se deja de consultar al salir. Si se rechaza el permiso, se desactiva la ubicación o no se obtiene señal, muestra instrucciones y permite seguir explorando el mapa. Se descartan ubicaciones de más de dos minutos y se retira el punto si deja de actualizarse durante ese tiempo.
+
 La regla inicial aprobada agrupa en celdas de 0,005 grados (aproximadamente 500 m en Santa Cruz): 1–2 incidentes, BAJO; 3–4, MEDIO; desde 5, ALTO. Se cuentan reportes VALIDADO, EN_ATENCION y ATENDIDO dentro del período, usando su fecha de registro UTC. Pendientes, rechazados y fechas futuras no cuentan. Los límites de consulta se ajustan a celdas completas para evitar cambios de conteo al desplazar unos metros el mapa.
 
 El mapa muestra cantidades agrupadas de todas las cuentas, sin autores, descripciones ni coordenadas exactas. Las áreas sin datos no se pintan de verde: ausencia de reportes no equivale a seguridad. Las calles requieren internet en el dispositivo; la API sigue siendo la fuente exclusiva de la capa de riesgo.
@@ -55,6 +89,23 @@ Leaflet 1.9.4 y su licencia están incluidos en `app/src/main/assets/mapa`. Las 
 
 Ambas APIs ofrecen `GET /api/mapa/resumen` y `GET /api/mapa/zonas` con Bearer. Parámetros: `sur`, `oeste`, `norte`, `este` (los cuatro juntos), `dias` (1–90, predeterminado 7) y `tipoIncidenteId` opcional. Sin límites se consulta el área urbana inicial de Santa Cruz. El resumen devuelve zonas, total, período, fechas UTC y umbrales; `/zonas` conserva la respuesta de arreglo del contrato inicial.
 
+## Confirmación de incidentes versión 2.2
+
+Un reporte pasa de `PENDIENTE_VALIDACION` a `VALIDADO` cuando **tres ciudadanos distintos del autor** lo confirman dentro de 500 m, o cuando **personal autorizado de Alcaldía** registra una comprobación institucional positiva. El autor no puede votar ni verificar su propio reporte. Un voto total por cuenta y reporte; uno o dos positivos no validan. Los votos negativos quedan registrados para revisión y no provocan rechazo automático. El índice informativo es positivos/votos totales; el criterio de validación es el contador de tres positivos, incluso si hay negativos.
+
+En Android, **Validar reportes** obtiene el GPS y muestra pendientes ajenos cercanos con contador de confirmaciones y estado de voto. El menú municipal incluye **Verificar reportes**: muestra incidentes pendientes o validados por la comunidad, su ubicación para inspección y permite confirmar o rechazar describiendo la comprobación (10–2000 caracteres). La revisión institucional no exige tres votos ni cercanía; guarda reporte, funcionario, resultado, motivo y fecha UTC en una transacción. Una decisión por reporte, sin sobrescritura; el rechazo fundamentado cambia a `RECHAZADO`. La gestión de apelaciones y la moderación general son alcances posteriores.
+
+| Operación implementada en ambas APIs | Contrato |
+| --- | --- |
+| `GET /api/reportes/cercanos` | `lat`, `lng`, `radio=500`; pendientes ajenos, sin autor ni ubicación exacta |
+| `POST /api/reportes/{id}/votos` | `confirma`, `latitud`, `longitud`; identidad desde Bearer |
+| `GET /api/alcaldia/reportes-verificacion` | Solo personal municipal activo; ubicación precisa para comprobar el incidente |
+| `POST /api/alcaldia/reportes/{id}/verificacion` | `confirma`, `motivo`; responsable desde Bearer |
+
+Spring: aplicar `backend-spring/sql/sprint2-verificacion.sql` en una base existente; las instalaciones nuevas ya lo incluyen en `zona_segura.sql`. C#: aplicar la migración `AgregarVerificacionReportes`. No se crean cuentas municipales ni se conceden roles automáticamente. C# representa al revisor mediante Usuario con rol `PERSONAL_ALCALDIA`; Spring conserva además su registro `PersonalAlcaldia`. C# impide modificar o borrar reportes con votos o verificaciones para conservar su auditoría.
+
+Los diagramas y la especificación vigentes están en `02_Diagramas/diagramas actualizados/Validacion_v2_2` y `01_Documentos/Zona_Segura_Requisitos_Verificacion_v2_2.pdf`, dentro de la carpeta general del proyecto. El mapa incluye los incidentes confirmados en su siguiente consulta; confirmar no crea una orden de intervención.
+
 ## Entrega a Mateo
 
 Descomprime el proyecto y abre la carpeta que contiene settings.gradle.kts. Android Studio debe resolver el SDK de tu propia computadora. Instala la variante debug y abre Zona Segura.
@@ -62,7 +113,7 @@ Descomprime el proyecto y abre la carpeta que contiene settings.gradle.kts. Andr
 Antes de la presentación, comprueba que una cuenta ciudadana recibe su ciudadanoId, que existen tipos activos y que un reporte creado desde Android figura en SQL Server. Cierra la sesión, vuelve a entrar y consulta el historial. Las pantallas de cuenta, mapa, votos, evidencia, moderación e intervenciones consumen el contrato propuesto a continuación. Mateo debe confirmar o implementar esas rutas y verificar el recorrido con SQL Server.
 ## Contrato propuesto para los recorridos añadidos
 
-El cliente espera una respuesta HTTP 2xx para confirmar una acción. Las listas son arreglos JSON. Todas las llamadas usan el backend elegido; las operaciones autenticadas incluyen su JWT como Bearer. El servidor debe verificar identidad y rol en cada operación. Registro y mapa ya están implementados; fotografía, votos, moderación, recursos y recuperación continúan como contrato propuesto.
+El cliente espera una respuesta HTTP 2xx para confirmar una acción. Las listas son arreglos JSON. Todas las llamadas usan el backend elegido; las operaciones autenticadas incluyen su JWT como Bearer. El servidor debe verificar identidad y rol en cada operación. Registro, mapa, votos y verificación municipal ya están implementados; fotografía, moderación general, recursos y recuperación continúan como contrato propuesto.
 
 | Operación | Ruta propuesta y datos |
 |---|---|
@@ -73,11 +124,11 @@ El cliente espera una respuesta HTTP 2xx para confirmar una acción. Las listas 
 | Voto o spam | POST /api/reportes/{id}/votos con confirma, latitud y longitud. Validar radio, unicidad y umbrales en servidor. |
 | Mapa | GET /api/mapa/zonas. Cada zona incluye nombre, nivel (ALTO, MEDIO, BAJO) y poligono como anillo de pares numéricos [longitud, latitud]. Android ajusta los polígonos a la pantalla y permite alternar su sombreado. |
 | Moderación | GET /api/moderacion/reportes para listar los casos revisables con sancionado. POST /api/reportes/{id}/rechazo o /sancion con objeto vacío. |
-| Recursos y órdenes | GET /api/intervenciones devuelve los reportes gestionables con recursosDisponibles (id y nombre) y estadoNotificacion. POST /api/intervenciones con reporteId y recursoId reserva el recurso, crea la orden e inicia su notificación. |
-| Cierre | POST /api/intervenciones/{idReporte}/atender con objeto vacío. El servidor libera el recurso. |
+| Recursos y órdenes implementados | GET /api/intervenciones devuelve reportes gestionables y recursosDisponibles. POST /api/intervenciones exige reporteId, recursoId, tipoOrden, instrucciones y solicitudId UUID. GET /api/intervenciones/ordenes muestra el seguimiento y el estado del aviso. |
+| Cierre operativo implementado | POST /api/operativa/ordenes/{idOrden}/atender con resultado obligatorio. Solo la unidad asignada cierra la orden, marca ATENDIDO y libera el recurso. |
 | Exportación | Android genera PDF o XLSX del listado municipal cargado y permite elegir el archivo de destino. |
 
-El mapa conectado usa calles de OpenStreetMap y conteos agrupados calculados por la API con los umbrales aprobados. La entrega de avisos externos sigue pendiente.
+El mapa conectado usa calles de OpenStreetMap y conteos agrupados calculados por la API con los umbrales aprobados. Los avisos de órdenes están implementados dentro de la bandeja operativa. El envío de avisos externos sigue fuera de esta implementación.
 
 ## Demo archivada del Sprint 2
 

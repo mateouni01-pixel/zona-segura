@@ -2,7 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/riskMapRoot" android:layout_width="match_parent" android:layout_height="match_parent"
     android:background="@color/login_background" android:fillViewport="true">
-    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+    <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent"
         android:orientation="vertical" android:padding="16dp">
         <com.google.android.material.button.MaterialButton android:id="@+id/riskMapBack"
             style="?attr/materialButtonOutlinedStyle" android:layout_width="wrap_content" android:layout_height="wrap_content"
@@ -31,6 +31,11 @@
                 style="?attr/materialButtonOutlinedStyle" android:layout_width="0dp" android:layout_weight="1"
                 android:layout_height="wrap_content" android:layout_marginStart="8dp" android:text="@string/map_city" />
         </LinearLayout>
+        <com.google.android.material.button.MaterialButton android:id="@+id/riskMapLocation"
+            style="?attr/materialButtonOutlinedStyle" android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:text="@string/map_my_location" />
+        <TextView android:id="@+id/riskMapLocationStatus" style="@style/CivicBody" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:accessibilityLiveRegion="polite" android:text="@string/map_location_hint" />
         <TextView android:id="@+id/riskMapStatus" style="@style/CivicBody" android:layout_width="match_parent"
             android:layout_height="wrap_content" android:accessibilityLiveRegion="polite" android:layout_marginVertical="8dp" />
         <WebView android:id="@+id/riskMapWeb" android:layout_width="match_parent" android:layout_height="420dp"

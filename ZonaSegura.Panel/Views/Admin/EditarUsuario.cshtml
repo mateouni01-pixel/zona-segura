@@ -1,0 +1,13 @@
+@model EditarUsuarioModel
+@{ViewData["Title"]="Administrar cuenta";}
+<div class="eyebrow">Administración de acceso</div><h1>Administrar cuenta #@Model.Id</h1><p class="muted">@Model.Nombre · @Model.Correo</p>
+<form asp-action="EditarUsuario" method="post" class="surface form-width"><input asp-for="Id" type="hidden"/><div asp-validation-summary="All" class="text-danger" role="alert"></div>
+<fieldset><legend class="h5">Permisos autorizados</legend><p class="muted">Conserva los permisos que la cuenta necesita para realizar su trabajo.</p>
+@foreach(var role in EditarUsuarioModel.RolesDisponibles){<div class="form-check mb-2"><input type="checkbox" name="Roles" value="@role" checked="@Model.Roles.Contains(role)" class="form-check-input" id="rol-@role"/><label class="form-check-label" for="rol-@role">@role.Replace('_',' ')</label></div>}
+</fieldset>
+@if(Model.Sancionado){<div class="alert alert-warning mt-3">Esta cuenta tiene una sanción vigente. Para recuperar el acceso, revisa y levanta la sanción mediante el formulario siguiente.</div><input type="hidden" name="Activo" value="false"/>}
+else{<div class="form-check my-3"><input asp-for="Activo" class="form-check-input"/><label asp-for="Activo" class="form-check-label">Permitir acceso a la cuenta</label></div>}
+<label asp-for="Motivo" class="form-label">Motivo del cambio</label><textarea asp-for="Motivo" class="form-control" rows="3" minlength="10" maxlength="2000" required></textarea><span asp-validation-for="Motivo" class="text-danger"></span>
+<p class="muted mt-2">La cuenta administrativa actual debe conservar su acceso. El sistema protege también al último administrador activo. Para utilizar permisos recién concedidos, la persona debe iniciar sesión nuevamente.</p><div class="d-flex gap-2 mt-3"><button class="btn btn-primary">Guardar cambios</button><a asp-action="Index" class="btn btn-outline-primary">Volver a usuarios</a></div></form>
+@if(Model.Sancionado){<form asp-action="LevantarSancion" method="post" class="surface form-width mt-4"><h2>Levantar sanción</h2><input name="Id" value="@Model.Id" type="hidden"/><label for="motivo-levantamiento" class="form-label">Comprobación y motivo del levantamiento</label><textarea id="motivo-levantamiento" name="Motivo" class="form-control" rows="3" minlength="10" maxlength="2000" required></textarea><button class="btn btn-outline-primary mt-3">Levantar sanción con este motivo</button></form>}
+<a asp-action="Auditoria" asp-route-usuarioId="@Model.Id" class="d-inline-block mt-3">Ver auditoría de esta cuenta</a>

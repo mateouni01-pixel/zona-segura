@@ -1,0 +1,6 @@
+@model List<Revision>
+@{ViewData["Title"]="Verificar incidentes";}
+<div class="eyebrow">Comprobación institucional</div><h1>Verificar incidentes</h1><p class="muted">Registra lo que comprobaste. La decisión conserva responsable, motivo y fecha.</p>
+@if(Model.Count==0){<div class="surface empty-state">No hay incidentes pendientes de comprobación institucional.</div>}
+<div class="review-grid">@foreach(var r in Model){<article class="surface"><div class="section-heading"><h2>Reporte #@r.Id</h2><span class="state">@r.Estado.Replace('_',' ')</span></div><strong>@r.TipoIncidenteNombre</strong><p>@r.Descripcion</p><p class="muted">Confirmaciones: @r.Confirmaciones de 3 · Votos negativos: @r.VotosNegativos</p><p>Coordenadas del incidente: @r.Latitud, @r.Longitud</p>
+<form asp-action="Verificar" method="post"><input type="hidden" name="Id" value="@r.Id"/><label class="form-label" for="motivo-@r.Id">Comprobación realizada</label><textarea id="motivo-@r.Id" name="Motivo" class="form-control" minlength="10" maxlength="2000" rows="3" required></textarea><div class="d-flex gap-2 mt-3"><button name="Confirma" value="true" class="btn btn-primary">Confirmar incidente</button><button name="Confirma" value="false" class="btn btn-outline-danger">Rechazar tras comprobar</button></div></form></article>}</div>

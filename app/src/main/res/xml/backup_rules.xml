@@ -7,4 +7,7 @@
 -->
 <full-backup-content>
     <exclude domain="sharedpref" path="auth_session.xml"/>
+    <exclude domain="database" path="pending_reports.db"/>
+    <exclude domain="database" path="pending_reports.db-wal"/>
+    <exclude domain="database" path="pending_reports.db-shm"/>
 </full-backup-content>

@@ -17,14 +17,16 @@ import org.springframework.web.server.ResponseStatusException;
 public class ReportesService {
     private final JdbcTemplate jdbc;
     private final AuthService auth;
+    private final TerritorioService territorio;
     private static final String REPORT_QUERY = "SELECT r.id_reporte, r.descripcion, r.fecha_hora, r.estado, "
             + "r.id_ciudadano, r.id_tipo, t.nombre AS tipo_nombre, u.latitud, u.longitud "
             + "FROM dbo.Reportes r JOIN dbo.TiposIncidente t ON t.id_tipo=r.id_tipo "
             + "JOIN dbo.UbicacionesGPS u ON u.id_ubicacion=r.id_ubicacion ";
 
-    public ReportesService(JdbcTemplate jdbc, AuthService auth) {
+    public ReportesService(JdbcTemplate jdbc, AuthService auth,TerritorioService territorio) {
         this.jdbc = jdbc;
         this.auth = auth;
+        this.territorio=territorio;
     }
 
     private int citizen(String subject) {
@@ -64,8 +66,11 @@ public class ReportesService {
     }
 
     @Transactional
-    public Reporte create(String subject, Entrada input) {
+    public Reporte create(String subject, Entrada input,String key) {
         int author = citizen(subject);
+        java.util.UUID clientId=null;
+        if(key!=null){try{clientId=java.util.UUID.fromString(key);}catch(IllegalArgumentException e){throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Idempotency-Key debe ser UUID.");}}
+        jdbc.queryForObject("SELECT id_usuario FROM dbo.Usuarios WITH (UPDLOCK,HOLDLOCK) WHERE id_usuario=?",Integer.class,author);
         String description = input.descripcion() == null ? "" : input.descripcion().strip();
         if (description.length() < 10 || description.length() > 2000
                 || input.tipoIncidenteId() == null || input.tipoIncidenteId() <= 0
@@ -73,14 +78,26 @@ public class ReportesService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Revisa descripción, tipo y coordenadas.");
         if (input.ciudadanoId() != null && input.ciudadanoId() != author)
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El autor debe corresponder a la sesión.");
+        var lat=input.latitud().setScale(6,java.math.RoundingMode.HALF_UP);
+        var lng=input.longitud().setScale(6,java.math.RoundingMode.HALF_UP);
+        if(clientId!=null){
+            var existing=jdbc.query(REPORT_QUERY+"WHERE r.id_ciudadano=? AND r.id_cliente=?",(rs,row)->mapReport(rs),author,clientId.toString());
+            if(!existing.isEmpty()){
+                var r=existing.get(0);
+                if(!r.descripcion().equals(description)||r.tipoIncidenteId()!=input.tipoIncidenteId()||r.latitud().compareTo(lat)!=0||r.longitud().compareTo(lng)!=0)
+                    throw new ResponseStatusException(HttpStatus.CONFLICT,"La solicitud ya existe con otros datos.");
+                return r;
+            }
+        }
+        territorio.require(lat.doubleValue(),lng.doubleValue());
         Boolean active = jdbc.query("SELECT activo FROM dbo.TiposIncidente WHERE id_tipo=?",
                 (rs, row) -> rs.getBoolean("activo"), input.tipoIncidenteId()).stream().findFirst().orElse(false);
         if (!active) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Tipo inexistente o inactivo.");
         Integer location = jdbc.queryForObject("INSERT INTO dbo.UbicacionesGPS (latitud, longitud) "
-                + "OUTPUT INSERTED.id_ubicacion VALUES (?, ?)", Integer.class, input.latitud(), input.longitud());
-        Integer id = jdbc.queryForObject("INSERT INTO dbo.Reportes (id_ciudadano, id_tipo, id_ubicacion, descripcion) "
-                + "OUTPUT INSERTED.id_reporte VALUES (?, ?, ?, ?)", Integer.class,
-                author, input.tipoIncidenteId(), location, description);
+                + "OUTPUT INSERTED.id_ubicacion VALUES (?, ?)", Integer.class, lat, lng);
+        Integer id = jdbc.queryForObject("INSERT INTO dbo.Reportes (id_ciudadano, id_tipo, id_ubicacion, descripcion,id_cliente) "
+                + "OUTPUT INSERTED.id_reporte VALUES (?, ?, ?, ?,?)", Integer.class,
+                author, input.tipoIncidenteId(), location, description,clientId==null?null:clientId.toString());
         if (id == null) throw new IllegalStateException("No se recibió el identificador del reporte.");
         return find(id, author);
     }

@@ -1,0 +1,705 @@
+<?xml version='1.0' encoding='utf-8'?>
+<mxfile host="app.diagrams.net" version="24.7.17">
+  <diagram name="01 Casos de uso de verificación" id="v22-0">
+    <mxGraphModel dx="1500" dy="1260" grid="1" gridSize="10" page="1" pageWidth="1500" pageHeight="1260">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" value="01 Casos de uso de verificación&#10;Zona Segura · versión 2.2 · 20 de noviembre de 2026" vertex="1" parent="1" style="text;html=0;align=left;fontSize=24;fontStyle=1;strokeColor=none;fillColor=none;">
+          <mxGeometry x="35" y="15" width="1430" height="65" as="geometry" />
+        </mxCell>
+        <mxCell id="cit" value="Ciudadano" vertex="1" parent="1" style="shape=umlActor;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#edf4fa;">
+          <mxGeometry x="35" y="210" as="geometry" width="120" height="100" />
+        </mxCell>
+        <mxCell id="mun" value="Personal autorizado&#10;de Alcaldía" vertex="1" parent="1" style="shape=umlActor;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#edf4fa;">
+          <mxGeometry x="1330" y="210" as="geometry" width="140" height="110" />
+        </mxCell>
+        <mxCell id="adm" value="Administrador&#10;Moderador" vertex="1" parent="1" style="shape=umlActor;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#edf4fa;">
+          <mxGeometry x="1330" y="800" as="geometry" width="140" height="110" />
+        </mxCell>
+        <mxCell id="ope" value="Unidad operativa" vertex="1" parent="1" style="shape=umlActor;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#edf4fa;">
+          <mxGeometry x="35" y="970" as="geometry" width="135" height="100" />
+        </mxCell>
+        <mxCell id="reg" value="Registrarse e iniciar sesión" vertex="1" parent="1" style="ellipse;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#edf4fa;">
+          <mxGeometry x="230" y="110" as="geometry" width="280" height="85" />
+        </mxCell>
+        <mxCell id="report" value="Registrar reporte con GPS" vertex="1" parent="1" style="ellipse;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#edf4fa;">
+          <mxGeometry x="230" y="230" as="geometry" width="280" height="85" />
+        </mxCell>
+        <mxCell id="vote" value="Confirmar o desmentir reporte&#10;Un voto dentro de 500 m" vertex="1" parent="1" style="ellipse;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#edf4fa;">
+          <mxGeometry x="230" y="360" as="geometry" width="280" height="85" />
+        </mxCell>
+        <mxCell id="rule" value="Aplicar umbral&#10;3 ciudadanos distintos del autor" vertex="1" parent="1" style="ellipse;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#edf4fa;">
+          <mxGeometry x="630" y="360" as="geometry" width="280" height="85" />
+        </mxCell>
+        <mxCell id="map" value="Consultar mapa de riesgo&#10;Reportes validados y atendidos" vertex="1" parent="1" style="ellipse;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#edf4fa;">
+          <mxGeometry x="630" y="540" as="geometry" width="280" height="85" />
+        </mxCell>
+        <mxCell id="verify" value="Verificar incidente&#10;Confirmar o rechazar con fundamento" vertex="1" parent="1" style="ellipse;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#edf4fa;">
+          <mxGeometry x="980" y="360" as="geometry" width="280" height="85" />
+        </mxCell>
+        <mxCell id="audit" value="Registrar responsable&#10;resultado motivo y fecha" vertex="1" parent="1" style="ellipse;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#edf4fa;">
+          <mxGeometry x="980" y="540" as="geometry" width="280" height="85" />
+        </mxCell>
+        <mxCell id="resource" value="Asignar recurso disponible&#10;y generar orden" vertex="1" parent="1" style="ellipse;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#edf4fa;">
+          <mxGeometry x="980" y="700" as="geometry" width="280" height="85" />
+        </mxCell>
+        <mxCell id="notify" value="Comunicar orden a unidad" vertex="1" parent="1" style="ellipse;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#edf4fa;">
+          <mxGeometry x="630" y="830" as="geometry" width="280" height="85" />
+        </mxCell>
+        <mxCell id="close" value="Registrar resultado de atención" vertex="1" parent="1" style="ellipse;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#edf4fa;">
+          <mxGeometry x="230" y="970" as="geometry" width="280" height="85" />
+        </mxCell>
+        <mxCell id="mod" value="Moderar reportes y usuarios" vertex="1" parent="1" style="ellipse;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#edf4fa;">
+          <mxGeometry x="980" y="970" as="geometry" width="280" height="85" />
+        </mxCell>
+        <mxCell id="export" value="Exportar informe PDF o Excel" vertex="1" parent="1" style="ellipse;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#edf4fa;">
+          <mxGeometry x="980" y="1120" as="geometry" width="280" height="85" />
+        </mxCell>
+        <mxCell id="edge0" value="" edge="1" parent="1" source="cit" target="reg" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;fontSize=15;labelBackgroundColor=#ffffff;endArrow=open;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge1" value="" edge="1" parent="1" source="cit" target="report" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;fontSize=15;labelBackgroundColor=#ffffff;endArrow=open;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge2" value="" edge="1" parent="1" source="cit" target="vote" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;fontSize=15;labelBackgroundColor=#ffffff;endArrow=open;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge3" value="include" edge="1" parent="1" source="vote" target="rule" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;fontSize=15;labelBackgroundColor=#ffffff;endArrow=open;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge4" value="" edge="1" parent="1" source="cit" target="map" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;fontSize=15;labelBackgroundColor=#ffffff;endArrow=open;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge5" value="" edge="1" parent="1" source="mun" target="verify" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;fontSize=15;labelBackgroundColor=#ffffff;endArrow=open;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge6" value="include" edge="1" parent="1" source="verify" target="audit" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;fontSize=15;labelBackgroundColor=#ffffff;endArrow=open;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge7" value="" edge="1" parent="1" source="mun" target="map" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;fontSize=15;labelBackgroundColor=#ffffff;endArrow=open;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge8" value="" edge="1" parent="1" source="mun" target="resource" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;fontSize=15;labelBackgroundColor=#ffffff;endArrow=open;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge9" value="include" edge="1" parent="1" source="resource" target="notify" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;fontSize=15;labelBackgroundColor=#ffffff;endArrow=open;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge10" value="recibe" edge="1" parent="1" source="ope" target="notify" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;fontSize=15;labelBackgroundColor=#ffffff;endArrow=open;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge11" value="" edge="1" parent="1" source="ope" target="close" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;fontSize=15;labelBackgroundColor=#ffffff;endArrow=open;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge12" value="" edge="1" parent="1" source="adm" target="mod" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;fontSize=15;labelBackgroundColor=#ffffff;endArrow=open;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge13" value="opcional" edge="1" parent="1" source="mun" target="export" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;fontSize=15;labelBackgroundColor=#ffffff;endArrow=open;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram name="02 Actividad de validación comunitaria" id="v22-1">
+    <mxGraphModel dx="1400" dy="1000" grid="1" gridSize="10" page="1" pageWidth="1400" pageHeight="1000">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" value="02 Actividad de validación comunitaria&#10;Zona Segura · versión 2.2 · 20 de noviembre de 2026" vertex="1" parent="1" style="text;html=0;align=left;fontSize=24;fontStyle=1;strokeColor=none;fillColor=none;">
+          <mxGeometry x="35" y="15" width="1330" height="65" as="geometry" />
+        </mxCell>
+        <mxCell id="start" value="Reporte pendiente de validación" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#edf4fa;">
+          <mxGeometry x="470" y="100" as="geometry" width="270" height="85" />
+        </mxCell>
+        <mxCell id="gps" value="Ciudadano consulta incidentes&#10;Obtiene su ubicación" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#edf4fa;">
+          <mxGeometry x="470" y="225" as="geometry" width="270" height="85" />
+        </mxCell>
+        <mxCell id="check" value="Otro autor · activo · &lt;=500 m&#10;Sin voto previo · reporte pendiente" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#edf4fa;">
+          <mxGeometry x="470" y="350" as="geometry" width="270" height="85" />
+        </mxCell>
+        <mxCell id="vote" value="Registrar voto positivo o negativo&#10;Cuenta identificada por sesión" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#edf4fa;">
+          <mxGeometry x="470" y="475" as="geometry" width="270" height="85" />
+        </mxCell>
+        <mxCell id="three" value="¿Tres ciudadanos distintos&#10;marcaron verídico?" vertex="1" parent="1" style="rhombus;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#edf4fa;">
+          <mxGeometry x="470" y="610" as="geometry" width="270" height="110" />
+        </mxCell>
+        <mxCell id="yes" value="VALIDADO&#10;Origen comunitario" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#edf4fa;">
+          <mxGeometry x="900" y="625" as="geometry" width="270" height="85" />
+        </mxCell>
+        <mxCell id="no" value="PENDIENTE DE VALIDACIÓN&#10;Esperar más votos o Alcaldía" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#edf4fa;">
+          <mxGeometry x="60" y="625" as="geometry" width="270" height="85" />
+        </mxCell>
+        <mxCell id="end" value="Visible en la capa de riesgo&#10;No asigna recursos automáticamente" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#edf4fa;">
+          <mxGeometry x="900" y="800" as="geometry" width="270" height="85" />
+        </mxCell>
+        <mxCell id="note" value="Los negativos quedan registrados.&#10;Sin umbral de rechazo automático.&#10;El autor no puede votar su reporte." vertex="1" parent="1" style="shape=note;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#edf4fa;">
+          <mxGeometry x="60" y="810" as="geometry" width="310" height="120" />
+        </mxCell>
+        <mxCell id="error" value="No registrar voto&#10;Informar el motivo del rechazo" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#edf4fa;">
+          <mxGeometry x="60" y="365" as="geometry" width="300" height="110" />
+        </mxCell>
+        <mxCell id="edge0" value="" edge="1" parent="1" source="start" target="gps" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;fontSize=15;labelBackgroundColor=#ffffff;endArrow=open;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge1" value="" edge="1" parent="1" source="gps" target="check" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;fontSize=15;labelBackgroundColor=#ffffff;endArrow=open;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge2" value="cumple" edge="1" parent="1" source="check" target="vote" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;fontSize=15;labelBackgroundColor=#ffffff;endArrow=open;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge3" value="no cumple" edge="1" parent="1" source="check" target="error" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;fontSize=15;labelBackgroundColor=#ffffff;endArrow=open;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge4" value="" edge="1" parent="1" source="vote" target="three" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;fontSize=15;labelBackgroundColor=#ffffff;endArrow=open;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge5" value="sí" edge="1" parent="1" source="three" target="yes" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;fontSize=15;labelBackgroundColor=#ffffff;endArrow=open;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge6" value="no" edge="1" parent="1" source="three" target="no" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;fontSize=15;labelBackgroundColor=#ffffff;endArrow=open;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge7" value="" edge="1" parent="1" source="yes" target="end" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;fontSize=15;labelBackgroundColor=#ffffff;endArrow=open;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram name="03 Actividad de verificación institucional" id="v22-2">
+    <mxGraphModel dx="1400" dy="1000" grid="1" gridSize="10" page="1" pageWidth="1400" pageHeight="1000">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" value="03 Actividad de verificación institucional&#10;Zona Segura · versión 2.2 · 20 de noviembre de 2026" vertex="1" parent="1" style="text;html=0;align=left;fontSize=24;fontStyle=1;strokeColor=none;fillColor=none;">
+          <mxGeometry x="35" y="15" width="1330" height="65" as="geometry" />
+        </mxCell>
+        <mxCell id="auth" value="Personal autorizado de Alcaldía&#10;Sesión y rol activo" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#edf4fa;">
+          <mxGeometry x="480" y="100" as="geometry" width="270" height="85" />
+        </mxCell>
+        <mxCell id="select" value="Seleccionar reporte pendiente o validado&#10;Sin verificación institucional previa" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#edf4fa;">
+          <mxGeometry x="480" y="230" as="geometry" width="340" height="90" />
+        </mxCell>
+        <mxCell id="inspect" value="Inspeccionar o comprobar el incidente&#10;Revisar ubicación y observaciones" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#edf4fa;">
+          <mxGeometry x="480" y="365" as="geometry" width="340" height="90" />
+        </mxCell>
+        <mxCell id="decision" value="¿Incidente confirmado?" vertex="1" parent="1" style="rhombus;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#edf4fa;">
+          <mxGeometry x="500" y="505" as="geometry" width="300" height="110" />
+        </mxCell>
+        <mxCell id="yes" value="Registrar CONFIRMA&#10;Motivo obligatorio" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#edf4fa;">
+          <mxGeometry x="960" y="520" as="geometry" width="270" height="85" />
+        </mxCell>
+        <mxCell id="no" value="Registrar NO CONFIRMA&#10;Motivo obligatorio" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#edf4fa;">
+          <mxGeometry x="70" y="520" as="geometry" width="270" height="85" />
+        </mxCell>
+        <mxCell id="audit" value="Guardar verificación y estado juntos&#10;Reporte · personal · resultado · motivo · fecha" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#edf4fa;">
+          <mxGeometry x="460" y="720" as="geometry" width="380" height="100" />
+        </mxCell>
+        <mxCell id="end" value="Sí: VALIDADO · origen institucional&#10;No: RECHAZADO&#10;Actualizar mapa en próxima consulta" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#edf4fa;">
+          <mxGeometry x="450" y="865" as="geometry" width="400" height="100" />
+        </mxCell>
+        <mxCell id="note" value="No requiere tres votos ni radio de 500 m.&#10;No puede verificar un reporte propio.&#10;Un rechazo municipal fundamentado puede&#10;revisar una validación comunitaria." vertex="1" parent="1" style="shape=note;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#edf4fa;">
+          <mxGeometry x="40" y="155" as="geometry" width="360" height="145" />
+        </mxCell>
+        <mxCell id="edge0" value="" edge="1" parent="1" source="auth" target="select" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;fontSize=15;labelBackgroundColor=#ffffff;endArrow=open;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge1" value="" edge="1" parent="1" source="select" target="inspect" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;fontSize=15;labelBackgroundColor=#ffffff;endArrow=open;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge2" value="" edge="1" parent="1" source="inspect" target="decision" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;fontSize=15;labelBackgroundColor=#ffffff;endArrow=open;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge3" value="sí" edge="1" parent="1" source="decision" target="yes" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;fontSize=15;labelBackgroundColor=#ffffff;endArrow=open;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge4" value="no" edge="1" parent="1" source="decision" target="no" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;fontSize=15;labelBackgroundColor=#ffffff;endArrow=open;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge5" value="" edge="1" parent="1" source="yes" target="audit" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;fontSize=15;labelBackgroundColor=#ffffff;endArrow=open;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1090" y="680" />
+              <mxPoint x="650" y="680" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge6" value="" edge="1" parent="1" source="no" target="audit" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;fontSize=15;labelBackgroundColor=#ffffff;endArrow=open;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="205" y="680" />
+              <mxPoint x="650" y="680" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge7" value="" edge="1" parent="1" source="audit" target="end" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;fontSize=15;labelBackgroundColor=#ffffff;endArrow=open;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram name="04 Secuencia de voto comunitario" id="v22-3">
+    <mxGraphModel dx="1400" dy="1050" grid="1" gridSize="10" page="1" pageWidth="1400" pageHeight="1050">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" value="04 Secuencia de voto comunitario&#10;Zona Segura · versión 2.2 · 20 de noviembre de 2026" vertex="1" parent="1" style="text;html=0;align=left;fontSize=24;fontStyle=1;strokeColor=none;fillColor=none;">
+          <mxGeometry x="35" y="15" width="1330" height="65" as="geometry" />
+        </mxCell>
+        <mxCell id="p0" value="Usuario autorizado" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#edf4fa;">
+          <mxGeometry x="45" y="100" as="geometry" width="270" height="60" />
+        </mxCell>
+        <mxCell id="life0" value="" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#cbd5df;">
+          <mxGeometry x="178" y="175" as="geometry" width="3" height="720" />
+        </mxCell>
+        <mxCell id="p1" value="Aplicación Android" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#edf4fa;">
+          <mxGeometry x="390" y="100" as="geometry" width="270" height="60" />
+        </mxCell>
+        <mxCell id="life1" value="" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#cbd5df;">
+          <mxGeometry x="523" y="175" as="geometry" width="3" height="720" />
+        </mxCell>
+        <mxCell id="p2" value="API de verificación" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#edf4fa;">
+          <mxGeometry x="735" y="100" as="geometry" width="270" height="60" />
+        </mxCell>
+        <mxCell id="life2" value="" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#cbd5df;">
+          <mxGeometry x="868" y="175" as="geometry" width="3" height="720" />
+        </mxCell>
+        <mxCell id="p3" value="SQL Server" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#edf4fa;">
+          <mxGeometry x="1080" y="100" as="geometry" width="270" height="60" />
+        </mxCell>
+        <mxCell id="life3" value="" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#cbd5df;">
+          <mxGeometry x="1213" y="175" as="geometry" width="3" height="720" />
+        </mxCell>
+        <mxCell id="m0p0" value="" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#ffffff;">
+          <mxGeometry x="178" y="210" as="geometry" width="2" height="2" />
+        </mxCell>
+        <mxCell id="m0p1" value="" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#ffffff;">
+          <mxGeometry x="523" y="210" as="geometry" width="2" height="2" />
+        </mxCell>
+        <mxCell id="m1p1" value="" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#ffffff;">
+          <mxGeometry x="523" y="280" as="geometry" width="2" height="2" />
+        </mxCell>
+        <mxCell id="m1p2" value="" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#ffffff;">
+          <mxGeometry x="868" y="280" as="geometry" width="2" height="2" />
+        </mxCell>
+        <mxCell id="m2p2" value="" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#ffffff;">
+          <mxGeometry x="868" y="350" as="geometry" width="2" height="2" />
+        </mxCell>
+        <mxCell id="m2p3" value="" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#ffffff;">
+          <mxGeometry x="1213" y="350" as="geometry" width="2" height="2" />
+        </mxCell>
+        <mxCell id="m3p2" value="" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#ffffff;">
+          <mxGeometry x="868" y="420" as="geometry" width="2" height="2" />
+        </mxCell>
+        <mxCell id="m3p3" value="" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#ffffff;">
+          <mxGeometry x="1213" y="420" as="geometry" width="2" height="2" />
+        </mxCell>
+        <mxCell id="m4p2" value="" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#ffffff;">
+          <mxGeometry x="868" y="490" as="geometry" width="2" height="2" />
+        </mxCell>
+        <mxCell id="m4p3" value="" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#ffffff;">
+          <mxGeometry x="1213" y="490" as="geometry" width="2" height="2" />
+        </mxCell>
+        <mxCell id="m5p2" value="" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#ffffff;">
+          <mxGeometry x="868" y="560" as="geometry" width="2" height="2" />
+        </mxCell>
+        <mxCell id="m5p3" value="" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#ffffff;">
+          <mxGeometry x="1213" y="560" as="geometry" width="2" height="2" />
+        </mxCell>
+        <mxCell id="m6p2" value="" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#ffffff;">
+          <mxGeometry x="868" y="630" as="geometry" width="2" height="2" />
+        </mxCell>
+        <mxCell id="m6p3" value="" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#ffffff;">
+          <mxGeometry x="1213" y="630" as="geometry" width="2" height="2" />
+        </mxCell>
+        <mxCell id="m7p1" value="" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#ffffff;">
+          <mxGeometry x="523" y="700" as="geometry" width="2" height="2" />
+        </mxCell>
+        <mxCell id="m7p2" value="" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#ffffff;">
+          <mxGeometry x="868" y="700" as="geometry" width="2" height="2" />
+        </mxCell>
+        <mxCell id="m8p0" value="" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#ffffff;">
+          <mxGeometry x="178" y="770" as="geometry" width="2" height="2" />
+        </mxCell>
+        <mxCell id="m8p1" value="" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#ffffff;">
+          <mxGeometry x="523" y="770" as="geometry" width="2" height="2" />
+        </mxCell>
+        <mxCell id="note" value="Alternativas: 401 sin sesión; 403 autor o fuera de radio; 409 voto repetido o estado cerrado. La inserción del voto y el cambio de estado son atómicos." vertex="1" parent="1" style="shape=note;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#edf4fa;">
+          <mxGeometry x="100" y="925" as="geometry" width="1200" height="90" />
+        </mxCell>
+        <mxCell id="edge0" value="1 Seleccionar confirmar o desmentir" edge="1" parent="1" source="m0p0" target="m0p1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;fontSize=15;labelBackgroundColor=#ffffff;endArrow=open;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge1" value="2 POST votos: confirma y coordenadas + Bearer" edge="1" parent="1" source="m1p1" target="m1p2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;fontSize=15;labelBackgroundColor=#ffffff;endArrow=open;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge2" value="3 Comprobar cuenta y bloquear reporte" edge="1" parent="1" source="m2p2" target="m2p3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;fontSize=15;labelBackgroundColor=#ffffff;endArrow=open;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge3" value="4 Validar autor radio estado y voto único" edge="1" parent="1" source="m3p2" target="m3p3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;fontSize=15;labelBackgroundColor=#ffffff;endArrow=open;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge4" value="5 Insertar voto y contar confirmaciones" edge="1" parent="1" source="m4p2" target="m4p3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;fontSize=15;labelBackgroundColor=#ffffff;endArrow=open;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge5" value="6 Si positivos &gt;=3: VALIDADO; si no: pendiente" edge="1" parent="1" source="m5p2" target="m5p3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;fontSize=15;labelBackgroundColor=#ffffff;endArrow=open;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge6" value="7 Confirmar transacción" edge="1" parent="1" source="m6p3" target="m6p2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;fontSize=15;labelBackgroundColor=#ffffff;endArrow=open;dashed=1;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge7" value="8 Estado contador y origen de validación" edge="1" parent="1" source="m7p2" target="m7p1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;fontSize=15;labelBackgroundColor=#ffffff;endArrow=open;dashed=1;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge8" value="9 Mostrar resultado y refrescar lista" edge="1" parent="1" source="m8p1" target="m8p0" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;fontSize=15;labelBackgroundColor=#ffffff;endArrow=open;dashed=1;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram name="05 Secuencia de verificación municipal" id="v22-4">
+    <mxGraphModel dx="1400" dy="1050" grid="1" gridSize="10" page="1" pageWidth="1400" pageHeight="1050">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" value="05 Secuencia de verificación municipal&#10;Zona Segura · versión 2.2 · 20 de noviembre de 2026" vertex="1" parent="1" style="text;html=0;align=left;fontSize=24;fontStyle=1;strokeColor=none;fillColor=none;">
+          <mxGeometry x="35" y="15" width="1330" height="65" as="geometry" />
+        </mxCell>
+        <mxCell id="p0" value="Usuario autorizado" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#edf4fa;">
+          <mxGeometry x="45" y="100" as="geometry" width="270" height="60" />
+        </mxCell>
+        <mxCell id="life0" value="" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#cbd5df;">
+          <mxGeometry x="178" y="175" as="geometry" width="3" height="720" />
+        </mxCell>
+        <mxCell id="p1" value="Aplicación Android" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#edf4fa;">
+          <mxGeometry x="390" y="100" as="geometry" width="270" height="60" />
+        </mxCell>
+        <mxCell id="life1" value="" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#cbd5df;">
+          <mxGeometry x="523" y="175" as="geometry" width="3" height="720" />
+        </mxCell>
+        <mxCell id="p2" value="API de verificación" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#edf4fa;">
+          <mxGeometry x="735" y="100" as="geometry" width="270" height="60" />
+        </mxCell>
+        <mxCell id="life2" value="" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#cbd5df;">
+          <mxGeometry x="868" y="175" as="geometry" width="3" height="720" />
+        </mxCell>
+        <mxCell id="p3" value="SQL Server" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#edf4fa;">
+          <mxGeometry x="1080" y="100" as="geometry" width="270" height="60" />
+        </mxCell>
+        <mxCell id="life3" value="" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#cbd5df;">
+          <mxGeometry x="1213" y="175" as="geometry" width="3" height="720" />
+        </mxCell>
+        <mxCell id="m0p0" value="" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#ffffff;">
+          <mxGeometry x="178" y="210" as="geometry" width="2" height="2" />
+        </mxCell>
+        <mxCell id="m0p1" value="" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#ffffff;">
+          <mxGeometry x="523" y="210" as="geometry" width="2" height="2" />
+        </mxCell>
+        <mxCell id="m1p1" value="" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#ffffff;">
+          <mxGeometry x="523" y="280" as="geometry" width="2" height="2" />
+        </mxCell>
+        <mxCell id="m1p2" value="" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#ffffff;">
+          <mxGeometry x="868" y="280" as="geometry" width="2" height="2" />
+        </mxCell>
+        <mxCell id="m2p2" value="" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#ffffff;">
+          <mxGeometry x="868" y="350" as="geometry" width="2" height="2" />
+        </mxCell>
+        <mxCell id="m2p3" value="" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#ffffff;">
+          <mxGeometry x="1213" y="350" as="geometry" width="2" height="2" />
+        </mxCell>
+        <mxCell id="m3p2" value="" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#ffffff;">
+          <mxGeometry x="868" y="420" as="geometry" width="2" height="2" />
+        </mxCell>
+        <mxCell id="m3p3" value="" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#ffffff;">
+          <mxGeometry x="1213" y="420" as="geometry" width="2" height="2" />
+        </mxCell>
+        <mxCell id="m4p1" value="" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#ffffff;">
+          <mxGeometry x="523" y="490" as="geometry" width="2" height="2" />
+        </mxCell>
+        <mxCell id="m4p2" value="" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#ffffff;">
+          <mxGeometry x="868" y="490" as="geometry" width="2" height="2" />
+        </mxCell>
+        <mxCell id="m5p0" value="" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#ffffff;">
+          <mxGeometry x="178" y="560" as="geometry" width="2" height="2" />
+        </mxCell>
+        <mxCell id="m5p1" value="" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#ffffff;">
+          <mxGeometry x="523" y="560" as="geometry" width="2" height="2" />
+        </mxCell>
+        <mxCell id="m6p1" value="" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#ffffff;">
+          <mxGeometry x="523" y="630" as="geometry" width="2" height="2" />
+        </mxCell>
+        <mxCell id="m6p2" value="" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#ffffff;">
+          <mxGeometry x="868" y="630" as="geometry" width="2" height="2" />
+        </mxCell>
+        <mxCell id="m7p2" value="" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#ffffff;">
+          <mxGeometry x="868" y="700" as="geometry" width="2" height="2" />
+        </mxCell>
+        <mxCell id="m7p3" value="" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#ffffff;">
+          <mxGeometry x="1213" y="700" as="geometry" width="2" height="2" />
+        </mxCell>
+        <mxCell id="m8p2" value="" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#ffffff;">
+          <mxGeometry x="868" y="770" as="geometry" width="2" height="2" />
+        </mxCell>
+        <mxCell id="m8p3" value="" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#ffffff;">
+          <mxGeometry x="1213" y="770" as="geometry" width="2" height="2" />
+        </mxCell>
+        <mxCell id="m9p1" value="" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#ffffff;">
+          <mxGeometry x="523" y="840" as="geometry" width="2" height="2" />
+        </mxCell>
+        <mxCell id="m9p2" value="" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#ffffff;">
+          <mxGeometry x="868" y="840" as="geometry" width="2" height="2" />
+        </mxCell>
+        <mxCell id="note" value="Alcaldía verifica con una comprobación propia; no registra votos ciudadanos adicionales. Sin permiso: 403; motivo inválido: 400; revisión previa o estado cerrado: 409." vertex="1" parent="1" style="shape=note;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#edf4fa;">
+          <mxGeometry x="100" y="925" as="geometry" width="1200" height="90" />
+        </mxCell>
+        <mxCell id="edge0" value="1 Abrir Verificar reportes" edge="1" parent="1" source="m0p0" target="m0p1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;fontSize=15;labelBackgroundColor=#ffffff;endArrow=open;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge1" value="2 GET bandeja de verificación + Bearer" edge="1" parent="1" source="m1p1" target="m1p2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;fontSize=15;labelBackgroundColor=#ffffff;endArrow=open;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge2" value="3 Consultar pendientes y validados sin revisión previa" edge="1" parent="1" source="m2p2" target="m2p3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;fontSize=15;labelBackgroundColor=#ffffff;endArrow=open;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge3" value="4 Devolver incidentes y ubicación a la API" edge="1" parent="1" source="m3p3" target="m3p2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;fontSize=15;labelBackgroundColor=#ffffff;endArrow=open;dashed=1;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge4" value="5 Mostrar datos sin identidad del reportante" edge="1" parent="1" source="m4p2" target="m4p1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;fontSize=15;labelBackgroundColor=#ffffff;endArrow=open;dashed=1;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge5" value="6 Registrar resultado y comprobación realizada" edge="1" parent="1" source="m5p0" target="m5p1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;fontSize=15;labelBackgroundColor=#ffffff;endArrow=open;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge6" value="7 POST verificacion: confirma y motivo + Bearer" edge="1" parent="1" source="m6p1" target="m6p2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;fontSize=15;labelBackgroundColor=#ffffff;endArrow=open;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge7" value="8 Validar rol actual autor y estado; bloquear reporte" edge="1" parent="1" source="m7p2" target="m7p3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;fontSize=15;labelBackgroundColor=#ffffff;endArrow=open;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge8" value="9 Guardar auditoría y estado en una transacción" edge="1" parent="1" source="m8p2" target="m8p3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;fontSize=15;labelBackgroundColor=#ffffff;endArrow=open;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge9" value="10 Confirmar decisión y origen institucional" edge="1" parent="1" source="m9p2" target="m9p1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;fontSize=15;labelBackgroundColor=#ffffff;endArrow=open;dashed=1;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram name="06 Estados del reporte" id="v22-5">
+    <mxGraphModel dx="1450" dy="1100" grid="1" gridSize="10" page="1" pageWidth="1450" pageHeight="1100">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" value="06 Estados del reporte&#10;Zona Segura · versión 2.2 · 20 de noviembre de 2026" vertex="1" parent="1" style="text;html=0;align=left;fontSize=24;fontStyle=1;strokeColor=none;fillColor=none;">
+          <mxGeometry x="35" y="15" width="1380" height="65" as="geometry" />
+        </mxCell>
+        <mxCell id="pending" value="PENDIENTE DE VALIDACIÓN" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#edf4fa;">
+          <mxGeometry x="100" y="200" as="geometry" width="340" height="100" />
+        </mxCell>
+        <mxCell id="valid" value="VALIDADO&#10;Origen comunitario o institucional" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#edf4fa;">
+          <mxGeometry x="940" y="200" as="geometry" width="360" height="100" />
+        </mxCell>
+        <mxCell id="reject" value="RECHAZADO&#10;Decisión institucional fundamentada&#10;o moderación autorizada" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#edf4fa;">
+          <mxGeometry x="520" y="570" as="geometry" width="380" height="120" />
+        </mxCell>
+        <mxCell id="attention" value="EN ATENCIÓN&#10;Orden y recurso confirmados" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#edf4fa;">
+          <mxGeometry x="940" y="600" as="geometry" width="360" height="100" />
+        </mxCell>
+        <mxCell id="done" value="ATENDIDO&#10;Resultado operativo registrado" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#edf4fa;">
+          <mxGeometry x="940" y="900" as="geometry" width="360" height="100" />
+        </mxCell>
+        <mxCell id="wait" value="Con 0, 1 o 2 confirmaciones sigue pendiente.&#10;Los votos negativos no cierran el reporte.&#10;Tres confirmaciones son suficientes aun&#10;cuando haya votos negativos registrados." vertex="1" parent="1" style="shape=note;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#edf4fa;">
+          <mxGeometry x="70" y="820" as="geometry" width="550" height="150" />
+        </mxCell>
+        <mxCell id="edge0" value="3 ciudadanos confirman O Alcaldía confirma" edge="1" parent="1" source="pending" target="valid" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;fontSize=15;labelBackgroundColor=#ffffff;endArrow=open;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="610" y="250" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge1" value="Alcaldía comprueba y rechaza" edge="1" parent="1" source="pending" target="reject" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;fontSize=15;labelBackgroundColor=#ffffff;endArrow=open;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="270" y="630" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge2" value="Revisión municipal negativa&#10;con motivo y auditoría" edge="1" parent="1" source="valid" target="reject" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;fontSize=15;labelBackgroundColor=#ffffff;endArrow=open;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1120" y="480" />
+              <mxPoint x="710" y="480" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge3" value="Recurso disponible y orden guardada" edge="1" parent="1" source="valid" target="attention" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;fontSize=15;labelBackgroundColor=#ffffff;endArrow=open;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge4" value="Unidad registra atención" edge="1" parent="1" source="attention" target="done" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;fontSize=15;labelBackgroundColor=#ffffff;endArrow=open;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge5" value="Voto aceptado y positivos &lt;3" edge="1" parent="1" source="pending" target="pending" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;fontSize=15;labelBackgroundColor=#ffffff;endArrow=open;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="100" y="140" />
+              <mxPoint x="420" y="140" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram name="07 Modelo de clases de verificación" id="v22-6">
+    <mxGraphModel dx="1550" dy="1140" grid="1" gridSize="10" page="1" pageWidth="1550" pageHeight="1140">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" value="07 Modelo de clases de verificación&#10;Zona Segura · versión 2.2 · 20 de noviembre de 2026" vertex="1" parent="1" style="text;html=0;align=left;fontSize=24;fontStyle=1;strokeColor=none;fillColor=none;">
+          <mxGeometry x="35" y="15" width="1480" height="65" as="geometry" />
+        </mxCell>
+        <mxCell id="usuario" value="Usuario&#10;id · activo · roles" vertex="1" parent="1" style="rounded=0;align=left;spacing=12;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#edf4fa;">
+          <mxGeometry x="60" y="120" as="geometry" width="320" height="100" />
+        </mxCell>
+        <mxCell id="ciudadano" value="Ciudadano&#10;idUsuario · reputación" vertex="1" parent="1" style="rounded=0;align=left;spacing=12;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#edf4fa;">
+          <mxGeometry x="60" y="360" as="geometry" width="320" height="100" />
+        </mxCell>
+        <mxCell id="personal" value="PersonalAlcaldia&#10;idUsuario · cargo · rolAcceso" vertex="1" parent="1" style="rounded=0;align=left;spacing=12;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#edf4fa;">
+          <mxGeometry x="1130" y="120" as="geometry" width="350" height="115" />
+        </mxCell>
+        <mxCell id="reporte" value="Reporte&#10;id · autor · estado · fecha&#10;ubicación · tipo · índiceVeracidad" vertex="1" parent="1" style="rounded=0;align=left;spacing=12;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#edf4fa;">
+          <mxGeometry x="600" y="350" as="geometry" width="390" height="150" />
+        </mxCell>
+        <mxCell id="voto" value="ValidacionComunitaria&#10;id · reporte · ciudadano&#10;confirma · fecha&#10;UNIQUE reporte y ciudadano" vertex="1" parent="1" style="rounded=0;align=left;spacing=12;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#edf4fa;">
+          <mxGeometry x="60" y="670" as="geometry" width="390" height="170" />
+        </mxCell>
+        <mxCell id="institucional" value="VerificacionInstitucional&#10;id · reporte · personal&#10;confirma · motivo · fecha&#10;UNIQUE reporte" vertex="1" parent="1" style="rounded=0;align=left;spacing=12;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#edf4fa;">
+          <mxGeometry x="1080" y="670" as="geometry" width="410" height="170" />
+        </mxCell>
+        <mxCell id="gps" value="UbicacionGPS&#10;id · latitud · longitud" vertex="1" parent="1" style="rounded=0;align=left;spacing=12;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#edf4fa;">
+          <mxGeometry x="600" y="100" as="geometry" width="390" height="100" />
+        </mxCell>
+        <mxCell id="tipo" value="TipoIncidente&#10;id · nombre · activo" vertex="1" parent="1" style="rounded=0;align=left;spacing=12;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#edf4fa;">
+          <mxGeometry x="600" y="850" as="geometry" width="390" height="100" />
+        </mxCell>
+        <mxCell id="note" value="La vía institucional conserva responsable y comprobación, sin alterar el historial de votos.&#10;Origen comunitario: tres positivos; origen institucional: existe una decisión municipal registrada.&#10;C# representa al personal mediante Usuario con rol municipal; Spring conserva la especialización PersonalAlcaldia." vertex="1" parent="1" style="shape=note;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#edf4fa;">
+          <mxGeometry x="150" y="1005" as="geometry" width="1250" height="100" />
+        </mxCell>
+        <mxCell id="edge0" value="1 a 0..1" edge="1" parent="1" source="usuario" target="ciudadano" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;fontSize=15;labelBackgroundColor=#ffffff;endArrow=open;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge1" value="1 autor a 0..N" edge="1" parent="1" source="ciudadano" target="reporte" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;fontSize=15;labelBackgroundColor=#ffffff;endArrow=open;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge2" value="1 a 0..N" edge="1" parent="1" source="ciudadano" target="voto" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;fontSize=15;labelBackgroundColor=#ffffff;endArrow=open;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge3" value="1 a 0..N" edge="1" parent="1" source="personal" target="institucional" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;fontSize=15;labelBackgroundColor=#ffffff;endArrow=open;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge4" value="0..1 a 1" edge="1" parent="1" source="institucional" target="reporte" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;fontSize=15;labelBackgroundColor=#ffffff;endArrow=open;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge5" value="1 a 1" edge="1" parent="1" source="gps" target="reporte" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;fontSize=15;labelBackgroundColor=#ffffff;endArrow=open;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge6" value="1 a 0..N" edge="1" parent="1" source="tipo" target="reporte" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;fontSize=15;labelBackgroundColor=#ffffff;endArrow=open;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge7" value="1 a 0..1" edge="1" parent="1" source="usuario" target="personal" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;fontSize=15;labelBackgroundColor=#ffffff;endArrow=open;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="220" y="85" />
+              <mxPoint x="1305" y="85" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge8" value="0..N a 1" edge="1" parent="1" source="voto" target="reporte" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;fontSize=15;labelBackgroundColor=#ffffff;endArrow=open;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="500" y="755" />
+              <mxPoint x="500" y="470" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram name="08 Proceso TO BE de confirmación y atención" id="v22-7">
+    <mxGraphModel dx="1500" dy="1300" grid="1" gridSize="10" page="1" pageWidth="1500" pageHeight="1300">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" value="08 Proceso TO BE de confirmación y atención&#10;Zona Segura · versión 2.2 · 20 de noviembre de 2026" vertex="1" parent="1" style="text;html=0;align=left;fontSize=24;fontStyle=1;strokeColor=none;fillColor=none;">
+          <mxGeometry x="35" y="15" width="1430" height="65" as="geometry" />
+        </mxCell>
+        <mxCell id="create" value="Ciudadano registra incidente&#10;GPS y descripción" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#edf4fa;">
+          <mxGeometry x="80" y="120" as="geometry" width="270" height="85" />
+        </mxCell>
+        <mxCell id="pending" value="Sistema guarda&#10;PENDIENTE DE VALIDACIÓN" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#edf4fa;">
+          <mxGeometry x="80" y="260" as="geometry" width="270" height="85" />
+        </mxCell>
+        <mxCell id="citizens" value="Ciudadanos cercanos&#10;registran un voto por cuenta" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#edf4fa;">
+          <mxGeometry x="80" y="440" as="geometry" width="310" height="100" />
+        </mxCell>
+        <mxCell id="official" value="Alcaldía inspecciona o comprueba&#10;y registra una decisión" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#edf4fa;">
+          <mxGeometry x="1050" y="440" as="geometry" width="350" height="100" />
+        </mxCell>
+        <mxCell id="three" value="¿Tres ciudadanos&#10;confirman?" vertex="1" parent="1" style="rhombus;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#edf4fa;">
+          <mxGeometry x="90" y="620" as="geometry" width="290" height="110" />
+        </mxCell>
+        <mxCell id="confirm" value="¿Alcaldía&#10;confirma?" vertex="1" parent="1" style="rhombus;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#edf4fa;">
+          <mxGeometry x="1080" y="620" as="geometry" width="290" height="110" />
+        </mxCell>
+        <mxCell id="wait" value="Permanece pendiente&#10;Esperar votos o revisión" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#edf4fa;">
+          <mxGeometry x="80" y="830" as="geometry" width="310" height="100" />
+        </mxCell>
+        <mxCell id="valid" value="VALIDADO&#10;Actualizar mapa de riesgo" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#edf4fa;">
+          <mxGeometry x="590" y="820" as="geometry" width="310" height="100" />
+        </mxCell>
+        <mxCell id="reject" value="RECHAZADO&#10;Conservar auditoría" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#edf4fa;">
+          <mxGeometry x="1100" y="830" as="geometry" width="310" height="100" />
+        </mxCell>
+        <mxCell id="resource" value="Alcaldía asigna recurso disponible&#10;y registra orden" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#edf4fa;">
+          <mxGeometry x="590" y="980" as="geometry" width="310" height="100" />
+        </mxCell>
+        <mxCell id="end" value="Unidad atiende y registra resultado&#10;Reporte ATENDIDO" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;fontSize=17;strokeColor=#456078;fillColor=#edf4fa;">
+          <mxGeometry x="590" y="1150" as="geometry" width="310" height="100" />
+        </mxCell>
+        <mxCell id="edge0" value="" edge="1" parent="1" source="create" target="pending" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;fontSize=15;labelBackgroundColor=#ffffff;endArrow=open;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge1" value="vía comunitaria" edge="1" parent="1" source="pending" target="citizens" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;fontSize=15;labelBackgroundColor=#ffffff;endArrow=open;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge2" value="vía institucional alternativa" edge="1" parent="1" source="pending" target="official" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;fontSize=15;labelBackgroundColor=#ffffff;endArrow=open;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge3" value="" edge="1" parent="1" source="citizens" target="three" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;fontSize=15;labelBackgroundColor=#ffffff;endArrow=open;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge4" value="" edge="1" parent="1" source="official" target="confirm" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;fontSize=15;labelBackgroundColor=#ffffff;endArrow=open;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge5" value="no" edge="1" parent="1" source="three" target="wait" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;fontSize=15;labelBackgroundColor=#ffffff;endArrow=open;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge6" value="sí" edge="1" parent="1" source="three" target="valid" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;fontSize=15;labelBackgroundColor=#ffffff;endArrow=open;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge7" value="sí" edge="1" parent="1" source="confirm" target="valid" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;fontSize=15;labelBackgroundColor=#ffffff;endArrow=open;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge8" value="no" edge="1" parent="1" source="confirm" target="reject" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;fontSize=15;labelBackgroundColor=#ffffff;endArrow=open;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge9" value="requiere intervención" edge="1" parent="1" source="valid" target="resource" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;fontSize=15;labelBackgroundColor=#ffffff;endArrow=open;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge10" value="orden y recurso confirmados" edge="1" parent="1" source="resource" target="end" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;fontSize=15;labelBackgroundColor=#ffffff;endArrow=open;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

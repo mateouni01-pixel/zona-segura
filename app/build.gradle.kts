@@ -18,8 +18,16 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    buildFeatures {
+        resValues = true
+    }
+
     buildTypes {
+        debug {
+            resValue("string", "backend_base_url", providers.gradleProperty("zonaApiUrl").getOrElse("http://127.0.0.1:8080"))
+        }
         release {
+            resValue("string", "backend_base_url", providers.gradleProperty("zonaApiUrl").getOrElse(""))
             optimization {
                 enable = false
             }
@@ -36,6 +44,7 @@ dependencies {
     implementation(libs.appcompat)
     implementation(libs.constraintlayout)
     implementation(libs.material)
+    implementation("androidx.work:work-runtime:2.10.1")
     testImplementation(libs.junit)
     androidTestImplementation(libs.espresso.core)
     androidTestImplementation(libs.ext.junit)

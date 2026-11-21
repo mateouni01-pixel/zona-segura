@@ -25,8 +25,9 @@ public class ReportesController {
 
     @PostMapping
     public ResponseEntity<ReportesService.Reporte> create(@AuthenticationPrincipal Jwt jwt,
+                                                         @RequestHeader(value="Idempotency-Key",required=false) String key,
                                                          @RequestBody ReportesService.Entrada input) {
-        var report = reports.create(jwt.getSubject(), input);
+        var report = reports.create(jwt.getSubject(), input,key);
         var location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(report.id()).toUri();
         return ResponseEntity.created(location).body(report);
     }

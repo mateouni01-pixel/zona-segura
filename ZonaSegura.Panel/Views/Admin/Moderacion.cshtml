@@ -1,0 +1,12 @@
+@model ModeracionModel
+@{ViewData["Title"]="Moderación de reportes";}
+<div class="page-heading"><div><div class="eyebrow">Revisión administrativa</div><h1>Moderación de reportes</h1><p class="muted">Revisa los indicios de abuso antes de registrar una decisión. Los votos negativos por sí solos no rechazan un incidente.</p></div><a asp-action="Auditoria" class="btn btn-outline-primary">Consultar auditoría</a></div>
+@if(Model.Error!=null){<div class="alert alert-danger" role="alert">@Model.Error</div>}
+else if(Model.Reportes.Count==0){<div class="surface empty-state">No hay reportes para revisar en la bandeja.</div>}
+else{<div class="review-grid">@foreach(var r in Model.Reportes){<article class="surface"><div class="section-heading"><h2>Reporte #@r.Id</h2><span class="state">@r.Estado.Replace('_',' ')</span></div><strong>@r.TipoIncidenteNombre</strong><p>@r.Descripcion</p><p class="muted">Índice: @r.IndiceVeracidad.ToString("P0") · Votos negativos: @r.VotosNegativos</p><p class="muted">Cuenta reportante: #@r.AutorId</p>
+@if(r.VerificadoInstitucionalmente){<p class="muted">Tiene una comprobación institucional registrada.</p>}
+@if((r.Estado=="PENDIENTE_VALIDACION"||r.Estado=="VALIDADO")&&!r.VerificadoInstitucionalmente){<form asp-action="Rechazar" method="post"><input type="hidden" name="Id" value="@r.Id"/><label class="form-label" for="rechazo-@r.Id">Comprobación y motivo del rechazo</label><textarea id="rechazo-@r.Id" name="Motivo" class="form-control" rows="3" minlength="10" maxlength="2000" required></textarea><button class="btn btn-outline-danger mt-3">Rechazar con este motivo</button></form>}
+@if(r.Estado=="RECHAZADO"&&!r.Sancionado&&!r.SancionPrevia){<form asp-action="Sancionar" method="post"><input type="hidden" name="Id" value="@r.Id"/><label class="form-label" for="sancion-@r.Id">Motivo de la sanción a la cuenta</label><textarea id="sancion-@r.Id" name="Motivo" class="form-control" rows="3" minlength="10" maxlength="2000" required></textarea><p class="muted mt-2">Esta acción suspende el acceso de la cuenta reportante y conserva una auditoría.</p><button class="btn btn-outline-danger">Registrar sanción y suspender acceso</button></form>}
+@if(r.Sancionado){<p class="state">Cuenta con sanción vigente</p>}
+else if(r.SancionPrevia){<p class="muted">Este reporte ya fue objeto de una sanción. La decisión se conserva en la auditoría.</p>}
+<a asp-action="EditarUsuario" asp-route-id="@r.AutorId" class="d-block mt-3">Consultar cuenta y permisos</a></article>}</div>}

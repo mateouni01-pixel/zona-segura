@@ -60,11 +60,17 @@ public final class ReportsActivity extends AppCompatActivity {
     private int draftType;
     private MaterialButton refresh;
     private android.location.LocationListener legacyLocationListener;
-    private final android.os.CancellationSignal gpsRequest = new android.os.CancellationSignal();
+    private android.os.CancellationSignal gpsRequest;
+    private final android.os.Handler gpsHandler=new android.os.Handler(android.os.Looper.getMainLooper());
+    private boolean foreground,gpsAttempted,gpsInProgress,gpsResumePending;
+    private int gpsGeneration;
+    private TextView gpsStatus;
+    private static final long MAX_FIX_AGE_MS=120000;
+    private static final float MAX_ACCURACY_METERS=100;
 
     private final androidx.activity.result.ActivityResultLauncher<String[]> gpsPermission =
             registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(),
-                    permissions -> readGps());
+                    permissions -> {if(foreground)readGps();else gpsResumePending=true;});
 
     @Override protected void onCreate(Bundle state) {
         super.onCreate(state);
@@ -102,6 +108,12 @@ public final class ReportsActivity extends AppCompatActivity {
         navigation(actions, "Volver", this::finish);
         refresh = navigation(actions, "Actualizar", this::load);
         load();
+        androidx.work.WorkManager.getInstance(this).getWorkInfosByTagLiveData("report-sync").observe(this,infos->{
+            if(!creating && citizenId>0)new Thread(()->{
+                try{JSONArray cached=new JSONArray(PendingReports.get(this).cached(getString(R.string.backend_base_url),citizenId,"history"));deliver(()->{if(!creating)show(new JSONArray(),cached);});}
+                catch(Exception ignored){}
+            }).start();
+        });
     }
 
     private void load() {
@@ -111,11 +123,18 @@ public final class ReportsActivity extends AppCompatActivity {
             return;
         }
         refresh.setEnabled(false);
-        status.setText("Consultando el servidor…");
+        status.setText("Cargando reportes y pendientes locales…");
         clearResults();
         new Thread(() -> {
             try {
-                AuthApi.Profile profile = AuthApi.profile(getString(R.string.api_base_url), token);
+                PendingReports db=PendingReports.get(this);
+                String backend=getString(R.string.backend_base_url);
+                AuthApi.Profile profile;
+                boolean offline=false;
+                try{profile=AuthApi.profile(getString(R.string.api_base_url),token);}
+                catch(IOException e){profile=SessionStore.offlineProfile(this);offline=true;}
+                if(profile.status>=500){profile=SessionStore.offlineProfile(this);offline=true;}
+                if(profile.status==401 || profile.status==403){SessionStore.clear(this);showError("Inicia sesión nuevamente para acceder a tus reportes.");return;}
                 if (profile.status != 200 || !"CIUDADANO".equalsIgnoreCase(profile.role)) {
                     showError("No se pudo verificar la sesión ciudadana.");
                     return;
@@ -124,12 +143,21 @@ public final class ReportsActivity extends AppCompatActivity {
                     showError("El servidor de sesión debe devolver el identificador ciudadano.");
                     return;
                 }
-                JSONArray types = creating ? new JSONArray(request("/api/tipos-incidente", null)) : new JSONArray();
-                JSONArray reports = creating ? new JSONArray() : new JSONArray(request("/api/reportes", null));
+                if(!offline)SessionStore.remember(this,profile);
+                int owner=profile.citizenId;
+                JSONArray types=new JSONArray(),reports=new JSONArray();
+                try{
+                    if(offline)throw new IOException();
+                    if(creating){types=new JSONArray(request("/api/tipos-incidente",null));db.cache(backend,0,"types",types.toString());}
+                    else {reports=new JSONArray(request("/api/reportes",null));db.cache(backend,owner,"history",reports.toString());}
+                }catch(IOException e){offline=true;types=new JSONArray(db.cached(backend,0,"types"));reports=new JSONArray(db.cached(backend,owner,"history"));}
+                JSONArray shownTypes=types,shownReports=reports;boolean local=offline;
+                ReportSyncWorker.resume(this,false);
                 deliver(() -> {
                     refresh.setEnabled(true);
-                    citizenId = profile.citizenId;
-                    show(types, reports);
+                    citizenId = owner;
+                    show(shownTypes, shownReports);
+                    status.setText(local?"Modo local. Los reportes pendientes se enviarán al recuperar la conexión y una sesión válida.":"Datos actualizados. Los pendientes se sincronizan automáticamente.");
                 });
             } catch (Exception error) {
                 showError("No se pudieron consultar los reportes. Revisa la conexión con la API.");
@@ -202,19 +230,21 @@ public final class ReportsActivity extends AppCompatActivity {
             description.setBackgroundResource(R.drawable.civic_card);
             description.setPadding(dp(14), dp(12), dp(14), dp(12));
             content.addView(description);
-            button("Capturar ubicación", () -> {
-                if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    gpsPermission.launch(new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
-                            Manifest.permission.ACCESS_COARSE_LOCATION});
-                } else readGps();
-            });
-            MaterialButton send = button("Enviar reporte", null);
+            gpsStatus=label(location==null?"La ubicación se captura automáticamente al abrir el formulario.":"Ubicación capturada. Puedes actualizarla antes de guardar.");
+            button("Actualizar ubicación", this::requestGps);
+            MaterialButton send = button("Guardar y sincronizar reporte", null);
             send.setOnClickListener(view -> submit(send, ids.get(typesInput.getSelectedItemPosition()),
                     description.getText().toString().trim()));
+            if(foreground&&location==null&&!gpsAttempted)requestGps();
         } else if (creating) {
-            label("El servidor no tiene tipos de incidente activos.");
+            label("No hay tipos de incidente guardados. Conéctate una vez y pulsa Actualizar para descargar el catálogo.");
         }
         if (creating) return;
+        button("Sincronizar pendientes",()->{ReportSyncWorker.resume(this,true);load();});
+        for(PendingReports.Item item:PendingReports.get(this).list(getString(R.string.backend_base_url),citizenId)){
+            try{JSONObject body=new JSONObject(item.payload);label("Guardado en este dispositivo · "+item.state.replace('_',' ')+"\n"+body.optString("descripcion")+"\n"+item.message);}
+            catch(Exception ignored){}
+        }
         button(getString(R.string.report_create), () -> {
             creating = true;
             getIntent().putExtra(EXTRA_CREATE_REPORT, true);
@@ -270,58 +300,90 @@ public final class ReportsActivity extends AppCompatActivity {
         });
         card.addView(photo);
     }
+    private void requestGps(){
+        if(!foreground){gpsResumePending=true;return;}
+        gpsAttempted=true;
+        if(checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)!=PackageManager.PERMISSION_GRANTED)
+            gpsPermission.launch(new String[]{Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION});
+        else readGps();
+    }
+
+    private void gpsMessage(String text){if(gpsStatus!=null)gpsStatus.setText(text);}
+
+    private static boolean usableLocation(Location fix){
+        if(fix==null||!Double.isFinite(fix.getLatitude())||!Double.isFinite(fix.getLongitude())||!fix.hasAccuracy()||fix.getAccuracy()<=0||fix.getAccuracy()>MAX_ACCURACY_METERS)return false;
+        long age=(android.os.SystemClock.elapsedRealtimeNanos()-fix.getElapsedRealtimeNanos())/1000000;
+        return age>=0&&age<=MAX_FIX_AGE_MS;
+    }
+
     @SuppressLint("MissingPermission")
     private void readGps() {
         if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            status.setText("Concede permiso de ubicación precisa para registrar el incidente.");
+            gpsMessage("Concede permiso de ubicación precisa y pulsa Actualizar ubicación.");
             return;
         }
         LocationManager manager = getSystemService(LocationManager.class);
         if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            status.setText("Activa el GPS para capturar la ubicación.");
+            gpsMessage("Activa el GPS y pulsa Actualizar ubicación.");
             return;
         }
-        stopLegacyLocation();
+        cancelGps();
         location = null;
-        status.setText("Buscando ubicación…");
+        gpsMessage("Buscando ubicación precisa… Puedes completar los datos mientras tanto.");
+        gpsInProgress=true;
+        int requestId=++gpsGeneration;
+        try{
+            Location cached=manager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            if(usableLocation(cached)&&(android.os.SystemClock.elapsedRealtimeNanos()-cached.getElapsedRealtimeNanos())/1000000<=30000){locationReady(cached);return;}
+        gpsHandler.postDelayed(()->{if(gpsInProgress&&gpsGeneration==requestId){cancelGps();gpsMessage("No se obtuvo una posición precisa. Acércate a un lugar abierto y pulsa Actualizar ubicación.");}},20000);
         if (android.os.Build.VERSION.SDK_INT >= 30) {
-            manager.getCurrentLocation(LocationManager.GPS_PROVIDER, gpsRequest, getMainExecutor(), this::locationReady);
+            gpsRequest=new android.os.CancellationSignal();
+            manager.getCurrentLocation(LocationManager.GPS_PROVIDER,gpsRequest,getMainExecutor(),result->{if(gpsGeneration==requestId)locationReady(result);});
         } else {
             legacyLocationListener = new android.location.LocationListener() {
-                @Override public void onLocationChanged(Location result) { locationReady(result); }
+                @Override public void onLocationChanged(Location result) { if(gpsGeneration==requestId)locationReady(result); }
                 @Override public void onStatusChanged(String provider, int state, Bundle extras) {}
                 @Override public void onProviderEnabled(String provider) {}
-                @Override public void onProviderDisabled(String provider) { locationReady(null); }
+                @Override public void onProviderDisabled(String provider) { if(gpsGeneration==requestId)locationReady(null); }
             };
             manager.requestSingleUpdate(LocationManager.GPS_PROVIDER, legacyLocationListener, getMainLooper());
         }
+        }catch(SecurityException|IllegalArgumentException exception){cancelGps();gpsMessage("El permiso o proveedor de ubicación cambió. Revisa el GPS y pulsa Actualizar ubicación.");}
     }
 
     private void locationReady(Location result) {
-        if (isDestroyed()) return;
-        stopLegacyLocation();
-        location = result;
-        status.setText(result == null ? "No se pudo obtener la ubicación." : "Ubicación capturada.");
+        if (isDestroyed()||!foreground){cancelGps();gpsAttempted=false;return;}
+        cancelGps();
+        location=null;
+        if(!usableLocation(result)){gpsMessage("La posición no es reciente o su precisión supera 100 m. Pulsa Actualizar ubicación.");return;}
+        try{
+            int district=TerritorioCobertura.distrito(this,result.getLatitude(),result.getLongitude());
+            if(district==0){gpsMessage("La ubicación está fuera de los distritos urbanos 1 al 12 de Santa Cruz de la Sierra.");return;}
+            location=result;
+            gpsMessage("Ubicación lista · Distrito "+district+" · Precisión aproximada ±"+Math.round(result.getAccuracy())+" m.");
+        }catch(IOException exception){gpsMessage("No se pudo comprobar la cobertura territorial. Vuelve a abrir el formulario.");}
     }
 
     private void stopLegacyLocation() {
         if (legacyLocationListener != null) {
-            getSystemService(LocationManager.class).removeUpdates(legacyLocationListener);
+            try{getSystemService(LocationManager.class).removeUpdates(legacyLocationListener);}catch(SecurityException ignored){}
             legacyLocationListener = null;
         }
     }
 
-    @Override protected void onDestroy() {
-        stopLegacyLocation();
-        gpsRequest.cancel();
-        super.onDestroy();
-    }
+    private void cancelGps(){gpsGeneration++;gpsInProgress=false;gpsHandler.removeCallbacksAndMessages(null);stopLegacyLocation();if(gpsRequest!=null){gpsRequest.cancel();gpsRequest=null;}}
+    @Override protected void onResume(){super.onResume();foreground=true;if(location!=null&&!usableLocation(location)){location=null;gpsAttempted=false;}if(gpsResumePending){gpsResumePending=false;gpsAttempted=true;readGps();}else if(creating&&draftField!=null&&location==null&&!gpsAttempted)requestGps();}
+    @Override protected void onStop(){foreground=false;if(gpsInProgress)gpsAttempted=false;cancelGps();super.onStop();}
+    @Override protected void onDestroy(){cancelGps();super.onDestroy();}
 
     private void submit(MaterialButton send, int type, String description) {
         if (description.length() < 10 || description.length() > 2000 || location == null) {
             status.setText("Escribe entre 10 y 2000 caracteres y captura la ubicación.");
             return;
         }
+        if(!usableLocation(location)){location=null;status.setText("La ubicación venció o no es precisa. Actualízala antes de guardar.");requestGps();return;}
+        try{if(TerritorioCobertura.distrito(this,location.getLatitude(),location.getLongitude())==0){status.setText("Solo se admiten incidentes dentro de los distritos urbanos 1 al 12.");return;}}
+        catch(IOException exception){status.setText("No se pudo comprobar la cobertura territorial.");return;}
         if (SessionStore.load(this) == null) {
             finish();
             return;
@@ -329,7 +391,7 @@ public final class ReportsActivity extends AppCompatActivity {
         send.setEnabled(false);
         refresh.setEnabled(false);
         Location position = location;
-        status.setText("Enviando reporte…");
+        status.setText("Guardando reporte en este dispositivo…");
         new Thread(() -> {
             try {
                 JSONObject body = new JSONObject()
@@ -337,10 +399,12 @@ public final class ReportsActivity extends AppCompatActivity {
                         .put("tipoIncidenteId", type)
                         .put("latitud", position.getLatitude())
                         .put("longitud", position.getLongitude());
-                request("/api/reportes", body);
+                String id=PendingReports.get(this).enqueue(getString(R.string.backend_base_url),citizenId,body);
+                try{ReportSyncWorker.schedule(this,id);}catch(Exception ignored){/* La fila durable se reprograma al abrir la cuenta. */}
                 deliver(() -> {
-                    android.widget.Toast.makeText(this, "Reporte registrado", android.widget.Toast.LENGTH_SHORT).show();
+                    android.widget.Toast.makeText(this, "Guardado localmente. Se confirmará cuando el servidor lo reciba.", android.widget.Toast.LENGTH_LONG).show();
                     location = null;
+                    gpsAttempted=false;
                     draftField = null;
                     typeField = null;
                     draftText = "";
@@ -354,7 +418,7 @@ public final class ReportsActivity extends AppCompatActivity {
                 deliver(() -> {
                     send.setEnabled(true);
                     refresh.setEnabled(true);
-                    status.setText("No se pudo confirmar el envío. Actualiza antes de intentarlo de nuevo.");
+                    status.setText("No se pudo guardar el reporte localmente. Conserva los datos e inténtalo otra vez.");
                 });
             }
         }).start();

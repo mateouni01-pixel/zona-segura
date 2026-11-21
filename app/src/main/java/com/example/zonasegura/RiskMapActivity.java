@@ -1,16 +1,24 @@
 package com.example.zonasegura;
 
 import android.annotation.SuppressLint;
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.SystemClock;
 import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.*;
 import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import com.google.android.material.checkbox.MaterialCheckBox;
@@ -29,7 +37,30 @@ public final class RiskMapActivity extends AppCompatActivity {
     private final AtomicInteger generation=new AtomicInteger();
     private final List<Integer> typeIds=new ArrayList<>();
     private WebView web;
-    private TextView status, tilesNotice;
+    private TextView status, tilesNotice, locationStatus;
+    private LocationManager locationManager;
+    private boolean mapReady, resumed, trackingLocation, centerOnLocation=true;
+    private final Runnable locationTimeout=()->{
+        if(trackingLocation)locationStatus.setText(R.string.map_location_waiting);
+    };
+    private final Runnable locationExpired=()->{
+        clearLocation();locationStatus.setText(R.string.map_location_waiting);
+    };
+    private final ActivityResultLauncher<String[]> locationPermission=registerForActivityResult(
+            new ActivityResultContracts.RequestMultiplePermissions(), result->{
+                if(hasLocationPermission())startLocation();
+                else locationStatus.setText(R.string.map_location_denied);
+            });
+    private final LocationListener locationListener=new LocationListener(){
+        @Override public void onLocationChanged(Location location){showLocation(location);}
+        @Override public void onProviderEnabled(String provider){
+            stopLocation();startLocation();
+        }
+        @Override public void onProviderDisabled(String provider){
+            stopLocation();clearLocation();startLocation();
+        }
+        @Override public void onStatusChanged(String provider,int state,Bundle extras){}
+    };
     private Spinner types;
     private int days=7, selectedType, restoredType;
     private boolean bindingTypes=true, catalogLoaded;
@@ -54,6 +85,14 @@ public final class RiskMapActivity extends AppCompatActivity {
             var bars=insets.getInsets(WindowInsetsCompat.Type.systemBars());v.setPadding(bars.left,bars.top,bars.right,bars.bottom);return insets;
         });
         status=findViewById(R.id.riskMapStatus);tilesNotice=findViewById(R.id.riskMapTilesNotice);
+        locationStatus=findViewById(R.id.riskMapLocationStatus);
+        locationManager=getSystemService(LocationManager.class);
+        findViewById(R.id.riskMapLocation).setOnClickListener(v->{
+            centerOnLocation=true;
+            if(hasLocationPermission()){
+                stopLocation();clearLocation();startLocation();
+            }else locationPermission.launch(new String[]{Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION});
+        });
         findViewById(R.id.riskMapBack).setOnClickListener(v->finish());
         findViewById(R.id.riskMapCity).setOnClickListener(v->web.evaluateJavascript("window.centerSantaCruz && window.centerSantaCruz()",null));
         findViewById(R.id.riskMapRefresh).setOnClickListener(v->{if(!catalogLoaded)loadTypes();web.evaluateJavascript("window.refreshRisk && window.refreshRisk()",null);});
@@ -77,6 +116,59 @@ public final class RiskMapActivity extends AppCompatActivity {
         heat.setOnCheckedChangeListener((button,checked)->web.evaluateJavascript("window.showRisk && window.showRisk("+checked+")",null));
         web.loadUrl("https://"+ASSET_HOST+"/assets/mapa/mapa.html#"+centerLat+","+centerLng+","+zoom);
         loadTypes();
+    }
+
+    private boolean hasLocationPermission(){
+        return checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)==PackageManager.PERMISSION_GRANTED
+                || checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION)==PackageManager.PERMISSION_GRANTED;
+    }
+
+    @SuppressLint("MissingPermission")
+    private void startLocation(){
+        if(!mapReady || !resumed || trackingLocation)return;
+        if(!hasLocationPermission()){
+            clearLocation();locationStatus.setText(R.string.map_location_hint);return;
+        }
+        locationStatus.setText(R.string.map_location_searching);
+        boolean precise=checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)==PackageManager.PERMISSION_GRANTED;
+        try{
+            for(String provider:new String[]{LocationManager.GPS_PROVIDER,LocationManager.NETWORK_PROVIDER}){
+                if(provider.equals(LocationManager.GPS_PROVIDER) && !precise)continue;
+                if(locationManager.getAllProviders().contains(provider) && locationManager.isProviderEnabled(provider)){
+                    locationManager.requestLocationUpdates(provider,5000,0,locationListener,Looper.getMainLooper());
+                    trackingLocation=true;
+                }
+            }
+            if(trackingLocation)ui.postDelayed(locationTimeout,20000);
+            else locationStatus.setText(precise?R.string.map_location_disabled:R.string.map_location_approximate_unavailable);
+        }catch(SecurityException exception){
+            stopLocation();clearLocation();locationStatus.setText(R.string.map_location_denied);
+        }
+    }
+
+    private void showLocation(Location location){
+        if(!resumed || !mapReady || !trackingLocation || !hasLocationPermission())return;
+        long age=SystemClock.elapsedRealtimeNanos()-location.getElapsedRealtimeNanos();
+        if(age<0 || age>TimeUnit.MINUTES.toNanos(2) || !location.hasAccuracy())return;
+        double lat=location.getLatitude(),lng=location.getLongitude(),accuracy=location.getAccuracy();
+        if(!Double.isFinite(lat) || !Double.isFinite(lng) || !Double.isFinite(accuracy) || accuracy<0)return;
+        ui.removeCallbacks(locationTimeout);
+        ui.removeCallbacks(locationExpired);
+        ui.postDelayed(locationExpired,TimeUnit.MINUTES.toMillis(2)-TimeUnit.NANOSECONDS.toMillis(age));
+        web.evaluateJavascript("window.showCitizenLocation && window.showCitizenLocation("+lat+","+lng+","+accuracy+","+centerOnLocation+")",null);
+        centerOnLocation=false;
+        locationStatus.setText(getString(R.string.map_location_found,Math.max(1,Math.round(accuracy))));
+    }
+
+    private void clearLocation(){
+        if(web!=null && mapReady)web.evaluateJavascript("window.clearCitizenLocation && window.clearCitizenLocation()",null);
+    }
+
+    private void stopLocation(){
+        ui.removeCallbacks(locationTimeout);
+        ui.removeCallbacks(locationExpired);
+        if(locationManager!=null)locationManager.removeUpdates(locationListener);
+        trackingLocation=false;
     }
 
     private void loadTypes(){
@@ -133,8 +225,17 @@ public final class RiskMapActivity extends AppCompatActivity {
     private final class LocalMapClient extends WebViewClient {
         @Override public void onPageFinished(WebView view,String url){
             if(ASSET_HOST.equals(Uri.parse(url).getHost())){
+                mapReady=true;
                 MaterialCheckBox heat=findViewById(R.id.riskMapHeat);
                 view.evaluateJavascript("window.showRisk && window.showRisk("+heat.isChecked()+")",null);
+                worker.execute(()->{
+                    try(java.util.Scanner reader=new java.util.Scanner(getAssets().open("distritos-urbanos.json"),"UTF-8")){
+                        String data=reader.useDelimiter("\\A").next();
+                        String json=JSONObject.quote(data);
+                        ui.post(()->{if(!isDestroyed()&&!isFinishing())view.evaluateJavascript("window.showDistricts && window.showDistricts(JSON.parse("+json+"))",null);});
+                    }catch(IOException ignored){}
+                });
+                startLocation();
             }
         }
         @Override public WebResourceResponse shouldInterceptRequest(WebView view,WebResourceRequest request){
@@ -161,7 +262,7 @@ public final class RiskMapActivity extends AppCompatActivity {
         @Override public void onNothingSelected(AdapterView<?> parent){}
     }
     @Override protected void onSaveInstanceState(Bundle state){super.onSaveInstanceState(state);state.putInt("days",days);state.putInt("type",selectedType);state.putDouble("lat",centerLat);state.putDouble("lng",centerLng);state.putInt("zoom",zoom);}
-    @Override protected void onResume(){super.onResume();ui.removeCallbacks(autoRefresh);ui.postDelayed(autoRefresh,30000);}
-    @Override protected void onPause(){ui.removeCallbacks(autoRefresh);super.onPause();}
-    @Override protected void onDestroy(){generation.incrementAndGet();worker.shutdownNow();ui.removeCallbacksAndMessages(null);if(web!=null){web.removeJavascriptInterface("ZonaMap");web.destroy();}super.onDestroy();}
+    @Override protected void onResume(){super.onResume();resumed=true;ui.removeCallbacks(autoRefresh);ui.postDelayed(autoRefresh,30000);startLocation();}
+    @Override protected void onPause(){resumed=false;stopLocation();clearLocation();ui.removeCallbacks(autoRefresh);super.onPause();}
+    @Override protected void onDestroy(){stopLocation();generation.incrementAndGet();worker.shutdownNow();ui.removeCallbacksAndMessages(null);if(web!=null){web.removeJavascriptInterface("ZonaMap");web.destroy();}super.onDestroy();}
 }

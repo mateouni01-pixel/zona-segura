@@ -137,6 +137,8 @@ final class AuthApi {
                         break;
                     } else if ("PERSONAL_ALCALDIA".equals(roles.optString(i))) {
                         role = "PERSONAL_ALCALDIA";
+                    } else if ("UNIDAD_OPERATIVA".equals(roles.optString(i)) && !"PERSONAL_ALCALDIA".equals(role)) {
+                        role = "UNIDAD_OPERATIVA";
                     }
                 }
             }

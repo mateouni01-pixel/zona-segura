@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>@ViewData["Title"] · Zona Segura</title><link rel="stylesheet" href="~/lib/bootstrap/bootstrap.min.css"/><link rel="stylesheet" href="~/css/panel.css" asp-append-version="true"/>
+@await RenderSectionAsync("Styles",false)</head>
+<body><a class="skip-link" href="#contenido">Saltar al contenido</a><div class="app-shell">
+<aside class="sidebar"><a class="brand" asp-controller="@(User.IsInRole("ADMINISTRADOR")?"Admin":User.IsInRole("PERSONAL_ALCALDIA")?"Panel":"Cuenta")" asp-action="@(User.Identity?.IsAuthenticated==true?"Index":"Ingresar")"><span class="brand-icon">ZS</span><span>Zona Segura<small>Gestión institucional</small></span></a>
+@if(User.Identity?.IsAuthenticated==true){<nav aria-label="Menú principal">@if(User.IsInRole("PERSONAL_ALCALDIA")){<a asp-controller="Panel" asp-action="Index">Mapa y reportes</a><a asp-controller="Panel" asp-action="Verificar">Verificar incidentes</a><a asp-controller="Panel" asp-action="Ordenes">Órdenes de intervención</a><a asp-controller="Panel" asp-action="Recursos">Recursos preventivos</a><a asp-controller="Panel" asp-action="Unidades">Unidades operativas</a>}@if(User.IsInRole("ADMINISTRADOR")){<a asp-controller="Admin" asp-action="Index">Usuarios y permisos</a><a asp-controller="Admin" asp-action="Moderacion">Moderación de reportes</a><a asp-controller="Admin" asp-action="Auditoria">Auditoría</a>}</nav><div class="account"><span>@User.Identity.Name</span><form asp-controller="Cuenta" asp-action="Salir" method="post"><button class="btn btn-outline-light btn-sm" type="submit">Cerrar sesión</button></form></div>}
+<p class="sidebar-note">Información para coordinar la prevención y la atención ciudadana.</p></aside>
+<div class="workspace"><header class="topbar"><span>Alcaldía · Santa Cruz de la Sierra</span><span class="portal-label">Panel municipal</span></header><main id="contenido" tabindex="-1">
+@if(TempData["Error"] is string error){<div class="alert alert-danger" role="alert">@error</div>}
+@if(TempData["Exito"] is string success){<div class="alert alert-success" role="status">@success</div>}
+@RenderBody()</main><footer>Zona Segura · Las decisiones institucionales quedan registradas.</footer></div></div>
+<script src="~/lib/bootstrap/bootstrap.bundle.min.js"></script>@await RenderSectionAsync("Scripts",false)</body></html>

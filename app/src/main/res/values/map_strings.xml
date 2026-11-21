@@ -7,6 +7,14 @@
     <string name="map_all_types">Todos los tipos</string>
     <string name="map_refresh">Actualizar</string>
     <string name="map_city">Santa Cruz</string>
+    <string name="map_my_location">Mi ubicación</string>
+    <string name="map_location_hint">Pulsa Mi ubicación para ver dónde estás en el mapa.</string>
+    <string name="map_location_searching">Buscando tu ubicación…</string>
+    <string name="map_location_found">Punto azul: tu ubicación. Precisión aproximada: %1$d m.</string>
+    <string name="map_location_denied">No se concedió el permiso de ubicación. Puedes habilitarlo en Ajustes de la aplicación y pulsar Mi ubicación.</string>
+    <string name="map_location_disabled">Activa la ubicación del dispositivo y pulsa Mi ubicación.</string>
+    <string name="map_location_approximate_unavailable">No se pudo obtener ubicación aproximada. Activa la ubicación por red o concede ubicación precisa y pulsa Mi ubicación.</string>
+    <string name="map_location_waiting">Todavía no se obtiene tu ubicación. Busca un lugar con mejor señal o vuelve a pulsar Mi ubicación.</string>
     <string name="map_heat">Mostrar capa de riesgo</string>
     <string name="map_loading">Consultando el área visible…</string>
     <string name="map_empty">No hay incidentes confirmados en esta área y período. Los reportes pendientes todavía no aparecen.</string>
@@ -14,7 +22,7 @@
     <string name="map_error">No se pudo actualizar el mapa. Revisa tu conexión y pulsa Actualizar.</string>
     <string name="map_types_error">No se pudo cargar el filtro de tipos. Puedes consultar todos los tipos o pulsar Actualizar.</string>
     <string name="map_legend">Verde · bajo: 1–2 reportes\nÁmbar · medio: 3–4 reportes\nRojo · alto: 5 o más reportes\nSin color · sin reportes confirmados en la consulta</string>
-    <string name="map_privacy">Zonas aproximadas de 500 m. Solo se muestran cantidades agrupadas, sin nombres ni ubicaciones exactas. La ausencia de reportes no garantiza seguridad.</string>
+    <string name="map_privacy">Zonas aproximadas de 500 m. Los incidentes muestran cantidades agrupadas, sin nombres ni ubicaciones exactas. El punto azul indica tu propia ubicación mientras tienes abierto el mapa. La ausencia de reportes no garantiza seguridad.</string>
     <string name="map_tiles_offline">No se pudo cargar el mapa de calles. Revisa el acceso a internet del dispositivo.</string>
     <string name="map_content_description">Mapa de calles y zonas de riesgo. Puedes acercar, alejar y tocar una zona para consultar su cantidad de incidentes.</string>
 </resources>

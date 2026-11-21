@@ -1,0 +1,8 @@
+@model AsignarModel
+@{ViewData["Title"]="Crear orden";}
+<div class="eyebrow">Coordinación de atención</div><h1>Crear orden de intervención</h1><p class="muted">Reporte #@Model.ReporteId. La disponibilidad se comprueba de nuevo al guardar.</p>
+<form asp-action="Asignar" method="post" class="surface form-width"><div asp-validation-summary="All" class="text-danger" role="alert"></div><input asp-for="ReporteId" type="hidden"/><input asp-for="SolicitudId" type="hidden"/>
+<label asp-for="RecursoId" class="form-label">Recurso disponible</label><select asp-for="RecursoId" class="form-select" required><option value="">Seleccionar recurso</option>@foreach(var r in Model.Recursos){<option value="@r.Id">@r.Nombre · @r.Tipo</option>}</select>
+<label asp-for="TipoOrden" class="form-label mt-3">Tipo de intervención</label><select asp-for="TipoOrden" class="form-select"><option value="PATRULLAJE">Patrullaje</option><option value="MANTENIMIENTO">Mantenimiento</option><option value="DERIVACION">Derivación</option></select><p class="muted">Mantenimiento requiere una cuadrilla; patrullaje y derivación, una patrulla.</p>
+<label asp-for="Instrucciones" class="form-label mt-3">Instrucciones para la unidad</label><textarea asp-for="Instrucciones" class="form-control" rows="4" minlength="10" maxlength="2000" required></textarea>
+<div class="d-flex gap-3 mt-4"><button class="btn btn-primary" disabled="@(Model.Recursos.Count==0)">Crear orden y reservar</button><a asp-action="Index" class="btn btn-outline-secondary">Volver</a></div></form>

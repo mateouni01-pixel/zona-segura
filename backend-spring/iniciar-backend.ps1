@@ -1,9 +1,11 @@
+param([switch]$Actualizar, [switch]$SinAdb)
+
 $ErrorActionPreference = 'Stop'
 $backendRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
 $javaHome = 'C:\Program Files\Android\Android Studio\jbr'
 
 $adbPath = Join-Path $env:LOCALAPPDATA 'Android\Sdk\platform-tools\adb.exe'
-if (Test-Path -LiteralPath $adbPath) {
+if (-not $SinAdb -and (Test-Path -LiteralPath $adbPath)) {
     $connectedDevices = @(& $adbPath devices | ForEach-Object {
         if ($_ -match '^(\S+)\s+device\s*$') { $matches[1] }
     })
@@ -21,12 +23,28 @@ if (Test-Path -LiteralPath $adbPath) {
     }
 }
 
-if (Get-NetTCPConnection -LocalPort 8080 -State Listen -ErrorAction SilentlyContinue) {
+$listeners = @(Get-NetTCPConnection -LocalPort 8080 -State Listen -ErrorAction SilentlyContinue)
+if ($listeners.Count -gt 0 -and $Actualizar) {
+    $processIds = @($listeners | Select-Object -ExpandProperty OwningProcess -Unique)
+    if ($processIds.Count -ne 1) { throw 'No se pudo identificar un unico backend en el puerto 8080.' }
+    $runningBackend = Get-CimInstance Win32_Process -Filter "ProcessId=$($processIds[0])"
+    if ($runningBackend.Name -ne 'java.exe' -or [string]::IsNullOrWhiteSpace($runningBackend.CommandLine) -or
+        $runningBackend.CommandLine.IndexOf($backendRoot, [StringComparison]::OrdinalIgnoreCase) -lt 0) {
+        throw 'El puerto 8080 pertenece a otro proceso. No se detuvo ningun programa.'
+    }
+    Write-Host 'Reiniciando exclusivamente el backend de esta carpeta para cargar los cambios.'
+    Stop-Process -Id $processIds[0] -ErrorAction Stop
+    Wait-Process -Id $processIds[0] -Timeout 15 -ErrorAction SilentlyContinue
+} elseif ($listeners.Count -gt 0) {
     try {
         $backendStatus = Invoke-RestMethod -Uri 'http://127.0.0.1:8080/api/conexion' -TimeoutSec 5
         if ($backendStatus.estado -eq 'conectado' -and $backendStatus.base -eq 'ZonaSegura') {
-            Write-Host 'Spring Boot ya esta encendido y conectado a ZonaSegura. Ya puedes probar la app.'
-            exit 0
+            if ($backendStatus.panelMunicipal -eq $true -and $backendStatus.administracion -eq $true) {
+                Write-Host 'Spring Boot ya esta encendido y admite el panel municipal y la administracion.'
+                exit 0
+            }
+            Write-Warning 'El backend encendido es anterior a la administracion actual. Ejecuta iniciar-backend.cmd -Actualizar para cargar la version actual.'
+            exit 1
         }
     } catch { }
     Write-Host 'El puerto 8080 esta ocupado, pero no se pudo confirmar la conexion a ZonaSegura. Revisa la ventana del backend.'

@@ -53,9 +53,32 @@ fs.mkdirSync(out,{recursive:true});
     await page.evaluate(()=>window.renderRisk({dias:7,totalReportes:0,zonas:[]}));
     await page.locator('.leaflet-popup').waitFor({state:'detached'});
     assert.equal(await page.locator('.leaflet-popup').count(),0,'El estado vacío debe quitar las zonas anteriores.');
+    // La ubicación es independiente de la capa de riesgo y solo centra a petición.
+    await page.evaluate(()=>window.showCitizenLocation(-17.7833,-63.1821,35,true));
+    await page.waitForFunction(()=>{
+      const view=window.mapRequests.at(-1);
+      return view.zoom>=15 && Math.abs(view.lat+17.7833)<0.00005 && Math.abs(view.lng+63.1821)<0.00005;
+    });
+    const located=await page.evaluate(()=>window.mapRequests.at(-1));
+    assert.ok(Math.abs(located.lat+17.7833)<0.00005 && Math.abs(located.lng+63.1821)<0.00005,'Mi ubicación debe centrar el mapa (tolerancia de redondeo a píxeles).');
+    assert.equal(await page.locator('.citizen-location').count(),1);
+    assert.equal(await page.locator('.citizen-accuracy').count(),1);
+    await page.locator('.citizen-location').click({force:true});
+    await page.getByText('Tu ubicación',{exact:true}).waitFor();
+    await page.evaluate(data=>{window.renderRisk(data);window.showRisk(false);},summary);
+    assert.equal(await page.locator('.citizen-location').count(),1,'Ocultar riesgo conserva mi ubicación.');
+    await page.evaluate(()=>window.showCitizenLocation(-17.784,-63.183,80,false));
+    assert.equal(await page.locator('.citizen-location').count(),1,'Las actualizaciones mueven el marcador existente.');
+    assert.deepEqual(await page.evaluate(()=>window.mapRequests.at(-1)),located,'Actualizar posición no debe interrumpir la navegación.');
+    await page.evaluate(()=>window.showCitizenLocation(200,0,10,true));
+    assert.equal(await page.locator('.citizen-location').count(),1,'Una ubicación inválida no reemplaza la anterior.');
+    await page.screenshot({path:path.join(out,'mapa-mi-ubicacion.png')});
+    await page.evaluate(()=>window.clearCitizenLocation());
+    assert.equal(await page.locator('.citizen-location').count(),0);
+    assert.equal(await page.locator('.citizen-accuracy').count(),0);
     assert.deepEqual(failures,[],'El mapa no debe generar errores JavaScript.');
     assert.equal(await page.evaluate(()=>window.tileErrors),0);
-    const result={renderizado:true,popup:true,capa:true,zoom:true,desplazamiento:true,estadoVacio:true,erroresJavascript:failures,teselas:'simuladas; sin peticiones a OpenStreetMap'};
+    const result={renderizado:true,popup:true,capa:true,zoom:true,desplazamiento:true,estadoVacio:true,ubicacion:true,precision:true,centrado:true,ubicacionIndependienteDeRiesgo:true,limpiezaUbicacion:true,erroresJavascript:failures,teselas:'simuladas; sin peticiones a OpenStreetMap'};
     fs.writeFileSync(path.join(out,'verificacion.json'),JSON.stringify(result,null,2));
     console.log(JSON.stringify(result));
   }finally{await browser.close();}

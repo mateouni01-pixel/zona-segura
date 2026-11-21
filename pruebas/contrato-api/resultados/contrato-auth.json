@@ -235,6 +235,240 @@
   },
   {
     "api": "Spring",
+    "prueba": "registrar vecino 1",
+    "resultado": "OK",
+    "http": 201
+  },
+  {
+    "api": "Spring",
+    "prueba": "login vecino 1",
+    "resultado": "OK",
+    "http": 200
+  },
+  {
+    "api": "Spring",
+    "prueba": "registrar vecino 2",
+    "resultado": "OK",
+    "http": 201
+  },
+  {
+    "api": "Spring",
+    "prueba": "login vecino 2",
+    "resultado": "OK",
+    "http": 200
+  },
+  {
+    "api": "Spring",
+    "prueba": "registrar vecino 3",
+    "resultado": "OK",
+    "http": 201
+  },
+  {
+    "api": "Spring",
+    "prueba": "login vecino 3",
+    "resultado": "OK",
+    "http": 200
+  },
+  {
+    "api": "Spring",
+    "prueba": "registrar vecino 4",
+    "resultado": "OK",
+    "http": 201
+  },
+  {
+    "api": "Spring",
+    "prueba": "login vecino 4",
+    "resultado": "OK",
+    "http": 200
+  },
+  {
+    "api": "Spring",
+    "prueba": "crear incidente para votación",
+    "resultado": "OK",
+    "http": 201
+  },
+  {
+    "api": "Spring",
+    "prueba": "voto requiere sesión",
+    "resultado": "OK",
+    "http": 401
+  },
+  {
+    "api": "Spring",
+    "prueba": "autor no vota su reporte",
+    "resultado": "OK",
+    "http": 403
+  },
+  {
+    "api": "Spring",
+    "prueba": "voto fuera de 500 m",
+    "resultado": "OK",
+    "http": 403
+  },
+  {
+    "api": "Spring",
+    "prueba": "voto exige resultado",
+    "resultado": "OK",
+    "http": 400
+  },
+  {
+    "api": "Spring",
+    "prueba": "vecino consulta pendientes cercanos",
+    "resultado": "OK",
+    "http": 200
+  },
+  {
+    "api": "Spring",
+    "prueba": "confirmación 1 mantiene pendiente",
+    "resultado": "OK",
+    "http": 200
+  },
+  {
+    "api": "Spring",
+    "prueba": "confirmación 2 mantiene pendiente",
+    "resultado": "OK",
+    "http": 200
+  },
+  {
+    "api": "Spring",
+    "prueba": "rechazar voto duplicado",
+    "resultado": "OK",
+    "http": 409
+  },
+  {
+    "api": "Spring",
+    "prueba": "tercer ciudadano valida",
+    "resultado": "OK",
+    "http": 200
+  },
+  {
+    "api": "Spring",
+    "prueba": "no admite cuarto voto tras validación",
+    "resultado": "OK",
+    "http": 409
+  },
+  {
+    "api": "Spring",
+    "prueba": "voto simultáneo duplicado produce 200 y 409",
+    "resultado": "OK",
+    "http": 200
+  },
+  {
+    "api": "Spring",
+    "prueba": "segundo voto antes de concurrencia",
+    "resultado": "OK",
+    "http": 200
+  },
+  {
+    "api": "Spring",
+    "prueba": "tercero y cuarto simultáneos solo aceptan uno",
+    "resultado": "OK",
+    "http": 200
+  },
+  {
+    "api": "Spring",
+    "prueba": "cercanos requiere coordenadas",
+    "resultado": "OK",
+    "http": 400
+  },
+  {
+    "api": "Spring",
+    "prueba": "voto negativo 0",
+    "resultado": "OK",
+    "http": 200
+  },
+  {
+    "api": "Spring",
+    "prueba": "voto negativo 1",
+    "resultado": "OK",
+    "http": 200
+  },
+  {
+    "api": "Spring",
+    "prueba": "voto negativo 2",
+    "resultado": "OK",
+    "http": 200
+  },
+  {
+    "api": "Spring",
+    "prueba": "crear cuenta para perfil municipal de prueba",
+    "resultado": "OK",
+    "http": 201
+  },
+  {
+    "api": "Spring",
+    "prueba": "login municipal verificador",
+    "resultado": "OK",
+    "http": 200
+  },
+  {
+    "api": "Spring",
+    "prueba": "perfil municipal",
+    "resultado": "OK",
+    "http": 200
+  },
+  {
+    "api": "Spring",
+    "prueba": "ciudadano no accede a verificación institucional",
+    "resultado": "OK",
+    "http": 403
+  },
+  {
+    "api": "Spring",
+    "prueba": "bandeja municipal de revisión",
+    "resultado": "OK",
+    "http": 200
+  },
+  {
+    "api": "Spring",
+    "prueba": "personal municipal no verifica un reporte propio",
+    "resultado": "OK",
+    "http": 403
+  },
+  {
+    "api": "Spring",
+    "prueba": "ciudadano no puede verificar institucionalmente",
+    "resultado": "OK",
+    "http": 403
+  },
+  {
+    "api": "Spring",
+    "prueba": "motivo obligatorio",
+    "resultado": "OK",
+    "http": 400
+  },
+  {
+    "api": "Spring",
+    "prueba": "Alcaldía confirma sin tres votos positivos",
+    "resultado": "OK",
+    "http": 200
+  },
+  {
+    "api": "Spring",
+    "prueba": "no sobrescribir verificación institucional",
+    "resultado": "OK",
+    "http": 409
+  },
+  {
+    "api": "Spring",
+    "prueba": "rechazo institucional fundamentado",
+    "resultado": "OK",
+    "http": 200
+  },
+  {
+    "api": "Spring",
+    "prueba": "no reabrir rechazado mediante voto",
+    "resultado": "OK",
+    "http": 409
+  },
+  {
+    "api": "Spring",
+    "prueba": "auditoría institucional y revocación de rol",
+    "resultado": "OK",
+    "http": 401
+  },
+  {
+    "api": "Spring",
     "prueba": "token malformado",
     "resultado": "OK",
     "http": 401
@@ -520,6 +754,252 @@
     "prueba": "mapa rechaza categoría inválida",
     "resultado": "OK",
     "http": 400
+  },
+  {
+    "api": "Csharp",
+    "prueba": "registrar vecino 1",
+    "resultado": "OK",
+    "http": 201
+  },
+  {
+    "api": "Csharp",
+    "prueba": "login vecino 1",
+    "resultado": "OK",
+    "http": 200
+  },
+  {
+    "api": "Csharp",
+    "prueba": "registrar vecino 2",
+    "resultado": "OK",
+    "http": 201
+  },
+  {
+    "api": "Csharp",
+    "prueba": "login vecino 2",
+    "resultado": "OK",
+    "http": 200
+  },
+  {
+    "api": "Csharp",
+    "prueba": "registrar vecino 3",
+    "resultado": "OK",
+    "http": 201
+  },
+  {
+    "api": "Csharp",
+    "prueba": "login vecino 3",
+    "resultado": "OK",
+    "http": 200
+  },
+  {
+    "api": "Csharp",
+    "prueba": "registrar vecino 4",
+    "resultado": "OK",
+    "http": 201
+  },
+  {
+    "api": "Csharp",
+    "prueba": "login vecino 4",
+    "resultado": "OK",
+    "http": 200
+  },
+  {
+    "api": "Csharp",
+    "prueba": "crear incidente para votación",
+    "resultado": "OK",
+    "http": 201
+  },
+  {
+    "api": "Csharp",
+    "prueba": "voto requiere sesión",
+    "resultado": "OK",
+    "http": 401
+  },
+  {
+    "api": "Csharp",
+    "prueba": "autor no vota su reporte",
+    "resultado": "OK",
+    "http": 403
+  },
+  {
+    "api": "Csharp",
+    "prueba": "voto fuera de 500 m",
+    "resultado": "OK",
+    "http": 403
+  },
+  {
+    "api": "Csharp",
+    "prueba": "voto exige resultado",
+    "resultado": "OK",
+    "http": 400
+  },
+  {
+    "api": "Csharp",
+    "prueba": "vecino consulta pendientes cercanos",
+    "resultado": "OK",
+    "http": 200
+  },
+  {
+    "api": "Csharp",
+    "prueba": "confirmación 1 mantiene pendiente",
+    "resultado": "OK",
+    "http": 200
+  },
+  {
+    "api": "Csharp",
+    "prueba": "confirmación 2 mantiene pendiente",
+    "resultado": "OK",
+    "http": 200
+  },
+  {
+    "api": "Csharp",
+    "prueba": "rechazar voto duplicado",
+    "resultado": "OK",
+    "http": 409
+  },
+  {
+    "api": "Csharp",
+    "prueba": "tercer ciudadano valida",
+    "resultado": "OK",
+    "http": 200
+  },
+  {
+    "api": "Csharp",
+    "prueba": "no admite cuarto voto tras validación",
+    "resultado": "OK",
+    "http": 409
+  },
+  {
+    "api": "Csharp",
+    "prueba": "voto simultáneo duplicado produce 200 y 409",
+    "resultado": "OK",
+    "http": 200
+  },
+  {
+    "api": "Csharp",
+    "prueba": "segundo voto antes de concurrencia",
+    "resultado": "OK",
+    "http": 200
+  },
+  {
+    "api": "Csharp",
+    "prueba": "tercero y cuarto simultáneos solo aceptan uno",
+    "resultado": "OK",
+    "http": 200
+  },
+  {
+    "api": "Csharp",
+    "prueba": "cercanos requiere coordenadas",
+    "resultado": "OK",
+    "http": 400
+  },
+  {
+    "api": "Csharp",
+    "prueba": "voto negativo 0",
+    "resultado": "OK",
+    "http": 200
+  },
+  {
+    "api": "Csharp",
+    "prueba": "voto negativo 1",
+    "resultado": "OK",
+    "http": 200
+  },
+  {
+    "api": "Csharp",
+    "prueba": "voto negativo 2",
+    "resultado": "OK",
+    "http": 200
+  },
+  {
+    "api": "Csharp",
+    "prueba": "crear cuenta para perfil municipal de prueba",
+    "resultado": "OK",
+    "http": 201
+  },
+  {
+    "api": "Csharp",
+    "prueba": "login municipal verificador",
+    "resultado": "OK",
+    "http": 200
+  },
+  {
+    "api": "Csharp",
+    "prueba": "perfil municipal",
+    "resultado": "OK",
+    "http": 200
+  },
+  {
+    "api": "Csharp",
+    "prueba": "ciudadano no accede a verificación institucional",
+    "resultado": "OK",
+    "http": 403
+  },
+  {
+    "api": "Csharp",
+    "prueba": "bandeja municipal de revisión",
+    "resultado": "OK",
+    "http": 200
+  },
+  {
+    "api": "Csharp",
+    "prueba": "personal municipal no verifica un reporte propio",
+    "resultado": "OK",
+    "http": 403
+  },
+  {
+    "api": "Csharp",
+    "prueba": "ciudadano no puede verificar institucionalmente",
+    "resultado": "OK",
+    "http": 403
+  },
+  {
+    "api": "Csharp",
+    "prueba": "motivo obligatorio",
+    "resultado": "OK",
+    "http": 400
+  },
+  {
+    "api": "Csharp",
+    "prueba": "Alcaldía confirma sin tres votos positivos",
+    "resultado": "OK",
+    "http": 200
+  },
+  {
+    "api": "Csharp",
+    "prueba": "no sobrescribir verificación institucional",
+    "resultado": "OK",
+    "http": 409
+  },
+  {
+    "api": "Csharp",
+    "prueba": "rechazo institucional fundamentado",
+    "resultado": "OK",
+    "http": 200
+  },
+  {
+    "api": "Csharp",
+    "prueba": "no reabrir rechazado mediante voto",
+    "resultado": "OK",
+    "http": 409
+  },
+  {
+    "api": "Csharp",
+    "prueba": "conservar reporte votado al borrar",
+    "resultado": "OK",
+    "http": 409
+  },
+  {
+    "api": "Csharp",
+    "prueba": "conservar evidencia al editar reporte",
+    "resultado": "OK",
+    "http": 409
+  },
+  {
+    "api": "Csharp",
+    "prueba": "auditoría institucional y revocación de rol",
+    "resultado": "OK",
+    "http": 403
   },
   {
     "api": "Csharp",

@@ -1,0 +1,7 @@
+@model LoginModel
+@{ViewData["Title"]="Acceso institucional";}
+<section class="login-wrap"><div class="eyebrow">Acceso institucional</div><h1>Coordinar la atención<br/>empieza aquí.</h1><p class="lead muted">Consulta los incidentes, verifica reportes y organiza los recursos de tu unidad municipal.</p>
+<form asp-action="Ingresar" method="post" class="surface login-form"><h2>Ingresar al panel</h2><div asp-validation-summary="All" class="text-danger" role="alert"></div>
+<label asp-for="Correo" class="form-label">Correo institucional</label><input asp-for="Correo" class="form-control" autocomplete="username" maxlength="254"/><span asp-validation-for="Correo" class="text-danger"></span>
+<label asp-for="Password" class="form-label mt-3">Contraseña</label><input asp-for="Password" class="form-control" autocomplete="current-password"/><span asp-validation-for="Password" class="text-danger"></span>
+<button class="btn btn-primary w-100 mt-4">Ingresar</button><p class="muted mt-3 mb-0">Necesitas una cuenta autorizada de Personal de Alcaldía o Administración.</p></form></section>

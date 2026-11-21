@@ -17,8 +17,10 @@ public class ConexionController {
     }
 
     @GetMapping("/conexion")
-    public Map<String, String> comprobarConexion() {
+    public Map<String, Object> comprobarConexion() {
         String base = jdbcTemplate.queryForObject("SELECT DB_NAME()", String.class);
-        return Map.of("estado", "conectado", "base", base);
+        return Map.of("estado", "conectado", "base", base,
+                "version", "2.4-administracion", "panelMunicipal", true,
+                "administracion",true,"coberturaDistrital",true);
     }
 }

@@ -21,6 +21,7 @@ import org.json.*;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Arrays;
 
 public final class CommunityActivity extends AppCompatActivity {
     private LinearLayout panel;
@@ -51,7 +52,7 @@ public final class CommunityActivity extends AppCompatActivity {
         String[] pages;
         switch (role) {
             case "account": pages = new String[]{"Crear cuenta","Recuperar contraseña"}; break;
-            case "municipal": pages = new String[]{"Mapa de riesgo","Intervenciones"}; break;
+            case "municipal": pages = new String[]{"Mapa de riesgo","Verificar reportes","Unidades","Recursos","Intervenciones","Órdenes municipales"}; break;
             case "admin": pages = new String[]{"Moderación"}; break;
             default: pages = new String[]{"Mapa de riesgo","Validar reportes"};
         }
@@ -65,7 +66,8 @@ public final class CommunityActivity extends AppCompatActivity {
                     Math.round(16 * host.getResources().getDisplayMetrics().density),
                     button.getPaddingTop(), button.getPaddingEnd(), button.getPaddingBottom());
             button.setText(name);
-            button.setOnClickListener(v -> host.startActivity(name.equals("Mapa de riesgo")
+            button.setOnClickListener(v -> host.startActivity(Arrays.asList("Recursos","Unidades","Intervenciones","Órdenes municipales").contains(name)
+                    ? new Intent(host,OperationsActivity.class).putExtra("page",name) : name.equals("Mapa de riesgo")
                     ? new Intent(host, RiskMapActivity.class)
                     : new Intent(host, CommunityActivity.class).putExtra("page",name)));
             menu.addView(button, new LinearLayout.LayoutParams(-1, -2));
@@ -108,6 +110,7 @@ public final class CommunityActivity extends AppCompatActivity {
             case "Crear cuenta": account(true); backToLogin(); return;
             case "Recuperar contraseña": account(false); backToLogin(); return;
             case "Validar reportes":
+                label("Tres ciudadanos distintos del autor deben confirmar el incidente. Un voto por cuenta, dentro de 500 m. Alcaldía también puede verificarlo.");
                 if (!located) {
                     button("Buscar a 500 metros", () -> {
                         if (hasGps()) locate();
@@ -122,6 +125,7 @@ public final class CommunityActivity extends AppCompatActivity {
         switch(page) {
             case "Mapa de riesgo": path="/api/mapa/zonas"; break;
             case "Intervenciones": path="/api/intervenciones"; break;
+            case "Verificar reportes": path="/api/alcaldia/reportes-verificacion"; break;
             case "Moderación": path="/api/moderacion/reportes"; break;
             case "Validar reportes": path="/api/reportes/cercanos?lat="+lat+"&lng="+lng+"&radio=500"; break;
             default: finish(); return;
@@ -185,12 +189,35 @@ public final class CommunityActivity extends AppCompatActivity {
             card.setPadding(dp(14),dp(12),dp(14),dp(12));
             String base="/api/reportes/"+id;
             if(page.equals("Validar reportes")){
-                JSONObject vote=new JSONObject();put(vote,"latitud",lat);put(vote,"longitud",lng);
-                button("Confirmar reporte",()->{put(vote,"confirma",true);post(base+"/votos",vote);});
-                secondaryButton("Marcar como falso o spam",()->{put(vote,"confirma",false);post(base+"/votos",vote);});
+                label("Confirmaciones: "+row.optInt("confirmaciones")+" de 3 · Votos negativos: "+row.optInt("votosNegativos")
+                        +" · A "+row.optLong("distanciaMetros")+" m");
+                if(row.optBoolean("yaVoto"))label("Ya registraste tu voto. El reporte sigue pendiente hasta reunir tres confirmaciones o la verificación de Alcaldía.");
+                else {
+                    JSONObject vote=new JSONObject();put(vote,"latitud",lat);put(vote,"longitud",lng);
+                    button("Confirmar reporte",()->{put(vote,"confirma",true);post(base+"/votos",vote);});
+                    secondaryButton("Marcar como falso o spam",()->{put(vote,"confirma",false);post(base+"/votos",vote);});
+                }
+            } else if(page.equals("Verificar reportes")){
+                label("Confirmaciones ciudadanas: "+row.optInt("confirmaciones")+" de 3 · Votos negativos: "+row.optInt("votosNegativos"));
+                label("Registra una inspección o comprobación municipal. La decisión queda asociada a tu cuenta y fecha.");
+                if(!row.isNull("latitud") && !row.isNull("longitud")){
+                    String point=row.optDouble("latitud")+","+row.optDouble("longitud");
+                    label("Ubicación del incidente: "+point);
+                    secondaryButton("Abrir ubicación",()->{
+                        try {startActivity(new Intent(Intent.ACTION_VIEW,Uri.parse("geo:"+point+"?q="+point)));}
+                        catch(android.content.ActivityNotFoundException error){status.setText("No hay una aplicación de mapas disponible.");}
+                    });
+                }
+                button("Confirmar tras verificar",()->verify(id,true));
+                secondaryButton("Rechazar tras verificar",()->verify(id,false));
             } else if(page.equals("Moderación")){
-                if(state.equals("PENDIENTE_VALIDACION")) confirm("Rechazar reporte",base+"/rechazo");
-                if(state.equals("RECHAZADO") && !row.optBoolean("sancionado")) confirm("Sancionar al reportante",base+"/sancion");
+                label("Votos negativos: "+row.optInt("votosNegativos")+" · Índice: "+String.format(java.util.Locale.getDefault(),"%.0f%%",row.optDouble("indiceVeracidad")*100));
+                if(row.optBoolean("verificadoInstitucionalmente"))label("Existe una comprobación institucional. Su decisión se conserva.");
+                if((state.equals("PENDIENTE_VALIDACION")||state.equals("VALIDADO"))&&!row.optBoolean("verificadoInstitucionalmente"))
+                    button("Rechazar tras revisión",()->moderate(id,false));
+                if(row.optBoolean("sancionado"))label("La cuenta del reportante tiene el acceso suspendido. El levantamiento se gestiona desde el panel administrativo.");
+                else if(row.optBoolean("sancionPrevia"))label("Este reporte ya fue utilizado para una sanción. No se vuelve a sancionar el mismo hecho.");
+                else if(state.equals("RECHAZADO"))button("Suspender acceso del reportante",()->moderate(id,true));
             } else {
                 exportRows.add(new String[]{String.valueOf(id),type,state});
                 if(state.equals("VALIDADO")){
@@ -206,6 +233,45 @@ public final class CommunityActivity extends AppCompatActivity {
             secondaryButton("Exportar PDF",()->pdf.launch("intervenciones.pdf"));
             secondaryButton("Exportar Excel",()->excel.launch("intervenciones.xlsx"));
         }
+    }
+
+    private void moderate(int id,boolean sanction){
+        EditText reason=new EditText(this);
+        reason.setHint(sanction?"Describe la conducta y el motivo de la suspensión":"Describe la revisión y el motivo del rechazo");
+        reason.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+        reason.setMinLines(3);
+        reason.setFilters(new android.text.InputFilter[]{new android.text.InputFilter.LengthFilter(2000)});
+        AlertDialog dialog=new AlertDialog.Builder(this)
+                .setTitle(sanction?"Suspender acceso":"Rechazar reporte")
+                .setMessage(sanction?"Se suspenderá el acceso de la cuenta. La acción queda auditada y requiere un motivo."
+                        :"Revisa el hecho antes de decidir. Los votos negativos no provocan un rechazo automático. La decisión conserva motivo y responsable.")
+                .setView(reason).setNegativeButton("Cancelar",null).setPositiveButton("Registrar decisión",null).create();
+        dialog.setOnShowListener(ignored->dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v->{
+            if(busy)return;
+            String text=reason.getText().toString().trim();
+            if(text.length()<10||text.length()>2000){reason.setError("Escribe un motivo de 10 a 2000 caracteres.");return;}
+            JSONObject body=new JSONObject();put(body,"motivo",text);
+            dialog.dismiss();post("/api/reportes/"+id+(sanction?"/sancion":"/rechazo"),body);
+        }));
+        dialog.show();
+    }
+
+    private void verify(int id,boolean confirms){
+        EditText reason=new EditText(this);
+        reason.setHint("Describe qué comprobaste y cómo lo verificaste");
+        reason.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+        reason.setMinLines(3);
+        reason.setFilters(new android.text.InputFilter[]{new android.text.InputFilter.LengthFilter(2000)});
+        AlertDialog dialog=new AlertDialog.Builder(this).setTitle(confirms?"Confirmar incidente":"Rechazar incidente")
+                .setMessage("La decisión cambiará el estado del reporte. Registra la comprobación realizada.")
+                .setView(reason).setNegativeButton("Cancelar",null).setPositiveButton("Guardar verificación",null).create();
+        dialog.setOnShowListener(ignored->dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v->{
+            String text=reason.getText().toString().trim();
+            if(text.length()<10){reason.setError("Describe la comprobación con al menos 10 caracteres.");return;}
+            JSONObject body=new JSONObject();put(body,"confirma",confirms);put(body,"motivo",text);
+            dialog.dismiss();post("/api/alcaldia/reportes/"+id+"/verificacion",body);
+        }));
+        dialog.show();
     }
 
     private void choose(int id, JSONArray resources){
@@ -225,7 +291,16 @@ public final class CommunityActivity extends AppCompatActivity {
                 .setPositiveButton("Confirmar",(d,w)->post(path,new JSONObject())).show());
     }
     private void post(String path,JSONObject data){
-        run(()->{CommunityApi.call(this,false,path,data,null);return this::render;});
+        run(()->{
+            String response=CommunityApi.call(this,false,path,data,null);
+            String message;
+            if(path.endsWith("/votos") || path.endsWith("/verificacion")){
+                JSONObject result=new JSONObject(response);
+                message="Registrado · "+result.optString("estado").replace('_',' ')
+                        +" · "+result.optInt("confirmaciones")+" de 3 confirmaciones ciudadanas";
+            }else message="Acción registrada.";
+            return ()->{render();Toast.makeText(this,message,Toast.LENGTH_LONG).show();};
+        });
     }
 
     private void export(Uri uri,boolean asPdf){

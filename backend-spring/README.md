@@ -1,5 +1,23 @@
 # Zona Segura - API principal Spring Boot
 
+## Estado vigente: administración, territorio y HTTPS
+
+Implementados directorio y edición de usuarios/roles, moderación con motivo, sanciones de acceso, levantamiento explícito y auditoría. Solo un administrador vigente puede ejecutarlos; se protege al propio y al último administrador y no se sobrescriben verificaciones institucionales. Una sanción exige reporte rechazado, autor distinto y ausencia de sanción anterior para ese hecho; no altera reputación. El levantamiento conserva el historial y restaura el estado previo de acceso. Los cambios administrativos se serializan mediante bloqueo transaccional.
+
+`CuentaVigenteFilter` comprueba cuenta, sanción y roles SQL antes de autorizar cada JWT. El directorio admite búsqueda por ID/nombre/correo de hasta 100 caracteres y limita a 200 coincidencias; la auditoría devuelve hasta 500 registros recientes y admite filtro por usuario. El panel agrega viewport WGS84 e indicadores de total, pendientes, validados, en atención, atendidos, rechazados y zonas altas. Tabla e indicadores se recortan al área exacta; el color considera celdas completas para evitar cambios por recortar un borde.
+
+Nuevas rutas: `GET /api/admin/perfil`, `GET /api/admin/usuarios`, `GET/PUT /api/admin/usuarios/{id}`, `GET /api/moderacion/reportes`, `POST /api/reportes/{id}/rechazo`, `POST /api/reportes/{id}/sancion`, `POST /api/admin/usuarios/{id}/levantar-sancion`, `GET /api/admin/auditoria` y `GET /api/territorio/cobertura`. Escrituras administrativas exigen `motivo` de 10–2000 caracteres; el cambio de usuario recibe `roles` y `activo`. El API obtiene responsables de la sesión. La cobertura admite nuevas coordenadas solo dentro de los doce polígonos urbanos distribuidos en `distritos-urbanos.json`, sin borrar datos históricos.
+
+En este equipo ya se aplicaron `sprint2-operaciones.sql` y `sprint3-administracion.sql` a ZonaSegura, con respaldo previo. Para otra base existente aplicarlos en ese orden, después de verificación; no ejecutar `zona_segura.sql` sobre datos existentes. Los scripts incluyen las opciones SET requeridas por los índices filtrados y se invocan con `sqlcmd -I -b -f 65001`.
+
+HTTPS: desde `04_Codigo`, ejecutar `configurar-https-local.ps1` una vez y luego `iniciar-https-local.ps1 -Componente Spring`. El perfil `https` escucha en `https://localhost:8443`, loopback, TLS 1.2/1.3, clave PKCS12 por entorno. No necesita modificar el almacén de confianza de Windows. El lanzador HTTP anterior permanece para desarrollo; la configuración HTTPS es la utilizada por el APK preparado. El estado público identifica `2.4-administracion`.
+
+Los apartados siguientes conservan detalles de entregas anteriores. Las menciones a migraciones todavía sin aplicar describen esas entregas, no este estado vigente. Compilación y preparación de bases no certifican pruebas funcionales ni los tiempos de los RNF.
+
+## Sincronización y operaciones incorporadas
+
+Se implementaron reportes con Idempotency-Key, unidades y recursos, asignación transaccional, órdenes, bandeja operativa, cierre y avisos de lectura. Aplicar `sql/sprint2-operaciones.sql` en una base existente antes de ejecutar esta versión. El esquema inicial nuevo ya lo incorpora. La nueva migración no se aplicó ni se probó en SQL por indicación del usuario: solo se compiló el backend con `bootJar -x test --offline`. Los resultados HTTP anteriores no certifican estas funciones. El contrato y la instalación están en `../IMPLEMENTACION-PUNTOS-1-A-6.md`.
+
 Backend principal del proyecto, conectado a la base SQL Server `ZonaSegura`. El módulo C# de la otra materia replica el mismo contrato HTTP de autenticación, con usuarios y base independientes.
 
 ## Ejecutar
@@ -7,6 +25,8 @@ Backend principal del proyecto, conectado a la base SQL Server `ZonaSegura`. El 
 Aplicar el esquema `zona_segura.sql` del proyecto Android en una instalación nueva. Configurar la conexión de SQL Server en `src/main/resources/application.properties` o mediante `SPRING_DATASOURCE_URL`. Para autenticación de Windows se necesita la DLL JDBC disponible en `auth`.
 
 Desde esta carpeta, ejecutar `iniciar-backend.ps1`. Usa el puerto 8080 y genera una clave JWT de desarrollo si `ZONA_JWT_SECRET` no está definida. Si cambia la clave al reiniciar, las sesiones anteriores dejan de ser válidas.
+
+Para cargar cambios cuando ya está encendido: `iniciar-backend.cmd -Actualizar -SinAdb`. El reinicio comprueba que el proceso Java del puerto 8080 pertenece a esta carpeta antes de detenerlo; no afecta otros servidores. `-SinAdb` evita las acciones sobre dispositivos. Sin `-Actualizar`, un servidor antiguo que no informa soporte del panel municipal produce un aviso en vez de darse por actualizado. `/api/conexion` devuelve también `version: "2.3-panel"` y `panelMunicipal: true`.
 
 ## Contrato de autenticación
 
@@ -40,7 +60,17 @@ Todas estas rutas requieren Bearer y una cuenta activa:
 
 El POST recibe `descripcion` (10 a 2000 caracteres recortados), `tipoIncidenteId`, `latitud` y `longitud`. El tipo debe existir y estar activo; latitud debe estar entre -90 y 90, longitud entre -180 y 180. El servidor toma el autor de la sesión y fija `PENDIENTE_VALIDACION`; si se envía un `ciudadanoId` distinto al de la sesión, devuelve 400. Devuelve los datos guardados y su fecha en UTC.
 
-En Android, **Crear reporte** abre el formulario y **Mis reportes** abre el historial. Votos, recursos, fotografía y recuperación de contraseña continúan pendientes en este backend. La modificación y eliminación de reportes siguen pendientes en Spring; C# conserva su CRUD completo con control de propietario.
+En Android, **Crear reporte** abre el formulario y **Mis reportes** abre el historial. Votos y verificación municipal están implementados según la versión 2.2. Recursos, moderación general, fotografía y recuperación de contraseña continúan pendientes en este backend. La modificación y eliminación de reportes siguen pendientes en Spring; C# conserva su CRUD con control de propietario y protege de edición o borrado a los reportes que ya tienen votos o verificaciones.
+
+## Validación comunitaria e institucional versión 2.2
+
+Aplicar `sql/sprint2-verificacion.sql` sobre una base existente. Crea únicamente `VerificacionesInstitucionales`; votos usan `ValidacionesComunitarias`, ya incluida en el esquema inicial. El script es aditivo e idempotente y no cambia estados ni votos históricos.
+
+`GET /api/reportes/cercanos?lat=...&lng=...&radio=500` devuelve pendientes de otros autores dentro de 500 m, con contador de positivos, negativos y `yaVoto`, sin identidad ni coordenadas exactas. `POST /api/reportes/{id}/votos` recibe `confirma`, `latitud` y `longitud`. El servidor valida cuenta activa, autor distinto, radio y voto único. Tres positivos de ciudadanos distintos validan el reporte; antes de tres sigue pendiente. Negativos no rechazan automáticamente. El índice informativo es positivos/total y no sustituye el contador. La distancia depende del GPS recibido y no verifica por sí sola la autenticidad física de la posición.
+
+`GET /api/alcaldia/reportes-verificacion` exige rol municipal vigente y registro `PersonalAlcaldia`, y permite revisar pendientes o validados sin comprobación institucional previa. `POST /api/alcaldia/reportes/{id}/verificacion` recibe `confirma` y `motivo` de 10–2000 caracteres. Registra responsable desde la sesión, resultado y fecha UTC; confirma como VALIDADO o rechaza como RECHAZADO. No exige votos ni cercanía; prohíbe reportes propios y sobrescribir decisiones. No asigna recursos ni crea órdenes. La auditoría no se publica en el mapa.
+
+Votos y decisiones bloquean el reporte con `UPDLOCK,HOLDLOCK` dentro de una transacción. Un duplicado o estado cerrado devuelve 409; autor o radio indebido, 403; datos inválidos, 400; inexistente, 404. Se comprueba el rol en SQL además del JWT. Las pruebas del proyecto cubren solicitudes simultáneas y revocación del permiso. No se crean funcionarios ni se elevan roles automáticamente.
 
 ## Mapa de riesgo
 

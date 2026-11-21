@@ -1,0 +1,9 @@
+@model UsuariosModel
+@{ViewData["Title"]="Usuarios y permisos";}
+<div class="page-heading"><div><div class="eyebrow">Administración</div><h1>Usuarios y permisos</h1><p class="muted">Consulta cuentas y autoriza los accesos institucionales. Cada cambio conserva su responsable y motivo.</p></div><a asp-action="Auditoria" class="btn btn-outline-primary">Consultar auditoría</a></div>
+<form method="get" class="surface filter-bar"><div><label for="buscar" class="form-label">Nombre, correo o ID de cuenta</label><input id="buscar" name="buscar" value="@Model.Buscar" class="form-control" maxlength="100"/></div><button class="btn btn-primary align-self-end">Buscar</button><a asp-action="Index" class="align-self-end mb-2">Limpiar</a></form><p class="muted">Se muestran hasta 200 cuentas. Usa la búsqueda para encontrar una cuenta específica.</p>
+@if(Model.Error!=null){<div class="alert alert-danger" role="alert">@Model.Error</div>}
+else{<section class="surface"><div class="table-responsive"><table class="table align-middle"><thead><tr><th>Cuenta</th><th>Permisos</th><th>Acceso</th><th>Gestión</th></tr></thead><tbody>
+@foreach(var user in Model.Usuarios){<tr><td><strong>@user.Nombre</strong><p class="muted mb-0">#@user.Id · @user.Correo</p></td><td>@foreach(var role in user.Roles){<span class="state me-1 mb-1">@role.Replace('_',' ')</span>}</td><td>@(user.Activo?"Activo":"Inactivo") @if(user.Sancionado){<span class="state">Sanción vigente</span>}</td><td><a asp-action="EditarUsuario" asp-route-id="@user.Id" class="btn btn-sm btn-outline-primary">Administrar</a></td></tr>}
+@if(Model.Usuarios.Count==0){<tr><td colspan="4" class="empty-state">No hay cuentas que coincidan con la búsqueda.</td></tr>}
+</tbody></table></div></section>}

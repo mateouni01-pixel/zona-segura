@@ -26,10 +26,25 @@ final class SessionStore {
         cipher.init(Cipher.ENCRYPT_MODE, getOrCreateKey());
         byte[] encrypted = cipher.doFinal(token.getBytes(StandardCharsets.UTF_8));
         context.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit()
+                .remove("citizenId").remove("profileName").remove("profileRole")
                 .putString(TOKEN, Base64.encodeToString(encrypted, Base64.NO_WRAP))
                 .putString(IV, Base64.encodeToString(cipher.getIV(), Base64.NO_WRAP))
                 .putString(BACKEND, context.getString(R.string.backend_base_url))
                 .apply();
+    }
+
+    static void remember(Context context,AuthApi.Profile profile){
+        context.getSharedPreferences(PREFS,Context.MODE_PRIVATE).edit().putInt("citizenId",profile.citizenId)
+                .putString("profileName",profile.name).putString("profileRole",profile.role).apply();
+    }
+    static int citizenId(Context context){
+        if(load(context)==null)return 0;
+        SharedPreferences prefs=context.getSharedPreferences(PREFS,Context.MODE_PRIVATE);
+        return "CIUDADANO".equals(prefs.getString("profileRole",""))?prefs.getInt("citizenId",0):0;
+    }
+    static AuthApi.Profile offlineProfile(Context context){
+        int id=citizenId(context);SharedPreferences prefs=context.getSharedPreferences(PREFS,Context.MODE_PRIVATE);
+        return id>0?new AuthApi.Profile(200,prefs.getString("profileName","Ciudadano"),"CIUDADANO",id):new AuthApi.Profile(0,null,null);
     }
 
     static String load(Context context) {

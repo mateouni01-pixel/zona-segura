@@ -1,0 +1,8 @@
+@model RecursoModel
+@{ViewData["Title"]=Model.Id.HasValue?"Editar recurso":"Registrar recurso";}
+<h1>@ViewData["Title"]</h1><p class="muted">Un recurso con una orden activa conserva su reserva hasta el cierre operativo.</p>
+<form asp-action="EditarRecurso" method="post" class="surface form-width"><div asp-validation-summary="All" class="text-danger" role="alert"></div><input asp-for="Id" type="hidden"/>
+<label asp-for="Nombre" class="form-label"></label><input asp-for="Nombre" class="form-control" maxlength="150" required/>
+<label asp-for="Tipo" class="form-label mt-3"></label><select asp-for="Tipo" class="form-select"><option value="PATRULLA">Patrulla</option><option value="CUADRILLA">Cuadrilla</option></select>
+<label asp-for="UnidadId" class="form-label mt-3">Unidad operativa</label><select asp-for="UnidadId" class="form-select" required><option value="">Seleccionar unidad</option>@foreach(var u in Model.Unidades.Where(u=>u.Activo)){<option value="@u.Id">@u.Nombre</option>}</select>
+<label class="form-check mt-3"><input asp-for="Disponible" class="form-check-input"/> Disponible para asignación</label><label class="form-check"><input asp-for="Activo" class="form-check-input"/> Recurso activo</label><div class="mt-4 d-flex gap-3"><button class="btn btn-primary">Guardar recurso</button><a asp-action="Recursos" class="btn btn-outline-secondary">Volver</a></div></form>

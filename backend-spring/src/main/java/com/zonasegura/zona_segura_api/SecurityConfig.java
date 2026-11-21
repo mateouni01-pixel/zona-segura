@@ -30,6 +30,7 @@ import jakarta.servlet.DispatcherType;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.intercept.AuthorizationFilter;
 
 @Configuration
 public class SecurityConfig {
@@ -71,7 +72,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    SecurityFilterChain securityFilterChain(HttpSecurity http,AuthService authService) throws Exception {
         JwtGrantedAuthoritiesConverter roles = new JwtGrantedAuthoritiesConverter();
         roles.setAuthoritiesClaimName("roles");
         roles.setAuthorityPrefix("ROLE_");
@@ -87,6 +88,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/alcaldia/**").hasRole("PERSONAL_ALCALDIA")
                         .anyRequest().authenticated())
                 .oauth2ResourceServer(oauth -> oauth.jwt(jwt -> jwt.jwtAuthenticationConverter(converter)))
+                .addFilterBefore(new CuentaVigenteFilter(authService),AuthorizationFilter.class)
                 .build();
     }
 }

@@ -1,0 +1,9 @@
+@model AuditoriaModel
+@{ViewData["Title"]="Auditoría administrativa";}
+<div class="eyebrow">Trazabilidad</div><h1>Auditoría administrativa</h1><p class="muted">Hasta 500 decisiones y cambios recientes registrados por el servidor. Las fechas se muestran en UTC.</p>
+<form method="get" class="surface filter-bar"><div><label for="usuarioId" class="form-label">Filtrar por ID de cuenta</label><input id="usuarioId" name="UsuarioId" value="@Model.UsuarioId" type="number" min="1" class="form-control"/></div><button class="btn btn-primary align-self-end">Consultar</button><a asp-action="Auditoria" class="align-self-end mb-2">Limpiar</a></form><div asp-validation-summary="All" class="text-danger" role="alert"></div>
+@if(Model.Error!=null){<div class="alert alert-danger" role="alert">@Model.Error</div>}
+else if(ViewData.ModelState.IsValid){<section class="surface"><div class="table-responsive"><table class="table align-middle"><thead><tr><th>Registro</th><th>Acción</th><th>Objetivo</th><th>Responsable</th><th>Motivo y detalle</th><th>Fecha UTC</th></tr></thead><tbody>
+@foreach(var item in Model.Acciones){<tr><td>#@item.Id</td><td>@item.Accion.Replace('_',' ')</td><td>#@item.ObjetivoId</td><td>#@item.ResponsableId</td><td class="audit-reason">@item.Motivo @if(!string.IsNullOrWhiteSpace(item.Detalle)){<p class="muted mb-0 mt-2">@item.Detalle</p>}</td><td>@item.FechaUtc.ToString("dd/MM/yyyy HH:mm")</td></tr>}
+@if(Model.Acciones.Count==0){<tr><td colspan="6" class="empty-state">No hay registros para esta consulta.</td></tr>}
+</tbody></table></div></section>}

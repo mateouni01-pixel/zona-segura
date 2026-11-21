@@ -1,0 +1,5 @@
+@model List<Orden>
+@{ViewData["Title"]="Órdenes de intervención";}
+<div class="eyebrow">Seguimiento municipal</div><h1>Órdenes de intervención</h1><p class="muted">La unidad operativa registra la atención y libera el recurso desde su bandeja.</p>
+@if(Model.Count==0){<div class="surface empty-state">Todavía no se han creado órdenes.</div>}
+<div class="review-grid">@foreach(var o in Model){<article class="surface"><div class="section-heading"><h2>Orden #@o.Id</h2><span class="state">@o.EstadoOrden</span></div><strong>Reporte #@o.ReporteId · @o.TipoIncidenteNombre</strong><p>@o.Descripcion</p><dl><dt>Recurso y unidad</dt><dd>@o.RecursoNombre · @o.UnidadNombre</dd><dt>Intervención</dt><dd>@o.TipoOrden</dd><dt>Instrucciones</dt><dd>@o.Instrucciones</dd><dt>Aviso operativo</dt><dd>@o.EstadoNotificacion</dd>@if(o.Resultado!=null){<dt>Resultado registrado</dt><dd>@o.Resultado</dd><dt>Cierre UTC</dt><dd>@o.CierreUtc</dd>}</dl></article>}</div>

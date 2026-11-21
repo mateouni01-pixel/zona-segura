@@ -108,6 +108,117 @@ COMMIT TRANSACTION;
     Invoke-Sql $Database $fixtures
 }
 
+function Test-Verificacion($Api, $AuthorSession, $ReportInput) {
+    $base=$Api.url; $name=$Api.name; $voters=@()
+    foreach($n in 1..4){
+        $email="verificador$n@example.invalid"
+        Expect $name "registrar vecino $n" (Request $base 'POST' '/api/auth/register' @{nombre="Vecino $n";correo=$email;password='prueba-segura-123'}) 201
+        $login=Request $base 'POST' '/api/auth/login' @{correo=$email;password='prueba-segura-123'}
+        Expect $name "login vecino $n" $login 200
+        $voters+=($login.Content|ConvertFrom-Json)
+    }
+    $new=Request $base 'POST' '/api/reportes' $ReportInput $AuthorSession.token
+    Expect $name 'crear incidente para votación' $new 201
+    $reportId=($new.Content|ConvertFrom-Json).id
+    $vote=@{confirma=$true;latitud=$ReportInput.latitud;longitud=$ReportInput.longitud}
+    Expect $name 'voto requiere sesión' (Request $base 'POST' "/api/reportes/$reportId/votos" $vote) 401
+    Expect $name 'autor no vota su reporte' (Request $base 'POST' "/api/reportes/$reportId/votos" $vote $AuthorSession.token) 403
+    Expect $name 'voto fuera de 500 m' (Request $base 'POST' "/api/reportes/$reportId/votos" @{confirma=$true;latitud=0;longitud=0} $voters[0].token) 403
+    Expect $name 'voto exige resultado' (Request $base 'POST' "/api/reportes/$reportId/votos" @{latitud=$vote.latitud;longitud=$vote.longitud} $voters[0].token) 400
+    $nearPath="/api/reportes/cercanos?lat=$($vote.latitud)&lng=$($vote.longitud)&radio=500"
+    $near=Request $base 'GET' $nearPath $null $voters[0].token
+    Expect $name 'vecino consulta pendientes cercanos' $near 200
+    if(-not (@($near.Content|ConvertFrom-Json)|Where-Object id -EQ $reportId)){throw 'No aparece el reporte cercano.'}
+    if($near.Content -match 'id_ciudadano|ciudadanoId|correo|nombreAutor'){throw 'La consulta cercana expone al autor.'}
+    foreach($n in 0..1){
+        $response=Request $base 'POST' "/api/reportes/$reportId/votos" $vote $voters[$n].token
+        Expect $name "confirmación $($n+1) mantiene pendiente" $response 200
+        $data=$response.Content|ConvertFrom-Json
+        if($data.estado -ne 'PENDIENTE_VALIDACION' -or $data.confirmaciones -ne ($n+1)){throw 'Se validó antes de tres confirmaciones.'}
+    }
+    Expect $name 'rechazar voto duplicado' (Request $base 'POST' "/api/reportes/$reportId/votos" $vote $voters[0].token) 409
+    $third=Request $base 'POST' "/api/reportes/$reportId/votos" $vote $voters[2].token
+    Expect $name 'tercer ciudadano valida' $third 200
+    $data=$third.Content|ConvertFrom-Json
+    if($data.estado -ne 'VALIDADO' -or $data.confirmaciones -ne 3 -or $data.origenValidacion -ne 'COMUNITARIA'){throw 'No se aplicó el umbral de tres.'}
+    Expect $name 'no admite cuarto voto tras validación' (Request $base 'POST' "/api/reportes/$reportId/votos" $vote $voters[3].token) 409
+    $parallelReport=Request $base 'POST' '/api/reportes' $ReportInput $AuthorSession.token
+    $parallelId=($parallelReport.Content|ConvertFrom-Json).id
+    function Concurrent-Votes([string]$Path,[string]$TokenA,[string]$TokenB){
+        $barrier=[System.Threading.Barrier]::new(2)
+        $jobs=@()
+        try{
+            foreach($token in @($TokenA,$TokenB)){
+                $jobs+=Start-ThreadJob -ScriptBlock {
+                    param($gate,$url,$json,$bearer)
+                    [void]$gate.SignalAndWait([TimeSpan]::FromSeconds(20))
+                    $response=Invoke-WebRequest -Uri $url -Method POST -ContentType 'application/json' -Body $json -Headers @{Authorization="Bearer $bearer"} -SkipHttpErrorCheck -NoProxy -TimeoutSec 20
+                    [int]$response.StatusCode
+                } -ArgumentList $barrier,"$base$Path",($vote|ConvertTo-Json -Compress),$token
+            }
+            $statuses=@($jobs | Receive-Job -Wait -ErrorAction Stop | Sort-Object)
+            if(($statuses -join ',') -ne '200,409'){throw "Concurrencia incorrecta: $($statuses -join ',')"}
+        }finally{
+            $jobs|Remove-Job -Force -ErrorAction SilentlyContinue
+            $barrier.Dispose()
+        }
+    }
+    Concurrent-Votes "/api/reportes/$parallelId/votos" $voters[0].token $voters[0].token
+    $results.Add([pscustomobject]@{api=$name;prueba='voto simultáneo duplicado produce 200 y 409';resultado='OK';http=200})
+    Expect $name 'segundo voto antes de concurrencia' (Request $base 'POST' "/api/reportes/$parallelId/votos" $vote $voters[1].token) 200
+    Concurrent-Votes "/api/reportes/$parallelId/votos" $voters[2].token $voters[3].token
+    $results.Add([pscustomobject]@{api=$name;prueba='tercero y cuarto simultáneos solo aceptan uno';resultado='OK';http=200})
+    $parallelState=Request $base 'GET' "/api/reportes/$parallelId" $null $AuthorSession.token
+    if(($parallelState.Content|ConvertFrom-Json).estado -ne 'VALIDADO'){throw 'La concurrencia no validó el incidente.'}
+    Expect $name 'cercanos requiere coordenadas' (Request $base 'GET' '/api/reportes/cercanos?radio=500' $null $voters[0].token) 400
+    $negativeReport=Request $base 'POST' '/api/reportes' $ReportInput $AuthorSession.token
+    $negativeId=($negativeReport.Content|ConvertFrom-Json).id
+    foreach($n in 0..2){Expect $name "voto negativo $n" (Request $base 'POST' "/api/reportes/$negativeId/votos" @{confirma=$false;latitud=$vote.latitud;longitud=$vote.longitud} $voters[$n].token) 200}
+    $pending=Request $base 'GET' "/api/reportes/$negativeId" $null $AuthorSession.token
+    if(($pending.Content|ConvertFrom-Json).estado -ne 'PENDIENTE_VALIDACION'){throw 'Los votos negativos rechazaron automáticamente un reporte.'}
+    $official=Request $base 'POST' '/api/auth/register' @{nombre='Revisor municipal';correo='municipal@example.invalid';password='prueba-segura-123'}
+    Expect $name 'crear cuenta para perfil municipal de prueba' $official 201
+    $officialId=($official.Content|ConvertFrom-Json).idUsuario
+    $beforePromotion=Request $base 'POST' '/api/auth/login' @{correo='municipal@example.invalid';password='prueba-segura-123'}
+    $ownReport=Request $base 'POST' '/api/reportes' $ReportInput ($beforePromotion.Content|ConvertFrom-Json).token
+    $ownId=($ownReport.Content|ConvertFrom-Json).id
+    if($name -eq 'Spring'){
+        Invoke-Sql $Api.database "DELETE dbo.UsuarioRoles WHERE id_usuario=$officialId; INSERT dbo.UsuarioRoles SELECT $officialId,id_rol FROM dbo.Roles WHERE nombre=N'PERSONAL_ALCALDIA'; INSERT dbo.PersonalAlcaldia(id_usuario,cargo,rol_acceso) VALUES($officialId,N'Inspector de prueba',N'VERIFICACION');"
+    }else{Invoke-Sql $Api.database "UPDATE dbo.Usuarios SET Rol=N'PERSONAL_ALCALDIA' WHERE Id=$officialId"}
+    $officialLogin=Request $base 'POST' '/api/auth/login' @{correo='municipal@example.invalid';password='prueba-segura-123'}
+    Expect $name 'login municipal verificador' $officialLogin 200
+    $officialToken=($officialLogin.Content|ConvertFrom-Json).token
+    Expect $name 'perfil municipal' (Request $base 'GET' '/api/alcaldia/perfil' $null $officialToken) 200
+    Expect $name 'ciudadano no accede a verificación institucional' (Request $base 'GET' '/api/alcaldia/reportes-verificacion' $null $voters[0].token) 403
+    Expect $name 'bandeja municipal de revisión' (Request $base 'GET' '/api/alcaldia/reportes-verificacion' $null $officialToken) 200
+    $evidence=@{confirma=$true;motivo='Inspección municipal de prueba confirma el incidente en el lugar.'}
+    Expect $name 'personal municipal no verifica un reporte propio' (Request $base 'POST' "/api/alcaldia/reportes/$ownId/verificacion" $evidence $officialToken) 403
+    Expect $name 'ciudadano no puede verificar institucionalmente' (Request $base 'POST' "/api/alcaldia/reportes/$negativeId/verificacion" $evidence $voters[0].token) 403
+    Expect $name 'motivo obligatorio' (Request $base 'POST' "/api/alcaldia/reportes/$negativeId/verificacion" @{confirma=$true;motivo=''} $officialToken) 400
+    $verified=Request $base 'POST' "/api/alcaldia/reportes/$negativeId/verificacion" $evidence $officialToken
+    Expect $name 'Alcaldía confirma sin tres votos positivos' $verified 200
+    if(($verified.Content|ConvertFrom-Json).estado -ne 'VALIDADO' -or ($verified.Content|ConvertFrom-Json).origenValidacion -ne 'INSTITUCIONAL'){throw 'No se guardó la confirmación institucional.'}
+    Expect $name 'no sobrescribir verificación institucional' (Request $base 'POST' "/api/alcaldia/reportes/$negativeId/verificacion" $evidence $officialToken) 409
+    $rejectedReport=Request $base 'POST' '/api/reportes' $ReportInput $AuthorSession.token
+    $rejectedId=($rejectedReport.Content|ConvertFrom-Json).id
+    $rejected=Request $base 'POST' "/api/alcaldia/reportes/$rejectedId/verificacion" @{confirma=$false;motivo='Comprobación municipal de prueba identifica información incorrecta.'} $officialToken
+    Expect $name 'rechazo institucional fundamentado' $rejected 200
+    if(($rejected.Content|ConvertFrom-Json).estado -ne 'RECHAZADO'){throw 'No se registró el rechazo.'}
+    Expect $name 'no reabrir rechazado mediante voto' (Request $base 'POST' "/api/reportes/$rejectedId/votos" $vote $voters[0].token) 409
+    if($name -eq 'Spring'){
+        Invoke-Sql $Api.database "IF NOT EXISTS(SELECT 1 FROM dbo.VerificacionesInstitucionales WHERE id_reporte=$negativeId AND id_personal=$officialId AND confirma=1 AND LEN(motivo)>=10 AND fecha_hora IS NOT NULL) THROW 51000,'Falta auditoría institucional',1;"
+        Invoke-Sql $Api.database "DELETE dbo.UsuarioRoles WHERE id_usuario=$officialId"
+    }else{
+        Invoke-Sql $Api.database "IF NOT EXISTS(SELECT 1 FROM dbo.VerificacionesInstitucionales WHERE ReporteId=$negativeId AND PersonalId=$officialId AND Confirma=1 AND LEN(Motivo)>=10 AND FechaUtc IS NOT NULL) THROW 51000,'Falta auditoría institucional',1;"
+        Expect $name 'conservar reporte votado al borrar' (Request $base 'DELETE' "/api/reportes/$reportId" $null $AuthorSession.token) 409
+        Expect $name 'conservar evidencia al editar reporte' (Request $base 'PUT' "/api/reportes/$reportId" $ReportInput $AuthorSession.token) 409
+        Invoke-Sql $Api.database "UPDATE dbo.Usuarios SET Rol=N'CIUDADANO' WHERE Id=$officialId"
+    }
+    $removed=Request $base 'GET' '/api/alcaldia/reportes-verificacion' $null $officialToken
+    if([int]$removed.StatusCode -notin 401,403){throw 'Un rol retirado conserva permiso institucional.'}
+    $results.Add([pscustomobject]@{api=$name;prueba='auditoría institucional y revocación de rol';resultado='OK';http=[int]$removed.StatusCode})
+}
+
 try {
     foreach ($database in @($springDb, $csharpDb)) {
         if ($database -notmatch '^ZonaSeguraAuthPrueba_(Spring|Csharp)_[a-f0-9]{10}$') { throw 'Nombre de base de pruebas inválido.' }
@@ -261,6 +372,7 @@ try {
         Expect $name 'mapa rechaza NaN' (Request $base 'GET' '/api/mapa/resumen?sur=NaN&oeste=-63.2&norte=-17.7&este=-63.1' $null $session.token) 400
         Expect $name 'mapa rechaza período inválido' (Request $base 'GET' ($mapPath.Replace('dias=7','dias=91')) $null $session.token) 400
         Expect $name 'mapa rechaza categoría inválida' (Request $base 'GET' ($mapPath+'&tipoIncidenteId=0') $null $session.token) 400
+        Test-Verificacion $api $session $reportInput
         Expect $name 'token malformado' (Request $base 'GET' '/api/auth/me' $null 'token-invalido') 401
         $parts = $session.token.Split('.')
         $replacement = if ($parts[2][0] -eq 'A') { 'B' } else { 'A' }
