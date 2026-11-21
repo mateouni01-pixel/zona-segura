@@ -66,6 +66,9 @@ public final class CommunityActivity extends AppCompatActivity {
                     Math.round(16 * host.getResources().getDisplayMetrics().density),
                     button.getPaddingTop(), button.getPaddingEnd(), button.getPaddingBottom());
             button.setText(name);
+            if (role.equals("citizen")) {
+                button.setIconResource(name.equals("Mapa de riesgo") ? R.drawable.nav_mapa : R.drawable.nav_validar);
+            }
             button.setOnClickListener(v -> host.startActivity(Arrays.asList("Recursos","Unidades","Intervenciones","Órdenes municipales").contains(name)
                     ? new Intent(host,OperationsActivity.class).putExtra("page",name) : name.equals("Mapa de riesgo")
                     ? new Intent(host, RiskMapActivity.class)
@@ -87,6 +90,7 @@ public final class CommunityActivity extends AppCompatActivity {
         scroll.addView(panel);
         scroll.setBackgroundResource(R.color.login_background);
         setContentView(scroll);
+        if ("Validar reportes".equals(page)) CitizenNavigation.attach(this, R.id.nav_validar);
         ViewCompat.setOnApplyWindowInsetsListener(scroll,(v,i) -> {
             var bars = i.getInsets(WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.ime());
             v.setPadding(bars.left,bars.top,bars.right,bars.bottom); return i;
@@ -110,7 +114,7 @@ public final class CommunityActivity extends AppCompatActivity {
             case "Crear cuenta": account(true); backToLogin(); return;
             case "Recuperar contraseña": account(false); backToLogin(); return;
             case "Validar reportes":
-                label("Tres ciudadanos distintos del autor deben confirmar el incidente. Un voto por cuenta, dentro de 500 m. Alcaldía también puede verificarlo.");
+                label("Radio de validación · 500 m\nSe necesitan tres confirmaciones de ciudadanos distintos del autor.");
                 if (!located) {
                     button("Buscar a 500 metros", () -> {
                         if (hasGps()) locate();
@@ -194,7 +198,7 @@ public final class CommunityActivity extends AppCompatActivity {
                 if(row.optBoolean("yaVoto"))label("Ya registraste tu voto. El reporte sigue pendiente hasta reunir tres confirmaciones o la verificación de Alcaldía.");
                 else {
                     JSONObject vote=new JSONObject();put(vote,"latitud",lat);put(vote,"longitud",lng);
-                    button("Confirmar reporte",()->{put(vote,"confirma",true);post(base+"/votos",vote);});
+                    button("Sí, confirmo este incidente",()->{put(vote,"confirma",true);post(base+"/votos",vote);});
                     secondaryButton("Marcar como falso o spam",()->{put(vote,"confirma",false);post(base+"/votos",vote);});
                 }
             } else if(page.equals("Verificar reportes")){

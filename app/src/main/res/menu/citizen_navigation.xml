@@ -1,0 +1,6 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/nav_inicio" android:title="Inicio" android:icon="@drawable/nav_inicio" />
+    <item android:id="@+id/nav_mapa" android:title="Mapa" android:icon="@drawable/nav_mapa" />
+    <item android:id="@+id/nav_reportes" android:title="Mis reportes" android:icon="@drawable/nav_reportes" />
+    <item android:id="@+id/nav_validar" android:title="Validar" android:icon="@drawable/nav_validar" />
+</menu>

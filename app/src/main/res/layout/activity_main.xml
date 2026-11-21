@@ -19,94 +19,119 @@
         android:paddingEnd="24dp"
         android:paddingBottom="32dp">
 
-        <include layout="@layout/civic_brand" />
+        <ImageView
+            android:layout_width="64dp" android:layout_height="64dp"
+            android:layout_gravity="center_horizontal" android:layout_marginTop="12dp"
+            android:background="@drawable/civic_header" android:padding="12dp"
+            android:src="@drawable/ic_shield" android:importantForAccessibility="no" />
+        <TextView style="@style/CivicHeading"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_marginTop="12dp" android:gravity="center" android:text="@string/app_name" />
+        <TextView style="@style/CivicBody"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:gravity="center" android:text="Seguridad ciudadana · Santa Cruz de la Sierra" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:text="@string/login_title"
-            style="@style/CivicHeading"
-            android:accessibilityHeading="true" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="@string/login_subtitle"
-            style="@style/CivicBody" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/emailLayout"
-            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:hint="@string/login_email"
-            app:boxBackgroundColor="@color/login_field_background"
-            app:boxStrokeColor="@color/civic_field_stroke"
-            app:hintTextColor="@color/login_secondary_text"
-            app:errorEnabled="false">
+            android:background="@drawable/civic_card"
+            android:orientation="vertical"
+            android:padding="20dp">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/emailInput"
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:autofillHints="emailAddress"
-                android:imeOptions="actionNext"
-                android:inputType="textEmailAddress"
-                android:maxLines="1"
-                android:textColor="@color/login_text" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:text="@string/login_title"
+                style="@style/CivicHeading"
+                android:accessibilityHeading="true" />
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/passwordLayout"
-            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:hint="@string/login_password"
-            app:boxBackgroundColor="@color/login_field_background"
-            app:boxStrokeColor="@color/civic_field_stroke"
-            app:hintTextColor="@color/login_secondary_text"
-            app:endIconTint="@color/login_primary"
-            app:endIconMode="password_toggle"
-            app:errorIconDrawable="@null"
-            app:errorEnabled="false">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/passwordInput"
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:autofillHints="password"
-                android:imeOptions="actionDone"
-                android:inputType="textPassword"
-                android:maxLines="1"
-                android:textColor="@color/login_text" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:layout_marginTop="8dp"
+                android:text="@string/login_subtitle"
+                style="@style/CivicBody" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/loginButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="@string/login_action"
-            android:textAllCaps="false"
-            android:textSize="16sp"
-            app:backgroundTint="@color/login_primary"
-            app:cornerRadius="14dp" />
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/emailLayout"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:hint="@string/login_email"
+                app:boxCornerRadiusTopStart="8dp"
+                app:boxCornerRadiusTopEnd="8dp"
+                app:boxCornerRadiusBottomStart="8dp"
+                app:boxCornerRadiusBottomEnd="8dp"
+                app:boxBackgroundColor="@color/login_field_background"
+                app:boxStrokeColor="@color/civic_field_stroke"
+                app:hintTextColor="@color/login_secondary_text"
+                app:errorEnabled="false">
 
-        <TextView
-            android:id="@+id/loginStatus"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:accessibilityLiveRegion="polite"
-            android:gravity="center"
-            android:textColor="@color/login_secondary_text"
-            android:textSize="14sp"
-            android:visibility="gone" />
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/emailInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autofillHints="emailAddress"
+                    android:imeOptions="actionNext"
+                    android:inputType="textEmailAddress"
+                    android:maxLines="1"
+                    android:textColor="@color/login_text" />
+            </com.google.android.material.textfield.TextInputLayout>
 
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/passwordLayout"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:hint="@string/login_password"
+                app:boxCornerRadiusTopStart="8dp"
+                app:boxCornerRadiusTopEnd="8dp"
+                app:boxCornerRadiusBottomStart="8dp"
+                app:boxCornerRadiusBottomEnd="8dp"
+                app:boxBackgroundColor="@color/login_field_background"
+                app:boxStrokeColor="@color/civic_field_stroke"
+                app:hintTextColor="@color/login_secondary_text"
+                app:endIconTint="@color/login_primary"
+                app:endIconMode="password_toggle"
+                app:errorIconDrawable="@null"
+                app:errorEnabled="false">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/passwordInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autofillHints="password"
+                    android:imeOptions="actionDone"
+                    android:inputType="textPassword"
+                    android:maxLines="1"
+                    android:textColor="@color/login_text" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/loginButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="@string/login_action"
+                android:textAllCaps="false"
+                android:textSize="16sp"
+                app:backgroundTint="@color/login_primary"
+                app:cornerRadius="8dp" />
+
+            <TextView
+                android:id="@+id/loginStatus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:accessibilityLiveRegion="polite"
+                android:gravity="center"
+                android:textColor="@color/login_secondary_text"
+                android:textSize="14sp"
+                android:visibility="gone" />
+        </LinearLayout>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/registerAccount"

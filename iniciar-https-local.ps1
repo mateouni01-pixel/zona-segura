@@ -9,7 +9,9 @@ $env:ASPNETCORE_Kestrel__Certificates__Default__Path=$config.keystore
 $env:ASPNETCORE_Kestrel__Certificates__Default__Password=$config.password
 $env:ZONA_TLS_KEYSTORE=([Uri]$config.keystore).AbsoluteUri
 $env:ZONA_TLS_PASSWORD=$config.password
-$env:JAVA_HOME='C:\Program Files\Android\Android Studio\jbr'
+if ($Componente -eq 'Spring' -and [string]::IsNullOrWhiteSpace($env:JAVA_HOME)) {
+    $env:JAVA_HOME='C:\Program Files\Android\Android Studio\jbr'
+}
 if([string]::IsNullOrWhiteSpace($env:ZONA_JWT_SECRET)){
     $bytes=New-Object byte[] 32;$random=[System.Security.Cryptography.RandomNumberGenerator]::Create()
     try{$random.GetBytes($bytes)}finally{$random.Dispose()}
@@ -35,7 +37,7 @@ switch($Componente){
         $env:SPRING_PROFILES_ACTIVE='https'
         $env:Path="$env:JAVA_HOME\bin;$projectRoot\auth;$env:Path"
         Write-Host 'API Spring HTTPS: https://localhost:8443. Las sesiones anteriores pueden requerir un nuevo ingreso.'
-        & (Join-Path $projectRoot 'gradlew.bat') bootRun --offline
+        & (Join-Path $projectRoot 'gradlew.bat') bootRun
     }
     'Panel'{
         if([string]::IsNullOrWhiteSpace($env:Api__BaseUrl)){$env:Api__BaseUrl='https://localhost:8443/'}

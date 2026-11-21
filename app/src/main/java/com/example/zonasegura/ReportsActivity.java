@@ -88,6 +88,7 @@ public final class ReportsActivity extends AppCompatActivity {
         content.setPadding(padding, padding, padding, padding);
         scroll.addView(content);
         setContentView(scroll);
+        if (!creating) CitizenNavigation.attach(this, R.id.nav_reportes);
         ViewCompat.setOnApplyWindowInsetsListener(scroll, (view, insets) -> {
             var bars = insets.getInsets(WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.ime());
             view.setPadding(bars.left, bars.top, bars.right, bars.bottom);
@@ -95,7 +96,7 @@ public final class ReportsActivity extends AppCompatActivity {
         });
         scroll.setBackgroundColor(getColor(R.color.login_background));
         heading = label(getString(creating ? R.string.report_create : R.string.reports_title));
-        heading.setTextSize(28);
+        heading.setTextSize(30);
         ViewCompat.setAccessibilityHeading(heading, true);
         heading.setTypeface(android.graphics.Typeface.create("sans-serif-medium", 0));
         heading.setBackgroundResource(R.drawable.civic_header);
@@ -200,10 +201,12 @@ public final class ReportsActivity extends AppCompatActivity {
             }
         }
         if (creating && !ids.isEmpty()) {
-            TextView section = label(getString(R.string.report_create));
-            section.setTextSize(22);
-            section.setTypeface(android.graphics.Typeface.DEFAULT_BOLD);
+            gpsStatus=label(location==null?"La ubicación se captura automáticamente al abrir el formulario.":"Ubicación capturada. Puedes actualizarla antes de guardar.");
+            button("Actualizar ubicación", this::requestGps);
+            gpsStatus.setBackgroundResource(R.drawable.civic_card);
+            gpsStatus.setPadding(dp(16), dp(14), dp(16), dp(14));
             TextView typeLabel = label("Tipo de incidente");
+            typeLabel.setTypeface(android.graphics.Typeface.DEFAULT_BOLD);
             Spinner typesInput = new Spinner(this);
             var adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, names);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -218,8 +221,9 @@ public final class ReportsActivity extends AppCompatActivity {
             typesInput.setPadding(dp(12), 0, dp(12), 0);
             content.addView(typesInput);
             TextView descriptionLabel = label("Descripción");
+            descriptionLabel.setTypeface(android.graphics.Typeface.DEFAULT_BOLD);
             EditText description = new EditText(this);
-            description.setHint("Describe el incidente");
+            description.setHint("¿Qué ocurrió? Describe el hecho.");
             draftField = description;
             description.setId(View.generateViewId());
             descriptionLabel.setLabelFor(description.getId());
@@ -230,8 +234,6 @@ public final class ReportsActivity extends AppCompatActivity {
             description.setBackgroundResource(R.drawable.civic_card);
             description.setPadding(dp(14), dp(12), dp(14), dp(12));
             content.addView(description);
-            gpsStatus=label(location==null?"La ubicación se captura automáticamente al abrir el formulario.":"Ubicación capturada. Puedes actualizarla antes de guardar.");
-            button("Actualizar ubicación", this::requestGps);
             MaterialButton send = button("Guardar y sincronizar reporte", null);
             send.setOnClickListener(view -> submit(send, ids.get(typesInput.getSelectedItemPosition()),
                     description.getText().toString().trim()));
@@ -288,10 +290,16 @@ public final class ReportsActivity extends AppCompatActivity {
         String raw = report.optString("estado");
         String readable = raw.equals("PENDIENTE_VALIDACION") ? "Pendiente de validación"
                 : raw.replace('_', ' ').toLowerCase(new java.util.Locale("es"));
-        state.setText("Estado · " + readable);
+        state.setText(readable.isEmpty() ? "Estado desconocido" : readable.substring(0, 1).toUpperCase(java.util.Locale.ROOT) + readable.substring(1));
         state.setTextSize(14);
         state.setTextColor(getColor(R.color.login_primary));
-        card.addView(state);
+        android.graphics.drawable.GradientDrawable badge = new android.graphics.drawable.GradientDrawable();
+        badge.setCornerRadius(dp(8));
+        badge.setColor(android.graphics.Color.parseColor(raw.equals("RECHAZADO") ? "#FFEBEE" : raw.equals("PENDIENTE_VALIDACION") ? "#FFF1CB" : "#E6F4F1"));
+        state.setTextColor(getColor(R.color.login_text));
+        state.setBackground(badge);
+        state.setPadding(dp(10), dp(4), dp(10), dp(4));
+        card.addView(state, new LinearLayout.LayoutParams(-2, -2));
         MaterialButton photo = new MaterialButton(this, null, com.google.android.material.R.attr.materialButtonOutlinedStyle);
         photo.setText("Adjuntar fotografía");
         photo.setOnClickListener(v -> {

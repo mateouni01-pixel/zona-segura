@@ -30,6 +30,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
+            android:background="@drawable/civic_card"
+            android:padding="16dp"
             android:accessibilityLiveRegion="polite"
             android:text="@string/home_checking"
             style="@style/CivicBody" />
@@ -38,15 +40,18 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/createReportButton"
+            android:minHeight="64dp"
             android:layout_marginTop="24dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/report_create"
             android:visibility="gone"
-            app:cornerRadius="14dp" />
+            app:cornerRadius="16dp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/reportsButton"
+            app:icon="@drawable/nav_reportes"
+            android:gravity="start|center_vertical"
             style="?attr/materialButtonOutlinedStyle"
             android:layout_marginTop="16dp"
             android:layout_width="match_parent"

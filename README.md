@@ -30,7 +30,7 @@ La validación de código de este bloque es compilación de Android, Spring, API
 
 ## Implementación local de almacenamiento y operaciones
 
-Los puntos 1 al 6 están implementados en código: SQLite para reportes pendientes, sincronización automática con WorkManager, recursos y unidades, órdenes con reserva, bandeja operativa y avisos de órdenes. Android, Spring y C# comparten el contrato. Consultar [instalación y alcance](IMPLEMENTACION-PUNTOS-1-A-6.md). La verificación solicitada fue únicamente de compilación; las nuevas migraciones están preparadas pero no aplicadas, y no se ejecutaron emuladores ni pruebas funcionales. No se enviaron cambios a Git.
+Los puntos 1 al 6 están implementados en código: SQLite para reportes pendientes, sincronización automática con WorkManager, recursos y unidades, órdenes con reserva, bandeja operativa y avisos de órdenes. Android, Spring y C# comparten el contrato. Consultar [instalación y alcance](IMPLEMENTACION-PUNTOS-1-A-6.md). Las migraciones de operaciones y administración se aplicaron posteriormente en los entornos indicados en la sección de actualización. Cada instalación requiere preparar su propia base.
 
 Proyecto Zona Segura: aplicación Android, API principal Spring Boot en `backend-spring`, pruebas de integración y esquema de SQL Server (`zona_segura.sql`). La implementación equivalente en C# se conserva en [Zona-Segura-Api, rama sprint-2/Mateo](https://github.com/mateouni01-pixel/Zona-Segura-Api/tree/sprint-2/Mateo).
 
@@ -40,7 +40,7 @@ Proyecto Zona Segura: aplicación Android, API principal Spring Boot en `backend
 
 Configurar SQL Server y su esquema, instalar JDK 21 y compilar desde `backend-spring` con `gradlew.bat test bootJar`. Para iniciar en este equipo usar `backend-spring/iniciar-backend.cmd`. Si la instancia de SQL Server es distinta, configurar `SPRING_DATASOURCE_URL` antes de iniciar. Nunca guardar contraseñas o claves JWT en archivos versionados.
 
-Las [pruebas reproducibles](pruebas/README.md) conservan 176 comprobaciones de la versión 2.2: autenticación, reportes, mapa y validación. Son anteriores a almacenamiento offline y operaciones y no certifican estos módulos nuevos. Su verificación en ejecución queda pendiente; recuperación, evidencia fotográfica en servidor y moderación general continúan fuera de estos seis puntos.
+Las [pruebas reproducibles](pruebas/README.md) conservan 176 comprobaciones de la versión 2.2: autenticación, reportes, mapa y validación. Son anteriores a almacenamiento offline y operaciones y no certifican estos módulos nuevos. Su verificación en ejecución queda pendiente; recuperación y evidencia fotográfica en servidor siguen fuera del cierre acordado.
 
 ## Abrir el proyecto
 
@@ -93,7 +93,7 @@ Ambas APIs ofrecen `GET /api/mapa/resumen` y `GET /api/mapa/zonas` con Bearer. P
 
 Un reporte pasa de `PENDIENTE_VALIDACION` a `VALIDADO` cuando **tres ciudadanos distintos del autor** lo confirman dentro de 500 m, o cuando **personal autorizado de Alcaldía** registra una comprobación institucional positiva. El autor no puede votar ni verificar su propio reporte. Un voto total por cuenta y reporte; uno o dos positivos no validan. Los votos negativos quedan registrados para revisión y no provocan rechazo automático. El índice informativo es positivos/votos totales; el criterio de validación es el contador de tres positivos, incluso si hay negativos.
 
-En Android, **Validar reportes** obtiene el GPS y muestra pendientes ajenos cercanos con contador de confirmaciones y estado de voto. El menú municipal incluye **Verificar reportes**: muestra incidentes pendientes o validados por la comunidad, su ubicación para inspección y permite confirmar o rechazar describiendo la comprobación (10–2000 caracteres). La revisión institucional no exige tres votos ni cercanía; guarda reporte, funcionario, resultado, motivo y fecha UTC en una transacción. Una decisión por reporte, sin sobrescritura; el rechazo fundamentado cambia a `RECHAZADO`. La gestión de apelaciones y la moderación general son alcances posteriores.
+En Android, **Validar reportes** obtiene el GPS y muestra pendientes ajenos cercanos con contador de confirmaciones y estado de voto. El menú municipal incluye **Verificar reportes**: muestra incidentes pendientes o validados por la comunidad, su ubicación para inspección y permite confirmar o rechazar describiendo la comprobación (10–2000 caracteres). La revisión institucional no exige tres votos ni cercanía; guarda reporte, funcionario, resultado, motivo y fecha UTC en una transacción. Una decisión por reporte, sin sobrescritura; el rechazo fundamentado cambia a `RECHAZADO`. La administración y la moderación vigentes se describen al inicio de este README. Las apelaciones siguen fuera del alcance.
 
 | Operación implementada en ambas APIs | Contrato |
 | --- | --- |
@@ -147,4 +147,4 @@ El ZIP de pruebas conserva el APK y guion anteriores. En la compilación actual,
 
 La demo usa SQLite local, cuentas ficticias y un plano ilustrativo con zonas dibujadas de antemano. El umbral de dos votos y la brigada única son datos de demostración. La recuperación usa un código local. Los cambios del modo de demostración están en `app/src/debug` y la pantalla de login del Sprint 1 sigue disponible como **Zona Segura**.
 
-La integración requiere la URL de Mateo y los contratos de registro, recuperación, tipos de incidente, carga de fotos, reportes, votos, mapa y gestión municipal. También faltan los umbrales oficiales, la geometría y criterios de riesgo, la decisión sobre permisos de moderación y el catálogo de prueba. Para el flujo conectado quedan pendientes Room, reintentos con WorkManager, el cliente HTTP y la integración con Spring Boot y SQL Server. El panel web y las alertas de emergencia quedan pendientes de decisión de alcance.
+Para la aplicación conectada consulta el estado vigente al inicio de este README y el guion de entrega. El equipo retiró el guardado sin internet y la sincronización del alcance de aceptación.

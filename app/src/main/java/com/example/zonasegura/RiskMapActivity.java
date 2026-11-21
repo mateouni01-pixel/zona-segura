@@ -81,6 +81,7 @@ public final class RiskMapActivity extends AppCompatActivity {
         if(state!=null){days=state.getInt("days",7);selectedType=state.getInt("type");centerLat=state.getDouble("lat",centerLat);centerLng=state.getDouble("lng",centerLng);zoom=state.getInt("zoom",13);}
         restoredType=selectedType;
         setContentView(R.layout.activity_risk_map);
+        if ("CIUDADANO".equals(SessionStore.offlineProfile(this).role)) CitizenNavigation.attach(this, R.id.nav_mapa);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.riskMapRoot),(v,insets)->{
             var bars=insets.getInsets(WindowInsetsCompat.Type.systemBars());v.setPadding(bars.left,bars.top,bars.right,bars.bottom);return insets;
         });

@@ -79,6 +79,7 @@ public class HomeActivity extends AppCompatActivity {
                     welcome.setText(getString(R.string.home_welcome, result.name));
                     status.setText(getString(R.string.home_role, result.role));
                     if ("CIUDADANO".equalsIgnoreCase(result.role)) {
+                        CitizenNavigation.attach(this, R.id.nav_inicio);
                         ReportSyncWorker.resume(this,false);
                         if(offline)status.setText("Sin conexión. Puedes guardar reportes pendientes y consultar el historial local.");
                         View reports = findViewById(R.id.reportsButton);

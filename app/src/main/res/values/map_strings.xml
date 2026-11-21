@@ -25,4 +25,7 @@
     <string name="map_privacy">Zonas aproximadas de 500 m. Los incidentes muestran cantidades agrupadas, sin nombres ni ubicaciones exactas. El punto azul indica tu propia ubicación mientras tienes abierto el mapa. La ausencia de reportes no garantiza seguridad.</string>
     <string name="map_tiles_offline">No se pudo cargar el mapa de calles. Revisa el acceso a internet del dispositivo.</string>
     <string name="map_content_description">Mapa de calles y zonas de riesgo. Puedes acercar, alejar y tocar una zona para consultar su cantidad de incidentes.</string>
+    <string name="map_low">Bajo\n1–2 reportes</string>
+    <string name="map_medium">Medio\n3–4 reportes</string>
+    <string name="map_high">Alto\n5+ reportes</string>
 </resources>
