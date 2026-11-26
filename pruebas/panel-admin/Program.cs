@@ -32,6 +32,7 @@ builder.Services.AddAuthentication(options=>{
     .AddScheme<AuthenticationSchemeOptions,TestIdentity>("Header",_=>{})
     .AddCookie(options=>{options.LoginPath="/Cuenta/Ingresar";options.AccessDeniedPath="/Cuenta/AccesoDenegado";});
 builder.Services.AddAuthorization();builder.Services.AddInterfacesUsuario();
+builder.Services.AddSingleton<GuiasUso>();
 var api=new FakeApi();
 builder.Services.AddTransient(provider=>new ZonaApi(new HttpClient(api,false){BaseAddress=new Uri("https://api.test/")},provider.GetRequiredService<IHttpContextAccessor>()));
 await using var app=builder.Build();
@@ -227,6 +228,28 @@ try{
     using(var removed=await client.PostAsync("/Admin/EliminarUsuario",new FormUrlEncodedContent(DeleteFields())))
         Check(removed.StatusCode==HttpStatusCode.Redirect&&removed.Headers.Location?.ToString()=="/Admin"&&api.LastPath=="/api/admin/usuarios/42"&&api.LastBody.GetProperty("confirmacionId").GetInt32()==42,"Eliminar usa DELETE con motivo y confirmación y vuelve al directorio");
     Check(WebUtility.HtmlDecode(await client.GetStringAsync("/Admin")).Contains("se eliminó definitivamente"),"El directorio confirma la eliminación definitiva");
+    using(var noSession=await publicBrowser.GetAsync("/Guias?rol=CIUDADANO"))Check(noSession.StatusCode==HttpStatusCode.Redirect,"Las guías de una interfaz exigen sesión");
+    string[] guideButtons=["Obtener mi ubicación","Crear orden y reservar","Eliminar cuenta definitivamente","Confirmar atención"];
+    string[] guideSearches=["UBICACION","RESERVAR","ELIMINAR","ATENCION"];
+    for(int index=0;index<allRoles.Length;index++){
+        using var guideBrowser=NewClient();guideBrowser.DefaultRequestHeaders.Add("X-Test-Role",allRoles[index]);
+        int beforeGuide=api.Requests;
+        var guideHtml=WebUtility.HtmlDecode(await guideBrowser.GetStringAsync("/Guias?rol="+allRoles[index]));
+        Check(guideHtml.Contains("Guías de uso")&&guideHtml.Contains(guideButtons[index])&&guideHtml.Contains("Antes de usarlo")&&guideHtml.Contains("Qué ocurre"),$"Guía {allRoles[index]} explica sus controles, requisitos y resultados");
+        Check(guideHtml.Contains(registry.Buscar(allRoles[index])!.Interfaz.CssClase),$"Guía {allRoles[index]} conserva el aspecto de su interfaz");
+        var filtered=WebUtility.HtmlDecode(await guideBrowser.GetStringAsync("/Guias?rol="+allRoles[index]+"&buscar="+guideSearches[index]));
+        Check(filtered.Contains(guideButtons[index]),$"Guía {allRoles[index]} permite buscar sin distinguir mayúsculas ni acentos");
+        var empty=WebUtility.HtmlDecode(await guideBrowser.GetStringAsync("/Guias?rol="+allRoles[index]+"&buscar=zzzzsincoincidencias"));
+        Check(empty.Contains("No hay explicaciones que coincidan"),$"Guía {allRoles[index]} explica una búsqueda sin resultados");
+        using(var otherGuide=await guideBrowser.GetAsync("/Guias?rol="+allRoles[(index+1)%allRoles.Length]))Check(otherGuide.StatusCode==HttpStatusCode.Forbidden,"No se abre una guía de un rol no asignado");
+        Check(api.Requests==beforeGuide,$"Guía {allRoles[index]} funciona sin consultar ni modificar la API");
+    }
+    using var mixedGuide=NewClient();
+    using(var login=await Login(mixedGuide,"CIUDADANO","PERSONAL_ALCALDIA")){}
+    using(var chosen=await Choose(mixedGuide,"CIUDADANO")){}
+    var municipalGuide=WebUtility.HtmlDecode(await mixedGuide.GetStringAsync("/Guias?rol=PERSONAL_ALCALDIA"));
+    Check(municipalGuide.Contains("portal-alcaldia")&&municipalGuide.Contains("Crear orden y reservar"),"Una cuenta con varios roles ve la guía elegida con su contexto correcto");
+    using(var root=await mixedGuide.GetAsync("/"))Check(root.Headers.Location?.ToString()=="/Ciudadano","Consultar una guía no cambia la interfaz seleccionada");
     Console.WriteLine($"{checks} comprobaciones MVC correctas; API simulada, sin modificar cuentas reales.");
 }finally{await app.StopAsync();}
 

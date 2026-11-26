@@ -28,6 +28,7 @@ public final class OperationsActivity extends AppCompatActivity {
     @Override protected void onPause(){timer.removeCallbacks(refresh);super.onPause();}
     private void shell(){panel.removeAllViews();TextView title=label(page);title.setTextSize(25);title.setTypeface(android.graphics.Typeface.DEFAULT_BOLD);
         status=label("");button("Actualizar",this::load);button("Volver",this::finish);
+        panel.addView(GuiaUsoActivity.boton(this,SessionStore.selectedRole(this)));
         if(page.equals("Bandeja operativa"))button("Cambiar interfaz",()->InterfaceNavigation.selector(this));
         if(page.equals("Bandeja operativa"))button("Cerrar sesión",()->{SessionStore.clear(this);startActivity(new Intent(this,MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK));finish();});
     }

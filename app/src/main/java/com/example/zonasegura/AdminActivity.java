@@ -32,6 +32,7 @@ public class AdminActivity extends AppCompatActivity {
         retry = findViewById(R.id.adminRetry);
         retry.setOnClickListener(view -> checkAccess());
         findViewById(R.id.adminLogout).setOnClickListener(view -> logout());
+        InterfaceNavigation.agregarSelector(this,R.id.adminStatus);
         checkAccess();
     }
 

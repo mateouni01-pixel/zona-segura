@@ -1,0 +1,12 @@
+@model GuiaUsoModel
+@{ViewData["Title"]="Guías de uso · "+Model.Interfaz.Nombre;}
+<div class="page-heading"><div><div class="eyebrow">Ayuda · @Model.Interfaz.Nombre</div><h1>Guías de uso</h1><p class="muted">Conoce qué hace cada botón, cuándo puedes utilizarlo y qué ocurre al confirmar una acción.</p></div><a asp-controller="@Model.Interfaz.Controlador" asp-action="@Model.Interfaz.Accion" class="btn btn-outline-primary">Volver a mi interfaz</a></div>
+<form method="get" class="surface filter-bar" role="search"><input name="rol" value="@Model.Interfaz.Rol" type="hidden"/><div><label for="buscar-guia" class="form-label">Nombre de un botón o tema</label><input id="buscar-guia" name="buscar" value="@Model.Buscar" class="form-control" maxlength="100" placeholder="Por ejemplo: ubicación, guardar o cerrar sesión"/></div><button class="btn btn-primary align-self-end">Buscar en la guía</button><a asp-action="Index" asp-route-rol="@Model.Interfaz.Rol" class="align-self-end mb-2">Limpiar búsqueda</a></form>
+<div class="guide-sections">
+@foreach(var seccion in Model.Secciones){
+    <details class="surface guide-section" open="@(!string.IsNullOrEmpty(Model.Buscar)||seccion==Model.Secciones.First())"><summary><h2>@seccion.Titulo</h2><span class="muted">@seccion.Botones.Count controles</span></summary>
+    <dl class="guide-buttons">@foreach(var boton in seccion.Botones){<div><dt>@boton.Boton</dt><dd><p>@boton.Funcion</p>@if(!string.IsNullOrEmpty(boton.Requisito)){<p><strong>Antes de usarlo:</strong> @boton.Requisito</p>}@if(!string.IsNullOrEmpty(boton.Resultado)){<p><strong>Qué ocurre:</strong> @boton.Resultado</p>}</dd></div>}</dl>
+    </details>
+}
+@if(Model.Secciones.Count==0){<div class="surface empty-state" role="status">No hay explicaciones que coincidan con la búsqueda. Prueba otra palabra o limpia el filtro.</div>}
+</div>

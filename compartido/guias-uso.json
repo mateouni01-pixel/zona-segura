@@ -1,0 +1,958 @@
+{
+  "version": 1,
+  "comunes": {
+    "web": [
+      {
+        "titulo": "Navegación, ayuda y sesión",
+        "botones": [
+          {
+            "boton": "Guías de uso",
+            "funcion": "Abre esta ayuda para la interfaz que estás utilizando.",
+            "requisito": "",
+            "resultado": "Leer la guía no realiza cambios en tus datos."
+          },
+          {
+            "boton": "Buscar en la guía",
+            "funcion": "Busca un botón o una palabra en las explicaciones de esta interfaz.",
+            "requisito": "Escribe el texto y pulsa Buscar.",
+            "resultado": ""
+          },
+          {
+            "boton": "Limpiar búsqueda",
+            "funcion": "Quita el filtro y vuelve a mostrar todas las secciones de esta guía.",
+            "requisito": "",
+            "resultado": ""
+          },
+          {
+            "boton": "Abrir o cerrar una sección",
+            "funcion": "Despliega u oculta las explicaciones agrupadas bajo ese título.",
+            "requisito": "",
+            "resultado": ""
+          },
+          {
+            "boton": "Volver a mi interfaz",
+            "funcion": "Regresa al inicio de la interfaz descrita en esta guía.",
+            "requisito": "",
+            "resultado": ""
+          },
+          {
+            "boton": "Cambiar interfaz / Mi interfaz",
+            "funcion": "Abre el selector con los roles que tiene tu cuenta.",
+            "requisito": "Para actualizar los permisos se necesita conexión.",
+            "resultado": "Solo se muestran las interfaces autorizadas."
+          },
+          {
+            "boton": "Entrar como…",
+            "funcion": "Abre la interfaz correspondiente a la tarjeta elegida.",
+            "requisito": "La cuenta debe conservar ese rol.",
+            "resultado": "Cambian el menú y el espacio de trabajo; tus permisos no se amplían."
+          },
+          {
+            "boton": "Cerrar sesión",
+            "funcion": "Termina el acceso de esta sesión web.",
+            "requisito": "",
+            "resultado": "Deberás volver a ingresar para abrir el panel."
+          },
+          {
+            "boton": "Volver / Cancelar",
+            "funcion": "Regresa a la pantalla indicada sin enviar el formulario.",
+            "requisito": "",
+            "resultado": "Los cambios que no guardaste no se registran."
+          },
+          {
+            "boton": "Reintentar",
+            "funcion": "Repite la consulta que falló.",
+            "requisito": "Comprueba que el servidor esté disponible.",
+            "resultado": "Un error de consulta no significa que no existan registros."
+          },
+          {
+            "boton": "Ingresar nuevamente",
+            "funcion": "Abre el formulario de acceso cuando la sesión dejó de estar disponible.",
+            "requisito": "Usa tus credenciales actuales.",
+            "resultado": ""
+          }
+        ]
+      }
+    ],
+    "android": [
+      {
+        "titulo": "Navegación, ayuda y sesión",
+        "botones": [
+          {
+            "boton": "Guías de uso",
+            "funcion": "Abre la ayuda de esta interfaz guardada en la aplicación.",
+            "requisito": "",
+            "resultado": "Puede leerse sin conexión; no cambia datos ni permisos."
+          },
+          {
+            "boton": "Buscar en la guía",
+            "funcion": "Filtra las explicaciones mientras escribes el nombre de un botón o una palabra.",
+            "requisito": "",
+            "resultado": ""
+          },
+          {
+            "boton": "Limpiar búsqueda",
+            "funcion": "Borra el texto de búsqueda y muestra la guía completa.",
+            "requisito": "",
+            "resultado": ""
+          },
+          {
+            "boton": "Abrir o cerrar una sección",
+            "funcion": "Toca el título para mostrar u ocultar sus explicaciones.",
+            "requisito": "",
+            "resultado": ""
+          },
+          {
+            "boton": "Volver",
+            "funcion": "Cierra esta pantalla y regresa a la anterior.",
+            "requisito": "",
+            "resultado": "En la guía, volver conserva la pantalla desde la que abriste la ayuda."
+          },
+          {
+            "boton": "Cambiar interfaz",
+            "funcion": "Abre el selector de roles sin cerrar sesión.",
+            "requisito": "",
+            "resultado": "Al entrar en otra interfaz se cierra la navegación anterior."
+          },
+          {
+            "boton": "Entrar como…",
+            "funcion": "Comprueba tus roles y abre la tarjeta elegida.",
+            "requisito": "Conexión para interfaces institucionales. El modo ciudadano guardado permite trabajar sin internet.",
+            "resultado": "No concede roles que tu cuenta no tenga."
+          },
+          {
+            "boton": "Actualizar mis roles",
+            "funcion": "Vuelve a comprobar los permisos de la cuenta en el selector.",
+            "requisito": "Conexión al servidor.",
+            "resultado": ""
+          },
+          {
+            "boton": "Cerrar sesión",
+            "funcion": "Borra la sesión de la aplicación y vuelve al acceso.",
+            "requisito": "",
+            "resultado": "Los reportes pendientes locales permanecen asociados a su autor y servidor; no se envían con otra cuenta."
+          },
+          {
+            "boton": "Reintentar",
+            "funcion": "Repite la consulta que no pudo completarse.",
+            "requisito": "Comprueba la conexión y que el servidor esté encendido.",
+            "resultado": ""
+          },
+          {
+            "boton": "Cancelar",
+            "funcion": "Cierra un formulario de confirmación sin guardar los cambios.",
+            "requisito": "",
+            "resultado": ""
+          }
+        ]
+      }
+    ]
+  },
+  "roles": [
+    {
+      "rol": "CIUDADANO",
+      "web": [
+        {
+          "titulo": "Mis reportes",
+          "botones": [
+            {
+              "boton": "Mis reportes",
+              "funcion": "Muestra únicamente los incidentes registrados con tu cuenta y su estado de atención.",
+              "requisito": "",
+              "resultado": ""
+            },
+            {
+              "boton": "Crear reporte",
+              "funcion": "Abre un formulario para describir un nuevo incidente.",
+              "requisito": "",
+              "resultado": ""
+            }
+          ]
+        },
+        {
+          "titulo": "Crear un reporte",
+          "botones": [
+            {
+              "boton": "Obtener mi ubicación",
+              "funcion": "Solicita al navegador una lectura GPS actual.",
+              "requisito": "Permite la ubicación; la lectura debe tener hasta 100 m de precisión y menos de dos minutos.",
+              "resultado": "Rellena latitud y longitud. El incidente debe estar dentro de los distritos urbanos 1–12."
+            },
+            {
+              "boton": "Registrar reporte",
+              "funcion": "Envía categoría, descripción y ubicación para registrar el incidente.",
+              "requisito": "Categoría activa, descripción de 10 a 2000 caracteres y ubicación reciente.",
+              "resultado": "El reporte comienza pendiente de validación y aparece en Mis reportes. Reintentar la misma solicitud conserva su identificador."
+            }
+          ]
+        },
+        {
+          "titulo": "Mapa ciudadano",
+          "botones": [
+            {
+              "boton": "Mapa de incidentes",
+              "funcion": "Abre la concentración de incidentes confirmados; no muestra autores de otros reportes.",
+              "requisito": "",
+              "resultado": ""
+            },
+            {
+              "boton": "Período",
+              "funcion": "Permite elegir los últimos 7, 30 o 90 días.",
+              "requisito": "",
+              "resultado": ""
+            },
+            {
+              "boton": "Consultar mapa",
+              "funcion": "Aplica el período seleccionado y vuelve a cargar las zonas.",
+              "requisito": "Conexión al servidor.",
+              "resultado": "Los niveles bajo, medio y alto representan cantidad de incidentes confirmados, no una garantía de seguridad."
+            },
+            {
+              "boton": "Mover, acercar o alejar el mapa",
+              "funcion": "Permite explorar las zonas dibujadas y tocar una celda para ver su nivel y cantidad.",
+              "requisito": "",
+              "resultado": ""
+            }
+          ]
+        }
+      ],
+      "android": [
+        {
+          "titulo": "Inicio y navegación ciudadana",
+          "botones": [
+            {
+              "boton": "Inicio",
+              "funcion": "Regresa al inicio ciudadano.",
+              "requisito": "",
+              "resultado": ""
+            },
+            {
+              "boton": "Mis reportes",
+              "funcion": "Abre el historial del autor y los pendientes guardados en este dispositivo.",
+              "requisito": "",
+              "resultado": ""
+            },
+            {
+              "boton": "Crear reporte",
+              "funcion": "Abre el formulario de categoría, descripción y ubicación.",
+              "requisito": "",
+              "resultado": ""
+            },
+            {
+              "boton": "Mapa / Mapa de riesgo",
+              "funcion": "Abre el mapa de incidentes confirmados.",
+              "requisito": "",
+              "resultado": ""
+            },
+            {
+              "boton": "Validar / Validar reportes",
+              "funcion": "Abre los incidentes cercanos para registrar un voto comunitario.",
+              "requisito": "",
+              "resultado": ""
+            }
+          ]
+        },
+        {
+          "titulo": "Reportes y trabajo sin conexión",
+          "botones": [
+            {
+              "boton": "Actualizar ubicación",
+              "funcion": "Solicita una nueva posición del teléfono.",
+              "requisito": "Permiso de ubicación precisa y GPS activo; precisión de hasta 100 m y antigüedad de hasta dos minutos.",
+              "resultado": "El punto debe estar dentro de los distritos urbanos 1–12."
+            },
+            {
+              "boton": "Guardar y sincronizar reporte",
+              "funcion": "Guarda primero el incidente en el dispositivo y programa su envío.",
+              "requisito": "Categoría, descripción de 10 a 2000 caracteres y GPS válido.",
+              "resultado": "Sin conexión queda pendiente. Solo se considera registrado en el servidor cuando la aplicación confirma la sincronización."
+            },
+            {
+              "boton": "Sincronizar pendientes",
+              "funcion": "Solicita otro intento de envío de los reportes pendientes.",
+              "requisito": "Conexión y sesión válida del mismo autor y servidor.",
+              "resultado": "Las solicitudes repetidas no deben duplicar el reporte."
+            },
+            {
+              "boton": "Adjuntar fotografía",
+              "funcion": "Permite seleccionar una imagen para un reporte ya registrado.",
+              "requisito": "El servicio de fotografías aún no está disponible en esta versión.",
+              "resultado": "No consideres una imagen adjunta mientras no exista una confirmación de carga."
+            }
+          ]
+        },
+        {
+          "titulo": "Validación comunitaria",
+          "botones": [
+            {
+              "boton": "Buscar a 500 metros",
+              "funcion": "Obtiene tu ubicación y busca reportes cercanos.",
+              "requisito": "Permite la ubicación precisa y activa el GPS.",
+              "resultado": ""
+            },
+            {
+              "boton": "Sí, confirmo este incidente",
+              "funcion": "Registra una confirmación comunitaria del incidente.",
+              "requisito": "No puedes ser el autor, debes estar dentro de 500 m y solo puedes votar una vez por reporte.",
+              "resultado": "Tres ciudadanos distintos del autor pueden completar la validación comunitaria."
+            },
+            {
+              "boton": "Marcar como falso o spam",
+              "funcion": "Registra un voto negativo sobre el reporte.",
+              "requisito": "Se mantienen las restricciones de autor, distancia y voto único.",
+              "resultado": "Un voto negativo no rechaza automáticamente el reporte."
+            }
+          ]
+        },
+        {
+          "titulo": "Controles del mapa",
+          "botones": [
+            {
+              "boton": "Tipo de incidente y período",
+              "funcion": "Filtran el mapa por categoría y por los últimos 7, 30 o 90 días.",
+              "requisito": "Selecciona los valores disponibles.",
+              "resultado": "El mapa vuelve a consultar los incidentes que cumplen esos filtros."
+            },
+            {
+              "boton": "Mostrar capa de riesgo",
+              "funcion": "Muestra u oculta las zonas coloreadas de concentración de incidentes.",
+              "requisito": "",
+              "resultado": "Bajo: 1–2; medio: 3–4; alto: 5 o más incidentes confirmados por celda. La ausencia de reportes no garantiza seguridad."
+            },
+            {
+              "boton": "Santa Cruz",
+              "funcion": "Centra el mapa en Santa Cruz de la Sierra.",
+              "requisito": "",
+              "resultado": ""
+            },
+            {
+              "boton": "Mi ubicación",
+              "funcion": "Solicita el permiso de ubicación y centra el mapa en la posición del dispositivo.",
+              "requisito": "Activa la ubicación y permite su uso.",
+              "resultado": "Ver tu posición no significa que cumpla los requisitos de precisión para registrar un reporte."
+            },
+            {
+              "boton": "Actualizar",
+              "funcion": "Vuelve a consultar el mapa y el catálogo si faltaba cargarlo.",
+              "requisito": "Conexión al servidor.",
+              "resultado": ""
+            },
+            {
+              "boton": "Mover el mapa y acercar o alejar",
+              "funcion": "Arrastra el mapa o usa dos dedos para explorar otra área.",
+              "requisito": "",
+              "resultado": "Se consulta el área visible; los colores mantienen su significado de riesgo."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "rol": "PERSONAL_ALCALDIA",
+      "web": [
+        {
+          "titulo": "Mapa y seguimiento",
+          "botones": [
+            {
+              "boton": "Mapa y reportes",
+              "funcion": "Abre el panorama municipal de incidentes y estados de atención.",
+              "requisito": "",
+              "resultado": ""
+            },
+            {
+              "boton": "Aplicar filtros",
+              "funcion": "Consulta el mapa y la tabla con las fechas, categoría, estado e índice mínimo elegidos.",
+              "requisito": "Fechas ordenadas; rango de hasta 366 días.",
+              "resultado": "El mapa, los indicadores y el listado corresponden a la consulta y al área visible."
+            },
+            {
+              "boton": "Limpiar",
+              "funcion": "Restablece los filtros de la consulta.",
+              "requisito": "",
+              "resultado": ""
+            },
+            {
+              "boton": "Mostrar capa de riesgo",
+              "funcion": "Muestra u oculta las celdas de concentración de incidentes confirmados.",
+              "requisito": "",
+              "resultado": ""
+            },
+            {
+              "boton": "Mostrar límite de cobertura",
+              "funcion": "Muestra u oculta los contornos de los distritos urbanos configurados.",
+              "requisito": "",
+              "resultado": ""
+            },
+            {
+              "boton": "Zona de mayor concentración",
+              "funcion": "Al seleccionar una zona del listado, centra y amplía el mapa sobre esa celda.",
+              "requisito": "",
+              "resultado": ""
+            },
+            {
+              "boton": "Ver órdenes de intervención",
+              "funcion": "Abre el seguimiento de las órdenes creadas; no cierra su atención.",
+              "requisito": "",
+              "resultado": ""
+            }
+          ]
+        },
+        {
+          "titulo": "Asignar intervenciones",
+          "botones": [
+            {
+              "boton": "Crear orden",
+              "funcion": "Abre la asignación de un reporte validado.",
+              "requisito": "Reporte en estado VALIDADO y recurso disponible.",
+              "resultado": ""
+            },
+            {
+              "boton": "Crear orden y reservar",
+              "funcion": "Confirma el recurso, tipo de orden e instrucciones.",
+              "requisito": "Selecciona un recurso compatible y escribe instrucciones de 10 a 2000 caracteres. Mantenimiento utiliza cuadrilla; patrullaje y derivación utilizan patrulla.",
+              "resultado": "Se reserva el recurso, el reporte pasa a atención y la orden aparece en la bandeja de la unidad. No permite reservar un recurso ya ocupado."
+            }
+          ]
+        },
+        {
+          "titulo": "Recursos preventivos",
+          "botones": [
+            {
+              "boton": "Recursos preventivos",
+              "funcion": "Abre el inventario de recursos y su condición.",
+              "requisito": "",
+              "resultado": ""
+            },
+            {
+              "boton": "Registrar recurso",
+              "funcion": "Abre un recurso nuevo.",
+              "requisito": "Primero debe existir una unidad activa.",
+              "resultado": ""
+            },
+            {
+              "boton": "Editar",
+              "funcion": "Carga un recurso existente para modificar sus datos.",
+              "requisito": "",
+              "resultado": ""
+            },
+            {
+              "boton": "Guardar recurso",
+              "funcion": "Guarda nombre, tipo, unidad, disponibilidad y estado activo.",
+              "requisito": "Completa los campos obligatorios.",
+              "resultado": "La disponibilidad determina si podrá seleccionarse para una intervención."
+            }
+          ]
+        },
+        {
+          "titulo": "Unidades y órdenes",
+          "botones": [
+            {
+              "boton": "Unidades operativas",
+              "funcion": "Muestra los equipos disponibles y los formularios para asociar cuentas.",
+              "requisito": "",
+              "resultado": ""
+            },
+            {
+              "boton": "Registrar unidad",
+              "funcion": "Crea una unidad con el nombre indicado.",
+              "requisito": "Nombre de hasta 150 caracteres.",
+              "resultado": ""
+            },
+            {
+              "boton": "Asociar cuenta",
+              "funcion": "Vincula el ID de una cuenta a la unidad.",
+              "requisito": "La cuenta debe tener el rol Unidad Operativa.",
+              "resultado": "La cuenta podrá ver las órdenes de esa unidad activa."
+            },
+            {
+              "boton": "Órdenes de intervención",
+              "funcion": "Muestra recurso, unidad, instrucciones, aviso y resultado de cada orden.",
+              "requisito": "",
+              "resultado": "La unidad operativa registra la atención desde su propia interfaz."
+            }
+          ]
+        }
+      ],
+      "android": [
+        {
+          "titulo": "Panel municipal",
+          "botones": [
+            {
+              "boton": "Mapa de riesgo",
+              "funcion": "Abre el mapa de incidentes confirmados.",
+              "requisito": "",
+              "resultado": ""
+            },
+            {
+              "boton": "Unidades",
+              "funcion": "Abre el listado y gestión de equipos operativos.",
+              "requisito": "",
+              "resultado": ""
+            },
+            {
+              "boton": "Recursos",
+              "funcion": "Abre patrullas y cuadrillas para registrar o editar sus datos.",
+              "requisito": "",
+              "resultado": ""
+            },
+            {
+              "boton": "Intervenciones",
+              "funcion": "Muestra incidentes validados o en atención para coordinar recursos.",
+              "requisito": "",
+              "resultado": ""
+            },
+            {
+              "boton": "Órdenes municipales",
+              "funcion": "Consulta las órdenes, sus avisos y resultados.",
+              "requisito": "",
+              "resultado": "El cierre corresponde a la unidad operativa, no a esta pantalla."
+            }
+          ]
+        },
+        {
+          "titulo": "Gestionar unidades",
+          "botones": [
+            {
+              "boton": "Registrar unidad",
+              "funcion": "Crea una unidad operativa con el nombre indicado.",
+              "requisito": "Escribe un nombre de hasta 150 caracteres.",
+              "resultado": ""
+            },
+            {
+              "boton": "Asociar cuenta operativa",
+              "funcion": "Vincula un usuario a la unidad elegida mediante su ID.",
+              "requisito": "La cuenta debe tener el rol Unidad Operativa.",
+              "resultado": "La cuenta podrá consultar las órdenes de esa unidad activa; conceder el rol por sí solo no realiza esta asociación."
+            },
+            {
+              "boton": "Guardar",
+              "funcion": "Confirma el formulario de creación o asociación abierto.",
+              "requisito": "Revisa los datos y el ID antes de confirmar.",
+              "resultado": ""
+            }
+          ]
+        },
+        {
+          "titulo": "Gestionar recursos",
+          "botones": [
+            {
+              "boton": "Registrar recurso",
+              "funcion": "Abre el formulario para registrar una patrulla o cuadrilla.",
+              "requisito": "Debe existir una unidad activa.",
+              "resultado": ""
+            },
+            {
+              "boton": "Editar recurso",
+              "funcion": "Abre un recurso existente para cambiar nombre, tipo, unidad, disponibilidad o estado.",
+              "requisito": "",
+              "resultado": ""
+            },
+            {
+              "boton": "Guardar",
+              "funcion": "Confirma los datos del recurso en el formulario.",
+              "requisito": "Nombre, tipo y unidad válidos.",
+              "resultado": "El recurso aparece actualizado; estar disponible permite considerarlo para una asignación."
+            },
+            {
+              "boton": "Disponible para asignar y Activo",
+              "funcion": "Controlan si el recurso puede utilizarse para nuevas intervenciones.",
+              "requisito": " Mantenimiento utiliza cuadrilla; patrullaje y derivación utilizan patrulla.",
+              "resultado": "Un recurso ocupado por una orden no se puede reservar otra vez."
+            }
+          ]
+        },
+        {
+          "titulo": "Asignar y seguir órdenes",
+          "botones": [
+            {
+              "boton": "Crear orden y asignar recurso",
+              "funcion": "Abre el formulario de asignación de un reporte validado.",
+              "requisito": "Debe haber un recurso disponible.",
+              "resultado": ""
+            },
+            {
+              "boton": "Guardar",
+              "funcion": "Confirma recurso, tipo e instrucciones de la orden.",
+              "requisito": "Instrucciones de 10 a 2000 caracteres y recurso compatible. Mantenimiento utiliza cuadrilla; patrullaje y derivación utilizan patrulla.",
+              "resultado": "Reserva el recurso y avisa a la unidad. No cierra la atención."
+            },
+            {
+              "boton": "Ver ubicación del incidente",
+              "funcion": "Abre el punto del incidente en una aplicación de mapas.",
+              "requisito": "",
+              "resultado": ""
+            },
+            {
+              "boton": "Actualizar",
+              "funcion": "Vuelve a consultar el listado de la pantalla abierta.",
+              "requisito": "Conexión al servidor.",
+              "resultado": ""
+            }
+          ]
+        },
+        {
+          "titulo": "Controles del mapa",
+          "botones": [
+            {
+              "boton": "Tipo de incidente y período",
+              "funcion": "Filtran el mapa por categoría y por los últimos 7, 30 o 90 días.",
+              "requisito": "Selecciona los valores disponibles.",
+              "resultado": "El mapa vuelve a consultar los incidentes que cumplen esos filtros."
+            },
+            {
+              "boton": "Mostrar capa de riesgo",
+              "funcion": "Muestra u oculta las zonas coloreadas de concentración de incidentes.",
+              "requisito": "",
+              "resultado": "Bajo: 1–2; medio: 3–4; alto: 5 o más incidentes confirmados por celda. La ausencia de reportes no garantiza seguridad."
+            },
+            {
+              "boton": "Santa Cruz",
+              "funcion": "Centra el mapa en Santa Cruz de la Sierra.",
+              "requisito": "",
+              "resultado": ""
+            },
+            {
+              "boton": "Mi ubicación",
+              "funcion": "Solicita el permiso de ubicación y centra el mapa en la posición del dispositivo.",
+              "requisito": "Activa la ubicación y permite su uso.",
+              "resultado": "Ver tu posición no significa que cumpla los requisitos de precisión para registrar un reporte."
+            },
+            {
+              "boton": "Actualizar",
+              "funcion": "Vuelve a consultar el mapa y el catálogo si faltaba cargarlo.",
+              "requisito": "Conexión al servidor.",
+              "resultado": ""
+            },
+            {
+              "boton": "Mover el mapa y acercar o alejar",
+              "funcion": "Arrastra el mapa o usa dos dedos para explorar otra área.",
+              "requisito": "",
+              "resultado": "Se consulta el área visible; los colores mantienen su significado de riesgo."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "rol": "ADMINISTRADOR",
+      "web": [
+        {
+          "titulo": "Usuarios y permisos",
+          "botones": [
+            {
+              "boton": "Inicio",
+              "funcion": "Muestra los accesos a usuarios, validación, moderación y auditoría.",
+              "requisito": "",
+              "resultado": ""
+            },
+            {
+              "boton": "Usuarios y permisos / Gestionar usuarios",
+              "funcion": "Abre el directorio de cuentas y sus roles.",
+              "requisito": "",
+              "resultado": ""
+            },
+            {
+              "boton": "Buscar",
+              "funcion": "Busca una cuenta por nombre, correo o ID.",
+              "requisito": "Texto de hasta 100 caracteres; el directorio muestra hasta 200 coincidencias.",
+              "resultado": ""
+            },
+            {
+              "boton": "Limpiar",
+              "funcion": "Quita la búsqueda o el filtro de la pantalla abierta.",
+              "requisito": "",
+              "resultado": ""
+            },
+            {
+              "boton": "Crear usuario",
+              "funcion": "Abre el formulario y, al completarlo y confirmarlo, crea la cuenta.",
+              "requisito": "Nombre, correo válido y único, contraseña de 8 caracteres a 72 bytes, confirmación, roles y motivo.",
+              "resultado": "Se crean los perfiles de los roles elegidos. Una cuenta operativa aún necesita asociarse a una unidad."
+            },
+            {
+              "boton": "Administrar",
+              "funcion": "Abre una cuenta para revisar acceso, roles y sanciones.",
+              "requisito": "",
+              "resultado": ""
+            },
+            {
+              "boton": "Guardar cambios",
+              "funcion": "Aplica los roles y el acceso seleccionados.",
+              "requisito": "Motivo de 10 a 2000 caracteres. No puedes desactivarte ni retirar tu propio permiso; se protege al último administrador.",
+              "resultado": "Cambiar roles puede requerir que la persona vuelva a ingresar o actualice sus interfaces."
+            },
+            {
+              "boton": "Permitir acceso a la cuenta",
+              "funcion": "Activa o desactiva el acceso sin borrar la cuenta.",
+              "requisito": "",
+              "resultado": "Una sanción vigente debe levantarse por su acción específica."
+            }
+          ]
+        },
+        {
+          "titulo": "Eliminar cuentas y revisar sanciones",
+          "botones": [
+            {
+              "boton": "Eliminar / Eliminar cuenta",
+              "funcion": "Abre la pantalla de confirmación. Por sí solo no borra la cuenta.",
+              "requisito": "",
+              "resultado": ""
+            },
+            {
+              "boton": "Eliminar cuenta definitivamente",
+              "funcion": "Borra cuenta, credenciales y permisos de forma definitiva.",
+              "requisito": "Motivo y escribir el ID exacto. No admite cuenta propia, último administrador ni cuentas con actividad vinculada.",
+              "resultado": "La cuenta desaparece y pierde acceso en web y móvil; la auditoría se conserva."
+            },
+            {
+              "boton": "Levantar sanción con este motivo",
+              "funcion": "Registra el levantamiento y restaura el acceso al valor previo a la sanción.",
+              "requisito": "Cuenta con sanción vigente, motivo y administrador distinto del sancionado.",
+              "resultado": ""
+            },
+            {
+              "boton": "Ver auditoría de esta cuenta",
+              "funcion": "Muestra las decisiones y cambios cuyo objetivo es esa cuenta.",
+              "requisito": "",
+              "resultado": ""
+            }
+          ]
+        },
+        {
+          "titulo": "Validación manual",
+          "botones": [
+            {
+              "boton": "Validar reportes / Revisar reportes",
+              "funcion": "Abre los incidentes pendientes de revisión administrativa.",
+              "requisito": "",
+              "resultado": ""
+            },
+            {
+              "boton": "Validar reporte",
+              "funcion": "Confirma un incidente tras comprobarlo.",
+              "requisito": "Motivo de 10 a 2000 caracteres. No debe ser propio ni tener una revisión previa.",
+              "resultado": "Conserva responsable y motivo; la validación permite coordinar atención, pero no asigna recursos por sí sola."
+            },
+            {
+              "boton": "Rechazar tras comprobar",
+              "funcion": "Registra un rechazo fundamentado en la revisión administrativa.",
+              "requisito": "Mismas restricciones de autor, motivo y revisión previa.",
+              "resultado": "El reporte queda rechazado con una decisión registrada."
+            }
+          ]
+        },
+        {
+          "titulo": "Moderación",
+          "botones": [
+            {
+              "boton": "Moderación de reportes / Abrir moderación",
+              "funcion": "Abre los reportes que se pueden revisar por contenido o conducta.",
+              "requisito": "",
+              "resultado": ""
+            },
+            {
+              "boton": "Rechazar con este motivo",
+              "funcion": "Rechaza un reporte tras revisión de moderación.",
+              "requisito": "Motivo y reporte que admita moderación; no puede sobrescribirse una comprobación institucional ni moderarse el propio.",
+              "resultado": ""
+            },
+            {
+              "boton": "Registrar sanción y suspender acceso",
+              "funcion": "Suspende el acceso del autor por el reporte revisado.",
+              "requisito": "Reporte rechazado, motivo, autor distinto del administrador y ausencia de sanción previa por ese hecho.",
+              "resultado": "La cuenta pierde acceso; esta función no descuenta puntos de reputación."
+            },
+            {
+              "boton": "Consultar cuenta y permisos",
+              "funcion": "Abre la administración de la cuenta del autor.",
+              "requisito": "",
+              "resultado": ""
+            }
+          ]
+        },
+        {
+          "titulo": "Auditoría",
+          "botones": [
+            {
+              "boton": "Auditoría / Consultar auditoría / Consultar historial",
+              "funcion": "Abre el historial de decisiones con responsable, fecha y motivo.",
+              "requisito": "",
+              "resultado": ""
+            },
+            {
+              "boton": "Consultar",
+              "funcion": "Aplica el ID de usuario del filtro de auditoría.",
+              "requisito": "Deja el filtro vacío para consultar el historial general; se muestran hasta 500 entradas.",
+              "resultado": ""
+            }
+          ]
+        }
+      ],
+      "android": [
+        {
+          "titulo": "Panel y revisión administrativa",
+          "botones": [
+            {
+              "boton": "Verificar reportes",
+              "funcion": "Abre los incidentes pendientes de validación manual.",
+              "requisito": "",
+              "resultado": ""
+            },
+            {
+              "boton": "Confirmar tras verificar",
+              "funcion": "Inicia una validación después de comprobar el incidente.",
+              "requisito": "Motivo de 10 a 2000 caracteres; no puede ser un reporte propio ni tener una revisión previa.",
+              "resultado": ""
+            },
+            {
+              "boton": "Rechazar tras verificar",
+              "funcion": "Inicia el rechazo fundamentado de un incidente.",
+              "requisito": "Mismas restricciones de motivo, autor y revisión previa.",
+              "resultado": ""
+            },
+            {
+              "boton": "Guardar verificación",
+              "funcion": "Confirma la decisión en el diálogo final.",
+              "requisito": "Revisa el motivo y el reporte antes de aceptar.",
+              "resultado": "La decisión conserva responsable y motivo; no asigna recursos automáticamente."
+            },
+            {
+              "boton": "Abrir ubicación",
+              "funcion": "Abre la ubicación en una aplicación de mapas instalada.",
+              "requisito": "Se necesita una aplicación compatible.",
+              "resultado": ""
+            }
+          ]
+        },
+        {
+          "titulo": "Moderación y acceso",
+          "botones": [
+            {
+              "boton": "Moderación",
+              "funcion": "Abre los reportes que admiten revisión de moderación.",
+              "requisito": "",
+              "resultado": ""
+            },
+            {
+              "boton": "Rechazar tras revisión",
+              "funcion": "Solicita un motivo para rechazar un reporte por moderación.",
+              "requisito": "No se permite moderar un reporte propio ni sobrescribir una comprobación institucional.",
+              "resultado": ""
+            },
+            {
+              "boton": "Suspender acceso del reportante",
+              "funcion": "Inicia la sanción por un reporte ya rechazado.",
+              "requisito": "Motivo y ausencia de sanción previa por el mismo hecho.",
+              "resultado": "Bloquea el acceso de la cuenta; no cambia automáticamente su reputación."
+            },
+            {
+              "boton": "Registrar decisión",
+              "funcion": "Confirma la acción y el motivo en el diálogo.",
+              "requisito": "Revisa la cuenta y el reporte; Cancelar no aplica cambios.",
+              "resultado": ""
+            },
+            {
+              "boton": "Actualizar",
+              "funcion": "Vuelve a consultar la bandeja abierta.",
+              "requisito": "Conexión y cuenta administrativa vigente.",
+              "resultado": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "rol": "UNIDAD_OPERATIVA",
+      "web": [
+        {
+          "titulo": "Órdenes y avisos",
+          "botones": [
+            {
+              "boton": "Órdenes de mi unidad",
+              "funcion": "Muestra solamente las órdenes asignadas a la unidad de tu cuenta.",
+              "requisito": "Tu cuenta debe estar asociada a una unidad activa por Personal de Alcaldía.",
+              "resultado": ""
+            },
+            {
+              "boton": "Actualizar bandeja",
+              "funcion": "Vuelve a consultar las órdenes y sus estados.",
+              "requisito": "Conexión al servidor.",
+              "resultado": ""
+            },
+            {
+              "boton": "Marcar aviso como leído",
+              "funcion": "Registra que una cuenta de la unidad leyó el aviso.",
+              "requisito": "",
+              "resultado": "No atiende ni cierra la orden; el cierre es una acción separada."
+            }
+          ]
+        },
+        {
+          "titulo": "Atender una orden",
+          "botones": [
+            {
+              "boton": "Registrar atención",
+              "funcion": "Abre el formulario de resultado de una orden asignada.",
+              "requisito": "La orden debe pertenecer a tu unidad.",
+              "resultado": ""
+            },
+            {
+              "boton": "Confirmar atención",
+              "funcion": "Guarda el resultado y cierra la orden.",
+              "requisito": "Resultado de 10 a 2000 caracteres y orden que admita atención.",
+              "resultado": "La orden queda atendida, el reporte pasa a atendido y el recurso vuelve a estar disponible."
+            }
+          ]
+        }
+      ],
+      "android": [
+        {
+          "titulo": "Bandeja de la unidad",
+          "botones": [
+            {
+              "boton": "Bandeja operativa",
+              "funcion": "Muestra las órdenes de la unidad a la que está asociada tu cuenta.",
+              "requisito": "Personal de Alcaldía debe asociarte a una unidad activa.",
+              "resultado": ""
+            },
+            {
+              "boton": "Actualizar",
+              "funcion": "Vuelve a consultar las órdenes.",
+              "requisito": "Conexión al servidor; la bandeja también se refresca periódicamente.",
+              "resultado": ""
+            },
+            {
+              "boton": "Ver ubicación del incidente",
+              "funcion": "Abre la ubicación del incidente en una aplicación de mapas instalada.",
+              "requisito": "",
+              "resultado": ""
+            },
+            {
+              "boton": "Marcar aviso como leído",
+              "funcion": "Registra la lectura del aviso por tu unidad.",
+              "requisito": "",
+              "resultado": "Leer el aviso no cierra la orden."
+            }
+          ]
+        },
+        {
+          "titulo": "Registrar atención",
+          "botones": [
+            {
+              "boton": "Registrar atención y cerrar",
+              "funcion": "Abre el formulario para describir el resultado.",
+              "requisito": "Orden asignada a tu unidad.",
+              "resultado": ""
+            },
+            {
+              "boton": "Guardar",
+              "funcion": "Confirma el resultado de atención.",
+              "requisito": "Texto de 10 a 2000 caracteres y orden que admita cierre.",
+              "resultado": "La orden y el reporte quedan atendidos; el recurso se libera para otra intervención."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,5 +1,9 @@
 # Panel institucional Zona Segura
 
+## Guías de uso (25/11/2026)
+
+El menú de cada interfaz y las tarjetas del selector ofrecen **Guías de uso**. La pantalla explica cada control, sus requisitos y resultados, con búsqueda y secciones desplegables. Solo se abre la guía de un rol asignado; leerla no consulta la API ni cambia la selección. El catálogo `../compartido/guias-uso.json` también se empaqueta en Android. Se copia automáticamente al compilar y publicar MVC. Ver [guías y verificación](../docs/GUIAS-DE-USO.md): 178 comprobaciones MVC aprobadas con API simulada. Recompilar y reiniciar el panel para cargar esta opción.
+
 ## Selector de interfaces para todos los roles (25/11/2026)
 
 La web admite ahora Ciudadano, Personal de Alcaldía, Administrador y Unidad Operativa. Después del login se abre `/Cuenta/Interfaces` con una tarjeta por rol asignado; la persona elige cuál usar. **Cambiar interfaz** vuelve al selector sin cerrar sesión. Las 15 combinaciones se resuelven filtrando cuatro estrategias, conservando menús propios y comprobando los roles vigentes con `/api/auth/me` al mostrar y elegir.

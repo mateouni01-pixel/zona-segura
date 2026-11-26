@@ -37,6 +37,7 @@ final class InterfaceNavigation {
         MaterialButton button=new MaterialButton(host,null,com.google.android.material.R.attr.materialButtonOutlinedStyle);
         button.setTag("interface-switch");button.setText("Cambiar interfaz");button.setOnClickListener(view->selector(host));
         parent.addView(button,parent.indexOfChild(anchor)+1,new LinearLayout.LayoutParams(-1,-2));
+        parent.addView(GuiaUsoActivity.boton(host,SessionStore.selectedRole(host)),parent.indexOfChild(button)+1,new LinearLayout.LayoutParams(-1,-2));
     }
     private InterfaceNavigation(){}
 }

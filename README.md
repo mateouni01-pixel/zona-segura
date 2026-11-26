@@ -1,5 +1,9 @@
 # Zona Segura (Android)
 
+## Guías de uso en cada interfaz — 25/11/2026
+
+Las cuatro interfaces de web y Android ofrecen **Guías de uso**, también desde sus tarjetas del selector. Explican la función de los botones, requisitos y resultados, con búsqueda y secciones desplegables. Android incluye el contenido en el APK para leerlo sin internet. Se mantienen los colores por rol y la selección al consultar la ayuda. Fuente única: `compartido/guias-uso.json`. Ver [uso, mantenimiento y verificación](docs/GUIAS-DE-USO.md). Se aprobaron 178 comprobaciones MVC con API simulada y las 7 pruebas Android existentes; no se probó en teléfono físico.
+
 ## Colores por interfaz móvil — 25/11/2026
 
 Ciudadano conserva su color actual; Personal de Alcaldía usa azul y Administración morado. El tema acompaña el panel y sus pantallas internas, con tarjetas y botones del selector del mismo color. Se aplican temas derivados de Material, sin cambiar permisos ni los colores de riesgo del mapa. Unidad Operativa conserva la paleta base. Instalar el APK actualizado para ver los cambios.

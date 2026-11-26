@@ -8,6 +8,7 @@
             <input name="rol" value="@interfaz.Rol" type="hidden"/>
             <span class="task-category">@(Model.RolActual==interfaz.Rol?"Interfaz activa":"Acceso autorizado")</span><h2>@interfaz.Nombre</h2><p class="muted">@interfaz.Descripcion</p>
             <button type="submit" class="btn btn-primary">Entrar como @interfaz.Nombre</button>
+            <a asp-controller="Guias" asp-action="Index" asp-route-rol="@interfaz.Rol">Guías de uso de @interfaz.Nombre</a>
         </form>
     }
 </section>

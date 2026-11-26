@@ -1,3 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup><TargetFramework>net10.0</TargetFramework><Nullable>enable</Nullable><ImplicitUsings>enable</ImplicitUsings></PropertyGroup>
+  <PropertyGroup>
+    <DefaultItemExcludes>$(DefaultItemExcludes);bin/**;obj/**</DefaultItemExcludes>
+    <GuiasUsoSource Condition="Exists('../compartido/guias-uso.json')">../compartido/guias-uso.json</GuiasUsoSource>
+    <GuiasUsoSource Condition="'$(GuiasUsoSource)' == ''">../zona-segura/compartido/guias-uso.json</GuiasUsoSource>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="$(GuiasUsoSource)" Link="Content/guias-uso.json" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>

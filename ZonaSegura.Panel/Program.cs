@@ -10,6 +10,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     options.Cookie.SecurePolicy=builder.Environment.IsDevelopment()?CookieSecurePolicy.SameAsRequest:CookieSecurePolicy.Always;
 });
 builder.Services.AddAuthorization();builder.Services.AddHttpContextAccessor();builder.Services.AddInterfacesUsuario();
+builder.Services.AddSingleton<GuiasUso>();
 var apiAddress=new Uri(builder.Configuration["Api:BaseUrl"]??"http://127.0.0.1:8080/");
 if(apiAddress.Scheme!=Uri.UriSchemeHttps&&!(builder.Environment.IsDevelopment()&&apiAddress.Scheme==Uri.UriSchemeHttp&&apiAddress.IsLoopback))
     throw new InvalidOperationException("La API debe utilizar HTTPS. HTTP solo se admite en desarrollo sobre localhost.");

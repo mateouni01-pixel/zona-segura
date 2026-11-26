@@ -1,5 +1,7 @@
 # Comprobación del panel administrativo
 
+**Estado actual:** 178 comprobaciones MVC aprobadas, incluidas 27 de guías de uso. Comprueban contenido por rol, búsqueda sin acentos, autorización, contexto de la interfaz y consultas de ayuda sin llamadas a la API. Detalles en [GUIAS-DE-USO.md](../../docs/GUIAS-DE-USO.md). Los recuentos siguientes corresponden a etapas anteriores.
+
 **Verificación vigente:** [151 comprobaciones MVC aprobadas y selector de interfaces](VERIFICACION-INTERFACES-2026-11-25.md). La suite actual cubre los cuatro roles y sus 15 combinaciones, además de los flujos administrativos anteriores. El comando de ejecución indicado más abajo sigue siendo válido. Los resultados y bloqueos de las secciones siguientes son históricos.
 
 La funcionalidad nueva de eliminación y sus límites de verificación están en [VERIFICACION-ELIMINACION-2026-11-25.md](VERIFICACION-ELIMINACION-2026-11-25.md). El verificador incluye ahora 57 comprobaciones, pero la ejecución actual está bloqueada por Control de aplicaciones de Windows. Las 48 comprobaciones aprobadas citadas a continuación corresponden al bloque anterior de interfaces por rol.

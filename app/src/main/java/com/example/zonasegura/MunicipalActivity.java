@@ -38,6 +38,7 @@ public class MunicipalActivity extends AppCompatActivity {
         retry = findViewById(R.id.municipalRetry);
         retry.setOnClickListener(view -> checkAccess());
         findViewById(R.id.municipalLogout).setOnClickListener(view -> logout());
+        InterfaceNavigation.agregarSelector(this,R.id.municipalStatus);
         checkAccess();
     }
 

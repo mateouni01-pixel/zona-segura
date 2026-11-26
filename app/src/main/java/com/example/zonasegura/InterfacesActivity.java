@@ -55,6 +55,7 @@ public final class InterfacesActivity extends AppCompatActivity {
             LinearLayout box=new LinearLayout(themed);box.setOrientation(LinearLayout.VERTICAL);box.setPadding(dp(18),dp(16),dp(18),dp(16));card.addView(box);
             texto(box,interfaz.nombre,22).setTextColor(InterfaceAppearance.color(themed,androidx.appcompat.R.attr.colorPrimary));texto(box,interfaz.descripcion,16);
             boton(box,"Entrar como "+interfaz.nombre,()->comprobar(interfaz));
+            boton(box,"Guías de uso",()->GuiaUsoActivity.abrir(this,interfaz.rol));
             LinearLayout.LayoutParams params=new LinearLayout.LayoutParams(-1,-2);params.topMargin=dp(16);content.addView(card,params);
         }
         if(InterfazUsuario.disponibles(profile.roles).isEmpty())texto(content,"Tu cuenta no tiene interfaces disponibles. Solicita una revisión de permisos.",16);

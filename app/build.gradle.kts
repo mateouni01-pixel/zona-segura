@@ -21,6 +21,7 @@ android {
     buildFeatures {
         resValues = true
     }
+    sourceSets.getByName("main").assets.srcDir(rootProject.file("compartido"))
 
     buildTypes {
         debug {

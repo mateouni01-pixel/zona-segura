@@ -42,6 +42,11 @@ final class SessionStore {
         edit.apply();
     }
     static String selectedRole(Context context){return context.getSharedPreferences(PREFS,Context.MODE_PRIVATE).getString("selectedRole","");}
+    static boolean hasRole(Context context,String role){
+        if(load(context)==null||InterfazUsuario.buscar(role)==null)return false;
+        var prefs=context.getSharedPreferences(PREFS,Context.MODE_PRIVATE);
+        return prefs.getStringSet("profileRoles",java.util.Collections.singleton(prefs.getString("profileRole",""))).contains(role);
+    }
     static boolean selectRole(Context context,String role){
         var prefs=context.getSharedPreferences(PREFS,Context.MODE_PRIVATE);
         if(load(context)==null||InterfazUsuario.buscar(role)==null||!prefs.getStringSet("profileRoles",java.util.Collections.singleton(prefs.getString("profileRole",""))).contains(role))return false;

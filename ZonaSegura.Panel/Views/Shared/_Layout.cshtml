@@ -3,7 +3,9 @@
 @{
     var disponibles=Interfaces.Disponibles(User);
     var action=ViewContext.RouteData.Values["action"]?.ToString();
-    var actual=Interfaces.Actual(Context,ViewContext.RouteData.Values["controller"]?.ToString())?.Interfaz;
+    var controller=ViewContext.RouteData.Values["controller"]?.ToString();
+    var actual=Interfaces.Actual(Context,controller)?.Interfaz;
+    if(ViewData["InterfazRol"] is string guiaRol&&User.IsInRole(guiaRol))actual=Interfaces.Buscar(guiaRol)?.Interfaz??actual;
     var autenticado=User.Identity?.IsAuthenticated==true;
     var titulo=actual?.Nombre??(autenticado?"Elegir interfaz":"Acceso a Zona Segura");
 }
@@ -26,8 +28,9 @@
                 <div class="workspace-context"><span class="sidebar-label">Interfaz activa</span><strong>@actual.Nombre</strong></div>
                 <nav aria-label="Menú de @actual.Nombre">
                     @foreach(var enlace in actual.Menu){
-                        <a asp-controller="@actual.Controlador" asp-action="@enlace.Accion" aria-current="@(action==enlace.Accion||enlace.AccionesRelacionadas.Contains(action)?"page":null)">@enlace.Texto</a>
+                        <a asp-controller="@actual.Controlador" asp-action="@enlace.Accion" aria-current="@(controller==actual.Controlador&&(action==enlace.Accion||enlace.AccionesRelacionadas.Contains(action))?"page":null)">@enlace.Texto</a>
                     }
+                    <a asp-controller="Guias" asp-action="Index" asp-route-rol="@actual.Rol" aria-current="@(controller=="Guias"?"page":null)">Guías de uso</a>
                 </nav>
             }
             <div class="panel-switch"><span class="sidebar-label">@(disponibles.Count==1?"Una interfaz disponible":$"{disponibles.Count} interfaces disponibles")</span>
