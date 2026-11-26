@@ -6,11 +6,12 @@ public sealed class ApiException(int status,string message):Exception(message){p
 public sealed class ZonaApi(HttpClient http,IHttpContextAccessor accessor)
 {
     public async Task<T> Get<T>(string path,CancellationToken ct)=>await Send<T>(HttpMethod.Get,path,null,true,ct);
-    public async Task<T> Send<T>(HttpMethod method,string path,object? body,bool authenticated,CancellationToken ct)
+    public async Task<T> Send<T>(HttpMethod method,string path,object? body,bool authenticated,CancellationToken ct,string? idempotencyKey=null)
     {
         using var request=new HttpRequestMessage(method,path);
         if(authenticated){var token=accessor.HttpContext!.Session.GetString("token");if(string.IsNullOrEmpty(token))throw new ApiException(401,"Tu sesión venció. Ingresa nuevamente.");request.Headers.Authorization=new AuthenticationHeaderValue("Bearer",token);}
         if(body!=null)request.Content=JsonContent.Create(body);
+        if(idempotencyKey!=null)request.Headers.Add("Idempotency-Key",idempotencyKey);
         using var response=await http.SendAsync(request,ct);
         if(!response.IsSuccessStatusCode){var message=$"La API rechazó la operación ({(int)response.StatusCode}).";
             try{var data=await response.Content.ReadFromJsonAsync<JsonElement>(ct);if(data.TryGetProperty("detalle",out var d)||data.TryGetProperty("detail",out d))message=d.GetString()??message;}catch(JsonException){}

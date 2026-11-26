@@ -9,7 +9,11 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.dao.DuplicateKeyException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +21,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class AdministracionService {
+    private static final Logger LOG = LoggerFactory.getLogger(AdministracionService.class);
     private static final Set<String> ROLES = Set.of("CIUDADANO", "PERSONAL_ALCALDIA", "ADMINISTRADOR", "UNIDAD_OPERATIVA");
     private static final String USERS = "SELECT u.id_usuario,u.nombre,u.correo,u.activo,"
             + "CASE WHEN EXISTS(SELECT 1 FROM dbo.SancionesCuenta s WHERE s.id_usuario=u.id_usuario AND s.levantada_utc IS NULL) THEN 1 ELSE 0 END AS sancionado FROM dbo.Usuarios u ";
@@ -28,8 +33,11 @@ public class AdministracionService {
             + "FROM dbo.Reportes r JOIN dbo.TiposIncidente t ON t.id_tipo=r.id_tipo ";
     private final JdbcTemplate db;
     private final AuthService auth;
+    private final PasswordEncoder passwords;
 
-    public AdministracionService(JdbcTemplate db, AuthService auth) { this.db = db; this.auth = auth; }
+    public AdministracionService(JdbcTemplate db, AuthService auth, PasswordEncoder passwords) {
+        this.db = db; this.auth = auth; this.passwords = passwords;
+    }
 
     public AuthService.Profile profile(String subject) {
         var actor = auth.profile(subject);
@@ -55,22 +63,92 @@ public class AdministracionService {
     public Usuario user(String subject, int id) { profile(subject); return findUser(id); }
 
     @Transactional
+    public Usuario create(String subject, NuevoUsuario input) {
+        int actor = mutation(subject);
+        if (input == null) throw error(HttpStatus.BAD_REQUEST, "Indica los datos de la cuenta.");
+        String reason = reason(input.motivo());
+        String email = AuthService.validateRegistration(input.nombre(), input.correo(), input.password());
+        LinkedHashSet<String> roles = normalizedRoles(input.roles());
+        Integer id;
+        try {
+            id = db.queryForObject("INSERT INTO dbo.Usuarios(nombre,correo,password_hash,activo) OUTPUT INSERTED.id_usuario VALUES(?,?,?,1)",
+                    Integer.class, input.nombre().trim(), email, passwords.encode(input.password()));
+        } catch (DuplicateKeyException exception) {
+            throw error(HttpStatus.CONFLICT, "El correo ya está registrado.");
+        }
+        if (id == null) throw error(HttpStatus.INTERNAL_SERVER_ERROR, "No se pudo crear la cuenta.");
+        assignRoles(id, roles);
+        appendAudit("USUARIO_CREADO", id, id, actor, reason, "Cuenta activa; roles " + roles);
+        return findUser(id);
+    }
+
+    @Transactional
     public Usuario update(String subject, int id, CambioUsuario input) {
         int actor = mutation(subject);
         String reason = reason(input == null ? null : input.motivo());
-        if (input == null || input.activo() == null || input.roles() == null || input.roles().isEmpty() || input.roles().size() > ROLES.size())
-            throw error(HttpStatus.BAD_REQUEST, "Indica el estado y entre uno y cuatro roles válidos.");
-        LinkedHashSet<String> desired = new LinkedHashSet<>();
-        for (String role : input.roles()) {
-            if (role == null || !ROLES.contains(role.strip().toUpperCase(Locale.ROOT)) || !desired.add(role.strip().toUpperCase(Locale.ROOT)))
-                throw error(HttpStatus.BAD_REQUEST, "Los roles deben ser válidos y no repetirse.");
-        }
+        if (input == null || input.activo() == null) throw error(HttpStatus.BAD_REQUEST, "Indica el estado de acceso.");
+        LinkedHashSet<String> desired = normalizedRoles(input.roles());
         lockUser(id);
         Usuario before = findUser(id);
         if (actor == id && (!input.activo() || !desired.contains("ADMINISTRADOR")))
             throw error(HttpStatus.CONFLICT, "No puedes desactivar tu cuenta ni retirar tu propio permiso de administrador.");
         if (before.sancionado() && input.activo()) throw error(HttpStatus.CONFLICT, "Primero levanta la sanción mediante la acción correspondiente.");
         if (before.activo() && before.roles().contains("ADMINISTRADOR") && (!input.activo() || !desired.contains("ADMINISTRADOR"))) protectLastAdmin();
+        assignRoles(id, desired);
+        db.update("UPDATE dbo.Usuarios SET activo=? WHERE id_usuario=?", input.activo(), id);
+        Usuario after = findUser(id);
+        appendAudit("USUARIO_ACTUALIZADO", id, id, actor, reason,
+                "Roles " + before.roles() + " → " + after.roles() + "; acceso " + before.activo() + " → " + after.activo());
+        return after;
+    }
+
+    private LinkedHashSet<String> normalizedRoles(List<String> roles) {
+        if (roles == null || roles.isEmpty() || roles.size() > ROLES.size())
+            throw error(HttpStatus.BAD_REQUEST, "Selecciona entre uno y cuatro roles válidos.");
+        LinkedHashSet<String> desired = new LinkedHashSet<>();
+        for (String role : roles) {
+            if (role == null || !ROLES.contains(role.strip().toUpperCase(Locale.ROOT)) || !desired.add(role.strip().toUpperCase(Locale.ROOT)))
+                throw error(HttpStatus.BAD_REQUEST, "Los roles deben ser válidos y no repetirse.");
+        }
+        return desired;
+    }
+
+    @Transactional
+    public void delete(String subject, int id, EliminarUsuario input) {
+        int actor = mutation(subject);
+        String reason = reason(input == null ? null : input.motivo());
+        if (input.confirmacionId() == null || input.confirmacionId() != id)
+            throw error(HttpStatus.BAD_REQUEST, "Escribe el ID de la cuenta para confirmar su eliminación.");
+        if (actor == id) throw error(HttpStatus.CONFLICT, "No puedes eliminar tu propia cuenta administrativa.");
+        lockUser(id);
+        Usuario before = findUser(id);
+        if (before.activo() && before.roles().contains("ADMINISTRADOR")) protectLastAdmin();
+        for (String sql : List.of(
+                "SELECT COUNT(*) FROM dbo.Reportes WHERE id_ciudadano=?",
+                "SELECT COUNT(*) FROM dbo.ValidacionesComunitarias WHERE id_ciudadano=?",
+                "SELECT COUNT(*) FROM dbo.HistorialReputacion WHERE id_ciudadano=?",
+                "SELECT COUNT(*) FROM dbo.VerificacionesInstitucionales WHERE id_personal=?",
+                "SELECT COUNT(*) FROM dbo.OrdenesIntervencion WHERE id_personal=? OR id_usuario_cierre=?",
+                "SELECT COUNT(*) FROM dbo.AvisosOrden WHERE id_lector=?",
+                "SELECT COUNT(*) FROM dbo.DecisionesModeracion WHERE id_responsable=?",
+                "SELECT COUNT(*) FROM dbo.SancionesCuenta WHERE id_usuario=? OR id_responsable=? OR id_responsable_levantamiento=?",
+                "SELECT COUNT(*) FROM dbo.AuditoriaAdministrativa WHERE id_responsable=?")) {
+            Object[] parameters = new Object[(int)sql.chars().filter(ch -> ch == '?').count()];
+            java.util.Arrays.fill(parameters, id);
+            if (count(sql, parameters) > 0)
+                throw error(HttpStatus.CONFLICT, "Esta cuenta tiene reportes, decisiones u operaciones vinculadas y no se puede borrar sin perder historial. Puedes dejarla inactiva.");
+        }
+        appendAudit("USUARIO_ELIMINADO", id, id, actor, reason, "Eliminación definitiva de la cuenta #" + id + "; roles previos " + before.roles());
+        db.update("DELETE FROM dbo.MiembrosUnidad WHERE id_usuario=?", id);
+        db.update("DELETE FROM dbo.UsuarioRoles WHERE id_usuario=?", id);
+        db.update("DELETE FROM dbo.Ciudadanos WHERE id_usuario=?", id);
+        db.update("DELETE FROM dbo.PersonalAlcaldia WHERE id_usuario=?", id);
+        db.update("DELETE FROM dbo.Administradores WHERE id_usuario=?", id);
+        if (db.update("DELETE FROM dbo.Usuarios WHERE id_usuario=?", id) != 1)
+            throw error(HttpStatus.CONFLICT, "La cuenta cambió. Actualiza el directorio antes de reintentar.");
+    }
+
+    private void assignRoles(int id, Set<String> desired) {
         for (String role : desired) {
             if (role.equals("CIUDADANO")) db.update("IF NOT EXISTS(SELECT 1 FROM dbo.Ciudadanos WHERE id_usuario=?) INSERT dbo.Ciudadanos(id_usuario) VALUES(?)", id, id);
             if (role.equals("PERSONAL_ALCALDIA")) db.update("IF NOT EXISTS(SELECT 1 FROM dbo.PersonalAlcaldia WHERE id_usuario=?) INSERT dbo.PersonalAlcaldia(id_usuario,cargo,rol_acceso) VALUES(?,N'Personal municipal',N'GESTION')", id, id);
@@ -82,11 +160,6 @@ public class AdministracionService {
             int affected = db.update("INSERT dbo.UsuarioRoles(id_usuario,id_rol) SELECT ?,id_rol FROM dbo.Roles WHERE nombre=?", id, role);
             if (affected != 1) throw error(HttpStatus.CONFLICT, "Falta la definición de un rol. Instala las actualizaciones de la base.");
         }
-        db.update("UPDATE dbo.Usuarios SET activo=? WHERE id_usuario=?", input.activo(), id);
-        Usuario after = findUser(id);
-        appendAudit("USUARIO_ACTUALIZADO", id, id, actor, reason,
-                "Roles " + before.roles() + " → " + after.roles() + "; acceso " + before.activo() + " → " + after.activo());
-        return after;
     }
 
     public List<ReporteModeracion> reports(String subject) {
@@ -162,10 +235,19 @@ public class AdministracionService {
     }
 
     private int mutation(String subject) {
-        Integer result = db.queryForObject("DECLARE @result INT; EXEC @result=sys.sp_getapplock @Resource=N'zona-segura-admin-global',@LockMode=N'Exclusive',@LockOwner=N'Transaction',@LockTimeout=10000; SELECT @result", Integer.class);
-        if (result == null || result < 0) throw error(HttpStatus.CONFLICT, "Otra operación administrativa está en curso. Reintenta.");
+        // JDBC usa transacciones implicitas: la consulta del perfil inicia la transaccion
+        // real en SQL Server antes de pedir un applock con propietario Transaction.
         int actor = profile(subject).idUsuario();
+        Integer result = db.queryForObject("DECLARE @result INT; EXEC @result=sys.sp_getapplock @Resource=N'zona-segura-admin-global',@LockMode=N'Exclusive',@LockOwner=N'Transaction',@LockTimeout=10000; SELECT @result", Integer.class);
+        if (result != null && (result == -1 || result == -2 || result == -3))
+            throw error(HttpStatus.CONFLICT, "Otra operación administrativa está en curso. Reintenta.");
+        if (result == null || result < 0) {
+            LOG.error("No se pudo adquirir el bloqueo administrativo de SQL Server. Resultado: {}", result);
+            throw error(HttpStatus.INTERNAL_SERVER_ERROR, "No se pudo iniciar la operación administrativa. Revisa el registro de la API.");
+        }
         lockUser(actor);
+        // Los permisos pueden cambiar mientras se espera el bloqueo global.
+        profile(subject);
         return actor;
     }
 
@@ -234,6 +316,8 @@ public class AdministracionService {
     private record Sancion(int id, boolean activoAnterior) { }
     public record Usuario(int id, String nombre, String correo, boolean activo, List<String> roles, boolean sancionado) { }
     public record CambioUsuario(List<String> roles, Boolean activo, String motivo) { }
+    public record EliminarUsuario(String motivo, Integer confirmacionId) { }
+    public record NuevoUsuario(String nombre, String correo, String password, List<String> roles, String motivo) { }
     public record Motivo(String motivo) { }
     public record ReporteModeracion(int id, String tipoIncidenteNombre, String descripcion, String estado, double indiceVeracidad, int votosNegativos, int autorId, boolean sancionado, boolean verificadoInstitucionalmente, boolean sancionPrevia) { }
     public record Auditoria(int id, String accion, int objetivoId, String motivo, int responsableId, OffsetDateTime fechaUtc, String detalle) { }

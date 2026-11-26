@@ -52,8 +52,8 @@ public final class CommunityActivity extends AppCompatActivity {
         String[] pages;
         switch (role) {
             case "account": pages = new String[]{"Crear cuenta","Recuperar contraseña"}; break;
-            case "municipal": pages = new String[]{"Mapa de riesgo","Verificar reportes","Unidades","Recursos","Intervenciones","Órdenes municipales"}; break;
-            case "admin": pages = new String[]{"Moderación"}; break;
+            case "municipal": pages = new String[]{"Mapa de riesgo","Unidades","Recursos","Intervenciones","Órdenes municipales"}; break;
+            case "admin": pages = new String[]{"Verificar reportes","Moderación"}; break;
             default: pages = new String[]{"Mapa de riesgo","Validar reportes"};
         }
         for (String name : pages) {
@@ -78,6 +78,8 @@ public final class CommunityActivity extends AppCompatActivity {
     }
 
     @Override protected void onCreate(Bundle state) {
+        String requestedPage=getIntent().getStringExtra("page");
+        if(!"Crear cuenta".equals(requestedPage)&&!"Recuperar contraseña".equals(requestedPage))InterfaceAppearance.apply(this);
         super.onCreate(state);
         page = getIntent().getStringExtra("page");
         if (page == null) { finish(); return; }
@@ -88,7 +90,7 @@ public final class CommunityActivity extends AppCompatActivity {
         int pad = dp(22);
         panel.setPadding(pad,pad,pad,pad);
         scroll.addView(panel);
-        scroll.setBackgroundResource(R.color.login_background);
+        scroll.setBackgroundColor(InterfaceAppearance.color(this,R.attr.civicColorBackground));
         setContentView(scroll);
         if ("Validar reportes".equals(page)) CitizenNavigation.attach(this, R.id.nav_validar);
         ViewCompat.setOnApplyWindowInsetsListener(scroll,(v,i) -> {
@@ -129,7 +131,7 @@ public final class CommunityActivity extends AppCompatActivity {
         switch(page) {
             case "Mapa de riesgo": path="/api/mapa/zonas"; break;
             case "Intervenciones": path="/api/intervenciones"; break;
-            case "Verificar reportes": path="/api/alcaldia/reportes-verificacion"; break;
+            case "Verificar reportes": path="/api/admin/reportes-verificacion"; break;
             case "Moderación": path="/api/moderacion/reportes"; break;
             case "Validar reportes": path="/api/reportes/cercanos?lat="+lat+"&lng="+lng+"&radio=500"; break;
             default: finish(); return;
@@ -195,7 +197,7 @@ public final class CommunityActivity extends AppCompatActivity {
             if(page.equals("Validar reportes")){
                 label("Confirmaciones: "+row.optInt("confirmaciones")+" de 3 · Votos negativos: "+row.optInt("votosNegativos")
                         +" · A "+row.optLong("distanciaMetros")+" m");
-                if(row.optBoolean("yaVoto"))label("Ya registraste tu voto. El reporte sigue pendiente hasta reunir tres confirmaciones o la verificación de Alcaldía.");
+                if(row.optBoolean("yaVoto"))label("Ya registraste tu voto. El reporte sigue pendiente hasta reunir tres confirmaciones o la revisión del administrador/moderador.");
                 else {
                     JSONObject vote=new JSONObject();put(vote,"latitud",lat);put(vote,"longitud",lng);
                     button("Sí, confirmo este incidente",()->{put(vote,"confirma",true);post(base+"/votos",vote);});
@@ -203,7 +205,7 @@ public final class CommunityActivity extends AppCompatActivity {
                 }
             } else if(page.equals("Verificar reportes")){
                 label("Confirmaciones ciudadanas: "+row.optInt("confirmaciones")+" de 3 · Votos negativos: "+row.optInt("votosNegativos"));
-                label("Registra una inspección o comprobación municipal. La decisión queda asociada a tu cuenta y fecha.");
+                label("Revisa la evidencia como administrador/moderador. La decisión conserva tu cuenta, motivo y fecha.");
                 if(!row.isNull("latitud") && !row.isNull("longitud")){
                     String point=row.optDouble("latitud")+","+row.optDouble("longitud");
                     label("Ubicación del incidente: "+point);
@@ -273,7 +275,7 @@ public final class CommunityActivity extends AppCompatActivity {
             String text=reason.getText().toString().trim();
             if(text.length()<10){reason.setError("Describe la comprobación con al menos 10 caracteres.");return;}
             JSONObject body=new JSONObject();put(body,"confirma",confirms);put(body,"motivo",text);
-            dialog.dismiss();post("/api/alcaldia/reportes/"+id+"/verificacion",body);
+            dialog.dismiss();post("/api/admin/reportes/"+id+"/verificacion",body);
         }));
         dialog.show();
     }
@@ -348,7 +350,7 @@ public final class CommunityActivity extends AppCompatActivity {
         TextView label = new TextView(this);
         label.setText(value);
         label.setTextSize(16);
-        label.setTextColor(getColor(R.color.login_text));
+        label.setTextColor(InterfaceAppearance.color(this,R.attr.civicColorText));
         label.setLineSpacing(dp(3), 1f);
         label.setPadding(0, dp(8), 0, dp(8));
         panel.addView(label, new LinearLayout.LayoutParams(-1, -2));

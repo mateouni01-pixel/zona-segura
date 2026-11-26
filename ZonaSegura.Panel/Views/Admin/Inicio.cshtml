@@ -1,0 +1,9 @@
+@{ViewData["Title"]="Inicio de administración";}
+<div class="page-heading"><div><div class="eyebrow">Panel de administración</div><h1>Administra Zona Segura</h1><p class="muted">Gestiona el acceso a la plataforma, revisa los reportes ciudadanos y da seguimiento a las decisiones.</p></div><a asp-action="CrearUsuario" class="btn btn-primary">Crear usuario</a></div>
+<section class="surface portal-welcome"><div><span class="workspace-badge">Administrador</span><h2>Bienvenido, @User.Identity?.Name</h2><p class="muted mb-0">Elige una tarea para comenzar. Cada revisión y cambio de permisos conserva su responsable y motivo.</p></div></section>
+<section class="dashboard-grid" aria-label="Tareas de administración">
+    <a asp-action="Index" class="surface dashboard-card"><span class="task-category">Acceso a la plataforma</span><h2>Usuarios y permisos</h2><p>Crea cuentas, asigna roles y administra el estado de acceso de cada usuario.</p><span class="card-action">Gestionar usuarios</span></a>
+    <a asp-action="Verificar" class="surface dashboard-card"><span class="task-category">Revisión de incidentes</span><h2>Validar reportes</h2><p>Revisa la evidencia y registra una decisión fundamentada de validación o rechazo.</p><span class="card-action">Revisar reportes</span></a>
+    <a asp-action="Moderacion" class="surface dashboard-card"><span class="task-category">Comunidad</span><h2>Moderación de reportes</h2><p>Consulta los reportes cuestionados y gestiona las sanciones que correspondan.</p><span class="card-action">Abrir moderación</span></a>
+    <a asp-action="Auditoria" class="surface dashboard-card"><span class="task-category">Seguimiento</span><h2>Auditoría</h2><p>Consulta las acciones administrativas, sus responsables, fechas y motivos.</p><span class="card-action">Consultar historial</span></a>
+</section>

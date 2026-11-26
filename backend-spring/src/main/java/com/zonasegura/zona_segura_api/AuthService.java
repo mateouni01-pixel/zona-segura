@@ -34,15 +34,7 @@ public class AuthService {
 
     @Transactional
     public int register(String nombre, String correo, String password) {
-        String normalized = correo == null ? "" : correo.trim().toLowerCase(Locale.ROOT);
-        if (nombre == null || nombre.isBlank() || nombre.trim().length() > 150
-                || normalized.length() > 254
-                || !normalized.matches("(?i)^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}$")
-                || password == null || password.length() < 8
-                || password.getBytes(StandardCharsets.UTF_8).length > 72) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "Nombre, correo válido y contraseña de 8 caracteres a 72 bytes son obligatorios.");
-        }
+        String normalized = validateRegistration(nombre, correo, password);
         try {
             Integer id = jdbc.queryForObject(
                     "INSERT INTO dbo.Usuarios (nombre, correo, password_hash) OUTPUT INSERTED.id_usuario VALUES (?, ?, ?)",
@@ -55,6 +47,19 @@ public class AuthService {
         } catch (DuplicateKeyException exception) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "El correo ya está registrado.");
         }
+    }
+
+    static String validateRegistration(String nombre, String correo, String password) {
+        String normalized = correo == null ? "" : correo.trim().toLowerCase(Locale.ROOT);
+        if (nombre == null || nombre.isBlank() || nombre.trim().length() > 150
+                || normalized.length() > 254
+                || !normalized.matches("(?i)^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}$")
+                || password == null || password.length() < 8
+                || password.getBytes(StandardCharsets.UTF_8).length > 72) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Nombre, correo válido y contraseña de 8 caracteres a 72 bytes son obligatorios.");
+        }
+        return normalized;
     }
 
     public Map<String, Object> login(String correo, String password) {

@@ -24,7 +24,7 @@ android {
 
     buildTypes {
         debug {
-            resValue("string", "backend_base_url", providers.gradleProperty("zonaApiUrl").getOrElse("http://127.0.0.1:8080"))
+            resValue("string", "backend_base_url", providers.gradleProperty("zonaApiUrl").getOrElse("http://192.168.0.5:8080"))
         }
         release {
             resValue("string", "backend_base_url", providers.gradleProperty("zonaApiUrl").getOrElse(""))

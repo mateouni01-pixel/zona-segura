@@ -1,0 +1,43 @@
+<resources>
+    <attr name="civicColorBackground" format="color" />
+    <attr name="civicColorText" format="color" />
+    <attr name="civicColorSecondaryText" format="color" />
+    <attr name="civicColorBorder" format="color" />
+    <attr name="civicColorCardBorder" format="color" />
+    <attr name="civicColorBrandMark" format="color" />
+
+    <style name="Theme.ZONASEGURA.Alcaldia" parent="Theme.ZONASEGURA">
+        <item name="colorPrimary">#1559A5</item>
+        <item name="colorSecondary">#1559A5</item>
+        <item name="colorPrimaryContainer">#D8E7FF</item>
+        <item name="colorOnPrimaryContainer">#123969</item>
+        <item name="colorOnSurface">#182F4A</item>
+        <item name="colorOnSurfaceVariant">#41546D</item>
+        <item name="android:windowBackground">#F2F6FC</item>
+        <item name="android:statusBarColor">#F2F6FC</item>
+        <item name="android:navigationBarColor">#F2F6FC</item>
+        <item name="civicColorBackground">#F2F6FC</item>
+        <item name="civicColorText">#182F4A</item>
+        <item name="civicColorSecondaryText">#41546D</item>
+        <item name="civicColorBorder">#5B7FA6</item>
+        <item name="civicColorCardBorder">#B4C9E5</item>
+        <item name="civicColorBrandMark">#3F7CC4</item>
+    </style>
+    <style name="Theme.ZONASEGURA.Administrador" parent="Theme.ZONASEGURA">
+        <item name="colorPrimary">#6F3BA5</item>
+        <item name="colorSecondary">#6F3BA5</item>
+        <item name="colorPrimaryContainer">#EBDDFA</item>
+        <item name="colorOnPrimaryContainer">#482269</item>
+        <item name="colorOnSurface">#30213D</item>
+        <item name="colorOnSurfaceVariant">#65516E</item>
+        <item name="android:windowBackground">#F7F3FC</item>
+        <item name="android:statusBarColor">#F7F3FC</item>
+        <item name="android:navigationBarColor">#F7F3FC</item>
+        <item name="civicColorBackground">#F7F3FC</item>
+        <item name="civicColorText">#30213D</item>
+        <item name="civicColorSecondaryText">#65516E</item>
+        <item name="civicColorBorder">#8660A8</item>
+        <item name="civicColorCardBorder">#CFB8E5</item>
+        <item name="civicColorBrandMark">#8F5BC2</item>
+    </style>
+</resources>

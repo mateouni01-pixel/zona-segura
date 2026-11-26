@@ -1,0 +1,33 @@
+@model CrearUsuarioModel
+@{ViewData["Title"]="Crear usuario";}
+<div class="page-heading"><div><div class="eyebrow">Administración</div><h1>Crear usuario</h1><p class="muted">Registra una cuenta y asigna los permisos que necesita.</p></div><a asp-action="Index" class="btn btn-outline-primary">Volver a usuarios</a></div>
+<form asp-action="CrearUsuario" method="post" class="surface form-width">
+    <div asp-validation-summary="All" class="text-danger" role="alert"></div>
+    <h2 class="h5">Datos de la cuenta</h2>
+    <label asp-for="Nombre" class="form-label">Nombre completo</label>
+    <input asp-for="Nombre" class="form-control" autocomplete="name" maxlength="150" required/>
+    <span asp-validation-for="Nombre" class="text-danger"></span>
+    <label asp-for="Correo" class="form-label mt-3">Correo electrónico</label>
+    <input asp-for="Correo" type="email" class="form-control" autocomplete="off" maxlength="254" required/>
+    <span asp-validation-for="Correo" class="text-danger"></span>
+    <label asp-for="Password" class="form-label mt-3">Contraseña inicial</label>
+    <input asp-for="Password" class="form-control" autocomplete="new-password" minlength="8" maxlength="72" aria-describedby="password-ayuda" required/>
+    <p id="password-ayuda" class="muted mt-2">Mínimo 8 caracteres y máximo 72 bytes. Las letras con tilde y otros símbolos pueden ocupar más de un byte.</p>
+    <span asp-validation-for="Password" class="text-danger"></span>
+    <label asp-for="ConfirmarPassword" class="form-label mt-3">Confirmar contraseña</label>
+    <input asp-for="ConfirmarPassword" class="form-control" autocomplete="new-password" minlength="8" maxlength="72" required/>
+    <span asp-validation-for="ConfirmarPassword" class="text-danger"></span>
+    <fieldset class="mt-4"><legend class="h5">Roles de la cuenta</legend>
+        <p class="muted">Puedes seleccionar varios. El rol Administrador permite crear usuarios, incluyendo otros administradores, y gestionar sus permisos.</p>
+        @foreach(var role in EditarUsuarioModel.RolesDisponibles){
+            var label=role switch {"CIUDADANO"=>"Ciudadano","PERSONAL_ALCALDIA"=>"Personal de Alcaldía","ADMINISTRADOR"=>"Administrador","UNIDAD_OPERATIVA"=>"Unidad operativa",_=>role};
+            <div class="form-check mb-2"><input type="checkbox" name="Roles" value="@role" checked="@Model.Roles.Contains(role)" class="form-check-input" id="nuevo-rol-@role"/><label class="form-check-label" for="nuevo-rol-@role">@label</label></div>
+        }
+        <span asp-validation-for="Roles" class="text-danger"></span>
+    </fieldset>
+    <label asp-for="Motivo" class="form-label mt-3">Motivo de creación</label>
+    <textarea asp-for="Motivo" class="form-control" rows="3" minlength="10" maxlength="2000" required></textarea>
+    <span asp-validation-for="Motivo" class="text-danger"></span>
+    <p class="muted mt-2">La cuenta quedará activa. La creación y los permisos asignados se guardarán en la auditoría con tu usuario.</p>
+    <div class="d-flex gap-2 mt-3"><button type="submit" class="btn btn-primary">Crear usuario</button><a asp-action="Index" class="btn btn-outline-primary">Cancelar</a></div>
+</form>

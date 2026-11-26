@@ -1,0 +1,11 @@
+@model MapaCiudadanoModel
+@{ViewData["Title"]="Mapa de incidentes";}
+<div class="page-heading"><div><div class="eyebrow">Interfaz Ciudadano</div><h1>Mapa de incidentes</h1><p class="muted">Explora la concentración de incidentes confirmados en la ciudad.</p></div></div>
+<form method="get" class="surface filter-bar"><div><label for="dias" class="form-label">Período</label><select name="dias" id="dias" class="form-select">@foreach(var dias in new[]{7,30,90}){<option value="@dias" selected="@(Model.Datos?.Dias==dias)">Últimos @dias días</option>}</select></div><button class="btn btn-primary align-self-end">Consultar mapa</button></form>
+@if(Model.Error!=null){<div class="alert alert-danger" role="alert">@Model.Error</div>}
+else if(Model.Datos!=null){
+<section class="surface"><h2>@Model.Datos.TotalReportes incidentes confirmados en el período</h2><div id="mapa-ciudadano" role="region" aria-label="Mapa ciudadano de incidentes"></div><p class="muted mt-3 mb-0">Celdas aproximadas de 500 metros. La ausencia de reportes no garantiza seguridad. Actualizado: @Model.Datos.ActualizadoUtc.ToString("dd/MM/yyyy HH:mm") UTC.</p></section>
+<script type="application/json" id="datos-mapa-ciudadano">@Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Datos,new System.Text.Json.JsonSerializerOptions{PropertyNamingPolicy=System.Text.Json.JsonNamingPolicy.CamelCase}))</script>
+}
+@section Styles{<link rel="stylesheet" href="~/lib/leaflet/leaflet.css"/>}
+@section Scripts{<script src="~/lib/leaflet/leaflet.js"></script><script src="~/js/ciudadano-mapa.js" asp-append-version="true"></script>}

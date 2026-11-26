@@ -17,16 +17,18 @@ public final class OperationsActivity extends AppCompatActivity {
     private LinearLayout panel;private TextView status;private String page;private boolean busy;
     private JSONArray units=new JSONArray();private final Handler timer=new Handler(Looper.getMainLooper());
     private final Runnable refresh=new Runnable(){@Override public void run(){if(!busy)load();timer.postDelayed(this,30000);}};
-    @Override protected void onCreate(Bundle state){super.onCreate(state);
+    @Override protected void onCreate(Bundle state){InterfaceAppearance.apply(this);super.onCreate(state);
         page=getIntent().getStringExtra("page");if(page==null)page="Bandeja operativa";
+        if(!InterfaceNavigation.exigir(this,page.equals("Bandeja operativa")?InterfazUsuario.OPERATIVA:InterfazUsuario.ALCALDIA))return;
         if(SessionStore.load(this)==null){finish();return;}
-        ScrollView scroll=new ScrollView(this);panel=new LinearLayout(this);panel.setOrientation(LinearLayout.VERTICAL);panel.setPadding(24,24,24,24);scroll.addView(panel);setContentView(scroll);scroll.setBackgroundResource(R.color.login_background);
+        ScrollView scroll=new ScrollView(this);panel=new LinearLayout(this);panel.setOrientation(LinearLayout.VERTICAL);panel.setPadding(24,24,24,24);scroll.addView(panel);setContentView(scroll);scroll.setBackgroundColor(InterfaceAppearance.color(this,R.attr.civicColorBackground));
         ViewCompat.setOnApplyWindowInsetsListener(scroll,(v,i)->{var b=i.getInsets(WindowInsetsCompat.Type.systemBars()|WindowInsetsCompat.Type.ime());v.setPadding(b.left,b.top,b.right,b.bottom);return i;});load();
     }
     @Override protected void onResume(){super.onResume();timer.postDelayed(refresh,30000);}
     @Override protected void onPause(){timer.removeCallbacks(refresh);super.onPause();}
     private void shell(){panel.removeAllViews();TextView title=label(page);title.setTextSize(25);title.setTypeface(android.graphics.Typeface.DEFAULT_BOLD);
         status=label("");button("Actualizar",this::load);button("Volver",this::finish);
+        if(page.equals("Bandeja operativa"))button("Cambiar interfaz",()->InterfaceNavigation.selector(this));
         if(page.equals("Bandeja operativa"))button("Cerrar sesión",()->{SessionStore.clear(this);startActivity(new Intent(this,MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK));finish();});
     }
     private void load(){if(busy)return;shell();busy=true;status.setText("Consultando el servidor…");
@@ -110,6 +112,6 @@ public final class OperationsActivity extends AppCompatActivity {
     private void deliver(Runnable action){runOnUiThread(()->{if(!isFinishing()&&!isDestroyed())action.run();});}
     private static JSONObject json(String key,Object value){JSONObject j=new JSONObject();put(j,key,value);return j;}
     private static void put(JSONObject j,String key,Object value){try{j.put(key,value);}catch(JSONException e){throw new IllegalArgumentException(e);}}
-    private TextView label(String text){TextView v=new TextView(this);v.setText(text);v.setTextSize(16);v.setTextColor(getColor(R.color.login_text));v.setPadding(8,16,8,12);panel.addView(v);return v;}
+    private TextView label(String text){TextView v=new TextView(this);v.setText(text);v.setTextSize(16);v.setTextColor(InterfaceAppearance.color(this,R.attr.civicColorText));v.setPadding(8,16,8,12);panel.addView(v);return v;}
     private void button(String text,Runnable action){MaterialButton b=new MaterialButton(this);b.setText(text);b.setOnClickListener(v->{if(!busy)action.run();});panel.addView(b);}
 }

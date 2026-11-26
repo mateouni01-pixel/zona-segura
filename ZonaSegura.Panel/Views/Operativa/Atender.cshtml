@@ -1,0 +1,6 @@
+@model AtenderOrdenModel
+@{ViewData["Title"]="Registrar atención";}
+<div class="page-heading"><div><div class="eyebrow">Interfaz Unidad Operativa</div><h1>Registrar atención de la orden #@Model.Id</h1></div></div>
+<form asp-action="Atender" method="post" class="surface form-width"><input asp-for="Id" type="hidden"/><div asp-validation-summary="All" class="text-danger" role="alert"></div>
+@if(Model.Orden!=null){<p><strong>@Model.Orden.UnidadNombre · @Model.Orden.RecursoNombre</strong></p><p>@Model.Orden.Descripcion</p><p class="muted">@Model.Orden.Instrucciones</p>}
+<label asp-for="Resultado" class="form-label">Resultado de la atención</label><textarea asp-for="Resultado" class="form-control" minlength="10" maxlength="2000" rows="4" required></textarea><p class="muted mt-2">Al confirmar, la orden se cierra y el recurso vuelve a estar disponible.</p><div class="d-flex gap-2 mt-3"><button class="btn btn-primary">Confirmar atención</button><a asp-action="Index" class="btn btn-outline-primary">Cancelar</a></div></form>

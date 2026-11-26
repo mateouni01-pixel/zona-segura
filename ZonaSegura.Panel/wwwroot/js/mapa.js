@@ -43,12 +43,13 @@
             row.append(incident, node('td', Number.isNaN(timestamp.getTime()) ? 'Fecha no disponible' : date.format(timestamp)));
             state.append(node('span', report.estado.replaceAll('_', ' '), 'state'));
             row.append(state, node('td', percent.format(report.indiceVeracidad)));
-            if (report.estado === 'VALIDADO' || report.estado === 'PENDIENTE_VALIDACION') {
-                const assign = report.estado === 'VALIDADO';
-                const link = node('a', assign ? 'Crear orden' : 'Verificar', assign ? 'btn btn-sm btn-outline-primary' : '');
-                const url = new URL(assign ? mapElement.dataset.asignarUrl : mapElement.dataset.verificarUrl, window.location.origin);
-                if (assign) url.searchParams.set('id', String(report.id));
+            if (report.estado === 'VALIDADO') {
+                const link = node('a', 'Crear orden', 'btn btn-sm btn-outline-primary');
+                const url = new URL(mapElement.dataset.asignarUrl, window.location.origin);
+                url.searchParams.set('id', String(report.id));
                 link.href = url.toString(); management.append(link);
+            } else if (report.estado === 'PENDIENTE_VALIDACION') {
+                management.append(node('span', 'En espera de validación', 'muted'));
             }
             row.append(management); rows.append(row);
         }

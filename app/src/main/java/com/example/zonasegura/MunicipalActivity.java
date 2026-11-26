@@ -24,6 +24,7 @@ public class MunicipalActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if(!InterfaceNavigation.exigir(this,InterfazUsuario.ALCALDIA))return;
         setContentView(R.layout.activity_municipal);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.municipalRoot), (view, insets) -> {
             Insets bars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -65,10 +66,10 @@ public class MunicipalActivity extends AppCompatActivity {
                     cargo.setText(getString(R.string.municipal_cargo, result.cargo));
                     access.setText(getString(R.string.municipal_access, result.accessRole));
                     CommunityActivity.addActions(this, R.id.municipalStatus, "municipal");
+                    InterfaceNavigation.agregarSelector(this,R.id.municipalStatus);
                     status.setText(R.string.municipal_authorized);
                 } else if (result.status == 401 || result.status == 403 || result.status == 404) {
-                    SessionStore.clear(this);
-                    openLogin();
+                    if(result.status==401){SessionStore.clear(this);openLogin();}else InterfaceNavigation.selector(this);
                 } else {
                     status.setText(R.string.municipal_error);
                     retry.setVisibility(View.VISIBLE);

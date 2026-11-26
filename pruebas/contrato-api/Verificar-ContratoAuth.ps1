@@ -176,32 +176,32 @@ function Test-Verificacion($Api, $AuthorSession, $ReportInput) {
     foreach($n in 0..2){Expect $name "voto negativo $n" (Request $base 'POST' "/api/reportes/$negativeId/votos" @{confirma=$false;latitud=$vote.latitud;longitud=$vote.longitud} $voters[$n].token) 200}
     $pending=Request $base 'GET' "/api/reportes/$negativeId" $null $AuthorSession.token
     if(($pending.Content|ConvertFrom-Json).estado -ne 'PENDIENTE_VALIDACION'){throw 'Los votos negativos rechazaron automáticamente un reporte.'}
-    $official=Request $base 'POST' '/api/auth/register' @{nombre='Revisor municipal';correo='municipal@example.invalid';password='prueba-segura-123'}
-    Expect $name 'crear cuenta para perfil municipal de prueba' $official 201
+    $official=Request $base 'POST' '/api/auth/register' @{nombre='Administrador revisor';correo='revisor@example.invalid';password='prueba-segura-123'}
+    Expect $name 'crear cuenta para perfil administrativo de prueba' $official 201
     $officialId=($official.Content|ConvertFrom-Json).idUsuario
-    $beforePromotion=Request $base 'POST' '/api/auth/login' @{correo='municipal@example.invalid';password='prueba-segura-123'}
+    $beforePromotion=Request $base 'POST' '/api/auth/login' @{correo='revisor@example.invalid';password='prueba-segura-123'}
     $ownReport=Request $base 'POST' '/api/reportes' $ReportInput ($beforePromotion.Content|ConvertFrom-Json).token
     $ownId=($ownReport.Content|ConvertFrom-Json).id
     if($name -eq 'Spring'){
-        Invoke-Sql $Api.database "DELETE dbo.UsuarioRoles WHERE id_usuario=$officialId; INSERT dbo.UsuarioRoles SELECT $officialId,id_rol FROM dbo.Roles WHERE nombre=N'PERSONAL_ALCALDIA'; INSERT dbo.PersonalAlcaldia(id_usuario,cargo,rol_acceso) VALUES($officialId,N'Inspector de prueba',N'VERIFICACION');"
-    }else{Invoke-Sql $Api.database "UPDATE dbo.Usuarios SET Rol=N'PERSONAL_ALCALDIA' WHERE Id=$officialId"}
-    $officialLogin=Request $base 'POST' '/api/auth/login' @{correo='municipal@example.invalid';password='prueba-segura-123'}
-    Expect $name 'login municipal verificador' $officialLogin 200
+        Invoke-Sql $Api.database "DELETE dbo.UsuarioRoles WHERE id_usuario=$officialId; INSERT dbo.UsuarioRoles SELECT $officialId,id_rol FROM dbo.Roles WHERE nombre=N'ADMINISTRADOR'; INSERT dbo.Administradores(id_usuario,nivel_acceso) VALUES($officialId,N'GESTION');"
+    }else{Invoke-Sql $Api.database "UPDATE dbo.Usuarios SET Rol=N'ADMINISTRADOR' WHERE Id=$officialId"}
+    $officialLogin=Request $base 'POST' '/api/auth/login' @{correo='revisor@example.invalid';password='prueba-segura-123'}
+    Expect $name 'login del administrador revisor' $officialLogin 200
     $officialToken=($officialLogin.Content|ConvertFrom-Json).token
-    Expect $name 'perfil municipal' (Request $base 'GET' '/api/alcaldia/perfil' $null $officialToken) 200
-    Expect $name 'ciudadano no accede a verificación institucional' (Request $base 'GET' '/api/alcaldia/reportes-verificacion' $null $voters[0].token) 403
-    Expect $name 'bandeja municipal de revisión' (Request $base 'GET' '/api/alcaldia/reportes-verificacion' $null $officialToken) 200
-    $evidence=@{confirma=$true;motivo='Inspección municipal de prueba confirma el incidente en el lugar.'}
-    Expect $name 'personal municipal no verifica un reporte propio' (Request $base 'POST' "/api/alcaldia/reportes/$ownId/verificacion" $evidence $officialToken) 403
-    Expect $name 'ciudadano no puede verificar institucionalmente' (Request $base 'POST' "/api/alcaldia/reportes/$negativeId/verificacion" $evidence $voters[0].token) 403
-    Expect $name 'motivo obligatorio' (Request $base 'POST' "/api/alcaldia/reportes/$negativeId/verificacion" @{confirma=$true;motivo=''} $officialToken) 400
-    $verified=Request $base 'POST' "/api/alcaldia/reportes/$negativeId/verificacion" $evidence $officialToken
-    Expect $name 'Alcaldía confirma sin tres votos positivos' $verified 200
+    Expect $name 'perfil administrativo' (Request $base 'GET' '/api/admin/perfil' $null $officialToken) 200
+    Expect $name 'ciudadano no accede a verificación institucional' (Request $base 'GET' '/api/admin/reportes-verificacion' $null $voters[0].token) 403
+    Expect $name 'bandeja administrativa de revisión' (Request $base 'GET' '/api/admin/reportes-verificacion' $null $officialToken) 200
+    $evidence=@{confirma=$true;motivo='Revisión administrativa de prueba confirma el incidente en el lugar.'}
+    Expect $name 'administrador no verifica un reporte propio' (Request $base 'POST' "/api/admin/reportes/$ownId/verificacion" $evidence $officialToken) 403
+    Expect $name 'ciudadano no puede verificar institucionalmente' (Request $base 'POST' "/api/admin/reportes/$negativeId/verificacion" $evidence $voters[0].token) 403
+    Expect $name 'motivo obligatorio' (Request $base 'POST' "/api/admin/reportes/$negativeId/verificacion" @{confirma=$true;motivo=''} $officialToken) 400
+    $verified=Request $base 'POST' "/api/admin/reportes/$negativeId/verificacion" $evidence $officialToken
+    Expect $name 'administrador confirma sin tres votos positivos' $verified 200
     if(($verified.Content|ConvertFrom-Json).estado -ne 'VALIDADO' -or ($verified.Content|ConvertFrom-Json).origenValidacion -ne 'INSTITUCIONAL'){throw 'No se guardó la confirmación institucional.'}
-    Expect $name 'no sobrescribir verificación institucional' (Request $base 'POST' "/api/alcaldia/reportes/$negativeId/verificacion" $evidence $officialToken) 409
+    Expect $name 'no sobrescribir verificación institucional' (Request $base 'POST' "/api/admin/reportes/$negativeId/verificacion" $evidence $officialToken) 409
     $rejectedReport=Request $base 'POST' '/api/reportes' $ReportInput $AuthorSession.token
     $rejectedId=($rejectedReport.Content|ConvertFrom-Json).id
-    $rejected=Request $base 'POST' "/api/alcaldia/reportes/$rejectedId/verificacion" @{confirma=$false;motivo='Comprobación municipal de prueba identifica información incorrecta.'} $officialToken
+    $rejected=Request $base 'POST' "/api/admin/reportes/$rejectedId/verificacion" @{confirma=$false;motivo='Revisión administrativa de prueba identifica información incorrecta.'} $officialToken
     Expect $name 'rechazo institucional fundamentado' $rejected 200
     if(($rejected.Content|ConvertFrom-Json).estado -ne 'RECHAZADO'){throw 'No se registró el rechazo.'}
     Expect $name 'no reabrir rechazado mediante voto' (Request $base 'POST' "/api/reportes/$rejectedId/votos" $vote $voters[0].token) 409
@@ -214,7 +214,7 @@ function Test-Verificacion($Api, $AuthorSession, $ReportInput) {
         Expect $name 'conservar evidencia al editar reporte' (Request $base 'PUT' "/api/reportes/$reportId" $ReportInput $AuthorSession.token) 409
         Invoke-Sql $Api.database "UPDATE dbo.Usuarios SET Rol=N'CIUDADANO' WHERE Id=$officialId"
     }
-    $removed=Request $base 'GET' '/api/alcaldia/reportes-verificacion' $null $officialToken
+    $removed=Request $base 'GET' '/api/admin/reportes-verificacion' $null $officialToken
     if([int]$removed.StatusCode -notin 401,403){throw 'Un rol retirado conserva permiso institucional.'}
     $results.Add([pscustomobject]@{api=$name;prueba='auditoría institucional y revocación de rol';resultado='OK';http=[int]$removed.StatusCode})
 }

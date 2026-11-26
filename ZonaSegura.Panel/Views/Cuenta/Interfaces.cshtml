@@ -1,0 +1,14 @@
+@model SeleccionInterfazModel
+@{ViewData["Title"]="Elige tu interfaz";}
+<div class="page-heading"><div><div class="eyebrow">Tu cuenta · Tus espacios</div><h1>Elige tu interfaz</h1><p class="lead muted">Hola, @User.Identity?.Name. Estas son las interfaces disponibles con tus permisos actuales.</p></div></div>
+@if(Model.Error!=null){<div class="alert alert-danger" role="alert">@Model.Error <a asp-action="Interfaces">Volver a comprobar mis roles</a></div>}
+<section class="dashboard-grid interface-picker" aria-label="Interfaces disponibles">
+    @foreach(var interfaz in Model.Interfaces){
+        <form asp-action="ElegirInterfaz" method="post" class="surface interface-choice" data-rol="@interfaz.Rol">
+            <input name="rol" value="@interfaz.Rol" type="hidden"/>
+            <span class="task-category">@(Model.RolActual==interfaz.Rol?"Interfaz activa":"Acceso autorizado")</span><h2>@interfaz.Nombre</h2><p class="muted">@interfaz.Descripcion</p>
+            <button type="submit" class="btn btn-primary">Entrar como @interfaz.Nombre</button>
+        </form>
+    }
+</section>
+@if(Model.Interfaces.Count==1){<p class="muted mt-3">Tu cuenta tiene una interfaz disponible. Si necesitas otro rol, un administrador puede revisar tus permisos.</p>}

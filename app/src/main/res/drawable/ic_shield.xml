@@ -5,7 +5,7 @@
     android:viewportWidth="64"
     android:viewportHeight="64">
     <path
-        android:fillColor="#176B54"
+        android:fillColor="?attr/civicColorBrandMark"
         android:pathData="M32,2 L56,12 L56,30 C56,46 46,57 32,62 C18,57 8,46 8,30 L8,12 Z" />
     <path
         android:fillColor="#FFFFFF"

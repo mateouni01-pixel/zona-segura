@@ -6,4 +6,7 @@
         <domain includeSubdomains="false">localhost</domain>
         <trust-anchors><certificates src="system" /><certificates src="@raw/zona_local_ca" /></trust-anchors>
     </domain-config>
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="false">192.168.0.5</domain>
+    </domain-config>
 </network-security-config>

@@ -1,0 +1,14 @@
+@model CrearReporteCiudadanoModel
+@{ViewData["Title"]="Crear reporte";}
+<div class="page-heading"><div><div class="eyebrow">Interfaz Ciudadano</div><h1>Crear reporte</h1><p class="muted">Describe el incidente y permite obtener tu ubicación para registrarlo.</p></div></div>
+<form asp-action="CrearReporte" method="post" class="surface form-width" id="crear-reporte-ciudadano">
+    <input asp-for="SolicitudId" type="hidden"/><div asp-validation-summary="All" class="text-danger" role="alert"></div>
+    <label asp-for="TipoIncidenteId" class="form-label">Tipo de incidente</label><select asp-for="TipoIncidenteId" class="form-select" required><option value="">Selecciona una categoría</option>@foreach(var tipo in Model.Tipos){<option value="@tipo.Id">@tipo.Nombre</option>}</select>
+    <label asp-for="Descripcion" class="form-label mt-3">Descripción</label><textarea asp-for="Descripcion" class="form-control" rows="4" minlength="10" maxlength="2000" required></textarea>
+    <fieldset class="mt-3"><legend class="h5">Ubicación del incidente</legend><p class="muted">Ubícate junto al incidente. Se requiere una lectura reciente con precisión de hasta 100 metros y cobertura dentro de los distritos urbanos 1–12.</p>
+        <button type="button" class="btn btn-outline-primary" id="obtener-ubicacion">Obtener mi ubicación</button><p id="ubicacion-estado" class="muted mt-2" role="status">Pulsa el botón para obtener tu ubicación.</p>
+        <div class="row"><div class="col-sm-6"><label asp-for="Latitud" class="form-label">Latitud</label><input asp-for="Latitud" type="text" class="form-control" readonly/></div><div class="col-sm-6"><label asp-for="Longitud" class="form-label">Longitud</label><input asp-for="Longitud" type="text" class="form-control" readonly/></div></div>
+    </fieldset>
+    <div class="d-flex gap-2 mt-4"><button class="btn btn-primary" type="submit">Registrar reporte</button><a asp-action="Index" class="btn btn-outline-primary">Cancelar</a></div>
+</form>
+@section Scripts{<script src="~/js/ciudadano-reporte.js" asp-append-version="true"></script>}

@@ -50,7 +50,7 @@ CREATE TABLE dbo.AuditoriaAdministrativa (
     id_auditoria INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
     accion NVARCHAR(50) NOT NULL,
     objetivo_id INT NOT NULL,
-    id_usuario_objetivo INT NOT NULL REFERENCES dbo.Usuarios(id_usuario),
+    id_usuario_objetivo INT NOT NULL, -- ID historico: se conserva tras eliminar la cuenta.
     id_responsable INT NOT NULL REFERENCES dbo.Usuarios(id_usuario),
     motivo NVARCHAR(2000) NOT NULL,
     detalle NVARCHAR(1500) NOT NULL,

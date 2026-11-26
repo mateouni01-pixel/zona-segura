@@ -31,11 +31,10 @@ public class VerificacionService {
         return profile.ciudadanoId();
     }
 
-    private int municipal(String subject) {
+    private int administrator(String subject) {
         var profile=auth.profile(subject);
-        if(!profile.roles().contains("PERSONAL_ALCALDIA") || jdbc.queryForObject(
-                "SELECT COUNT(*) FROM dbo.PersonalAlcaldia WHERE id_usuario=?",Integer.class,profile.idUsuario())!=1)
-            throw error(HttpStatus.FORBIDDEN,"Se requiere personal autorizado de Alcaldía.");
+        if(!profile.roles().contains("ADMINISTRADOR"))
+            throw error(HttpStatus.FORBIDDEN,"La validación manual requiere un administrador/moderador activo.");
         return profile.idUsuario();
     }
 
@@ -73,8 +72,8 @@ public class VerificacionService {
         return detail(find(id),true,null,false);
     }
 
-    public List<Detalle> municipalReports(String subject) {
-        municipal(subject);
+    public List<Detalle> administrativeReports(String subject) {
+        administrator(subject);
         return jdbc.query(QUERY+"WHERE r.estado IN ('PENDIENTE_VALIDACION','VALIDADO') "
                 + "AND NOT EXISTS(SELECT 1 FROM dbo.VerificacionesInstitucionales i WHERE i.id_reporte=r.id_reporte) ORDER BY r.id_reporte DESC",
                 (rs,row)->detail(data(rs),false,null,true));
@@ -82,7 +81,7 @@ public class VerificacionService {
 
     @Transactional
     public Detalle verify(String subject,int id,Verificacion input) {
-        int reviewer=municipal(subject);
+        int reviewer=administrator(subject);
         String reason=input==null || input.motivo()==null?"":input.motivo().strip();
         if(input==null || input.confirma()==null || reason.length()<10 || reason.length()>2000)
             throw error(HttpStatus.BAD_REQUEST,"Registra el resultado y la comprobación realizada, entre 10 y 2000 caracteres.");
@@ -95,6 +94,9 @@ public class VerificacionService {
             throw error(HttpStatus.CONFLICT,"El reporte ya tiene una verificación institucional.");
         jdbc.update("INSERT dbo.VerificacionesInstitucionales(id_reporte,id_personal,confirma,motivo) VALUES(?,?,?,?)",id,reviewer,input.confirma(),reason);
         jdbc.update("UPDATE dbo.Reportes SET estado=? WHERE id_reporte=?",input.confirma()?"VALIDADO":"RECHAZADO",id);
+        jdbc.update("INSERT dbo.AuditoriaAdministrativa(accion,objetivo_id,id_usuario_objetivo,id_responsable,motivo,detalle) VALUES(?,?,?,?,?,?)",
+                input.confirma()?"REPORTE_VALIDADO":"REPORTE_RECHAZADO",id,report.author(),reviewer,reason,
+                "Revisión administrativa; estado " + report.state() + " → " + (input.confirma()?"VALIDADO":"RECHAZADO"));
         return detail(find(id),false,null,true);
     }
 

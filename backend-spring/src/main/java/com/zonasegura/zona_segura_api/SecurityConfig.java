@@ -85,6 +85,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/auth/register", "/api/auth/login").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/conexion").permitAll()
                         .requestMatchers("/api/admin/**").hasRole("ADMINISTRADOR")
+                        .requestMatchers("/api/alcaldia/reportes-verificacion", "/api/alcaldia/reportes/*/verificacion").hasRole("ADMINISTRADOR")
                         .requestMatchers("/api/alcaldia/**").hasRole("PERSONAL_ALCALDIA")
                         .anyRequest().authenticated())
                 .oauth2ResourceServer(oauth -> oauth.jwt(jwt -> jwt.jwtAuthenticationConverter(converter)))

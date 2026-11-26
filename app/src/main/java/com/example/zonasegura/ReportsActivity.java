@@ -59,8 +59,7 @@ public final class ReportsActivity extends AppCompatActivity {
     private String draftText = "";
     private int draftType;
     private MaterialButton refresh;
-    private android.location.LocationListener legacyLocationListener;
-    private android.os.CancellationSignal gpsRequest;
+    private android.location.LocationListener reportLocationListener;
     private final android.os.Handler gpsHandler=new android.os.Handler(android.os.Looper.getMainLooper());
     private boolean foreground,gpsAttempted,gpsInProgress,gpsResumePending;
     private int gpsGeneration;
@@ -136,7 +135,7 @@ public final class ReportsActivity extends AppCompatActivity {
                 catch(IOException e){profile=SessionStore.offlineProfile(this);offline=true;}
                 if(profile.status>=500){profile=SessionStore.offlineProfile(this);offline=true;}
                 if(profile.status==401 || profile.status==403){SessionStore.clear(this);showError("Inicia sesión nuevamente para acceder a tus reportes.");return;}
-                if (profile.status != 200 || !"CIUDADANO".equalsIgnoreCase(profile.role)) {
+                if (profile.status != 200 || !profile.hasRole("CIUDADANO")) {
                     showError("No se pudo verificar la sesión ciudadana.");
                     return;
                 }
@@ -319,43 +318,52 @@ public final class ReportsActivity extends AppCompatActivity {
     private void gpsMessage(String text){if(gpsStatus!=null)gpsStatus.setText(text);}
 
     private static boolean usableLocation(Location fix){
-        if(fix==null||!Double.isFinite(fix.getLatitude())||!Double.isFinite(fix.getLongitude())||!fix.hasAccuracy()||fix.getAccuracy()<=0||fix.getAccuracy()>MAX_ACCURACY_METERS)return false;
+        if(fix==null||!Double.isFinite(fix.getLatitude())||!Double.isFinite(fix.getLongitude())||!fix.hasAccuracy()||!Float.isFinite(fix.getAccuracy())||fix.getAccuracy()<=0||fix.getAccuracy()>MAX_ACCURACY_METERS)return false;
         long age=(android.os.SystemClock.elapsedRealtimeNanos()-fix.getElapsedRealtimeNanos())/1000000;
         return age>=0&&age<=MAX_FIX_AGE_MS;
     }
 
     @SuppressLint("MissingPermission")
     private void readGps() {
+        cancelGps();
+        location = null;
         if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             gpsMessage("Concede permiso de ubicación precisa y pulsa Actualizar ubicación.");
             return;
         }
         LocationManager manager = getSystemService(LocationManager.class);
-        if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            gpsMessage("Activa el GPS y pulsa Actualizar ubicación.");
-            return;
-        }
-        cancelGps();
-        location = null;
         gpsMessage("Buscando ubicación precisa… Puedes completar los datos mientras tanto.");
         gpsInProgress=true;
         int requestId=++gpsGeneration;
         try{
-            Location cached=manager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            if(usableLocation(cached)&&(android.os.SystemClock.elapsedRealtimeNanos()-cached.getElapsedRealtimeNanos())/1000000<=30000){locationReady(cached);return;}
-        gpsHandler.postDelayed(()->{if(gpsInProgress&&gpsGeneration==requestId){cancelGps();gpsMessage("No se obtuvo una posición precisa. Acércate a un lugar abierto y pulsa Actualizar ubicación.");}},20000);
-        if (android.os.Build.VERSION.SDK_INT >= 30) {
-            gpsRequest=new android.os.CancellationSignal();
-            manager.getCurrentLocation(LocationManager.GPS_PROVIDER,gpsRequest,getMainExecutor(),result->{if(gpsGeneration==requestId)locationReady(result);});
-        } else {
-            legacyLocationListener = new android.location.LocationListener() {
-                @Override public void onLocationChanged(Location result) { if(gpsGeneration==requestId)locationReady(result); }
+            ArrayList<String> providers=new ArrayList<>();
+            Location bestCached=null;
+            for(String provider:new String[]{LocationManager.GPS_PROVIDER,LocationManager.NETWORK_PROVIDER}){
+                if(!manager.getAllProviders().contains(provider)||!manager.isProviderEnabled(provider))continue;
+                providers.add(provider);
+                Location cached=manager.getLastKnownLocation(provider);
+                // Includes recent positions obtained while viewing the map.
+                if(usableLocation(cached)&&(android.os.SystemClock.elapsedRealtimeNanos()-cached.getElapsedRealtimeNanos())/1000000<=30000
+                        &&(bestCached==null||cached.getAccuracy()<bestCached.getAccuracy()))bestCached=cached;
+            }
+            if(providers.isEmpty()){
+                cancelGps();gpsMessage("Activa la ubicación del teléfono y pulsa Actualizar ubicación.");return;
+            }
+            if(bestCached!=null){locationReady(bestCached);return;}
+            reportLocationListener = new android.location.LocationListener() {
+                @Override public void onLocationChanged(Location result) {
+                    if(gpsInProgress&&gpsGeneration==requestId){
+                        if(usableLocation(result))locationReady(result);
+                        else gpsMessage("Afinando la ubicación… Se necesita una precisión de 100 m o mejor.");
+                    }
+                }
                 @Override public void onStatusChanged(String provider, int state, Bundle extras) {}
                 @Override public void onProviderEnabled(String provider) {}
-                @Override public void onProviderDisabled(String provider) { if(gpsGeneration==requestId)locationReady(null); }
+                @Override public void onProviderDisabled(String provider) {}
             };
-            manager.requestSingleUpdate(LocationManager.GPS_PROVIDER, legacyLocationListener, getMainLooper());
-        }
+            // Keep listening to both sources until a usable fix arrives or the request expires.
+            gpsHandler.postDelayed(()->{if(gpsInProgress&&gpsGeneration==requestId){cancelGps();gpsMessage("No se obtuvo una posición precisa. Acércate a un lugar abierto y pulsa Actualizar ubicación.");}},45000);
+            for(String provider:providers)manager.requestLocationUpdates(provider,1000,0,reportLocationListener,getMainLooper());
         }catch(SecurityException|IllegalArgumentException exception){cancelGps();gpsMessage("El permiso o proveedor de ubicación cambió. Revisa el GPS y pulsa Actualizar ubicación.");}
     }
 
@@ -372,14 +380,14 @@ public final class ReportsActivity extends AppCompatActivity {
         }catch(IOException exception){gpsMessage("No se pudo comprobar la cobertura territorial. Vuelve a abrir el formulario.");}
     }
 
-    private void stopLegacyLocation() {
-        if (legacyLocationListener != null) {
-            try{getSystemService(LocationManager.class).removeUpdates(legacyLocationListener);}catch(SecurityException ignored){}
-            legacyLocationListener = null;
+    private void stopReportLocation() {
+        if (reportLocationListener != null) {
+            try{getSystemService(LocationManager.class).removeUpdates(reportLocationListener);}catch(SecurityException ignored){}
+            reportLocationListener = null;
         }
     }
 
-    private void cancelGps(){gpsGeneration++;gpsInProgress=false;gpsHandler.removeCallbacksAndMessages(null);stopLegacyLocation();if(gpsRequest!=null){gpsRequest.cancel();gpsRequest=null;}}
+    private void cancelGps(){gpsGeneration++;gpsInProgress=false;gpsHandler.removeCallbacksAndMessages(null);stopReportLocation();}
     @Override protected void onResume(){super.onResume();foreground=true;if(location!=null&&!usableLocation(location)){location=null;gpsAttempted=false;}if(gpsResumePending){gpsResumePending=false;gpsAttempted=true;readGps();}else if(creating&&draftField!=null&&location==null&&!gpsAttempted)requestGps();}
     @Override protected void onStop(){foreground=false;if(gpsInProgress)gpsAttempted=false;cancelGps();super.onStop();}
     @Override protected void onDestroy(){cancelGps();super.onDestroy();}

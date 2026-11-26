@@ -16,6 +16,7 @@ final class AuthApi {
         final int status;
         final String name;
         final String role;
+        final java.util.List<String> roles;
 
         final int citizenId;
 
@@ -24,11 +25,16 @@ final class AuthApi {
         }
 
         Profile(int status, String name, String role, int citizenId) {
+            this(status,name,role,citizenId,role==null?java.util.Collections.emptyList():java.util.Collections.singletonList(role));
+        }
+        Profile(int status,String name,String role,int citizenId,java.util.List<String> roles) {
             this.citizenId = citizenId;
             this.status = status;
             this.name = name;
             this.role = role;
+            this.roles=java.util.Collections.unmodifiableList(new java.util.ArrayList<>(roles));
         }
+        boolean hasRole(String expected){return roles.contains(expected);}
     }
 
     static final class MunicipalProfile {
@@ -130,19 +136,9 @@ final class AuthApi {
                     new String(bytes.toByteArray(), StandardCharsets.UTF_8));
             JSONArray roles = response.optJSONArray("roles");
             String role = roles != null && roles.length() > 0 ? roles.optString(0) : "";
-            if (roles != null) {
-                for (int i = 0; i < roles.length(); i++) {
-                    if ("ADMINISTRADOR".equals(roles.optString(i))) {
-                        role = "ADMINISTRADOR";
-                        break;
-                    } else if ("PERSONAL_ALCALDIA".equals(roles.optString(i))) {
-                        role = "PERSONAL_ALCALDIA";
-                    } else if ("UNIDAD_OPERATIVA".equals(roles.optString(i)) && !"PERSONAL_ALCALDIA".equals(role)) {
-                        role = "UNIDAD_OPERATIVA";
-                    }
-                }
-            }
-            return new Profile(200, response.optString("nombre", ""), role, response.optInt("ciudadanoId"));
+            java.util.List<String> available=new java.util.ArrayList<>();
+            if(roles!=null)for(int i=0;i<roles.length();i++)if(InterfazUsuario.buscar(roles.optString(i))!=null&&!available.contains(roles.optString(i)))available.add(roles.optString(i));
+            return new Profile(200,response.optString("nombre",""),role,response.optInt("ciudadanoId"),available);
         } catch (org.json.JSONException exception) {
             throw new IOException("Respuesta inválida del servidor.", exception);
         } finally {

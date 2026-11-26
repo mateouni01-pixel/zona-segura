@@ -1,0 +1,10 @@
+@model MisReportesModel
+@{ViewData["Title"]="Mis reportes";}
+<div class="page-heading"><div><div class="eyebrow">Interfaz Ciudadano</div><h1>Mis reportes</h1><p class="muted">Consulta los incidentes que registraste y sigue su atención.</p></div><a asp-action="CrearReporte" class="btn btn-primary">Crear reporte</a></div>
+@if(Model.Error!=null){<div class="alert alert-danger" role="alert">@Model.Error <a asp-action="Index">Reintentar</a></div>}
+else{
+<section class="surface"><div class="table-responsive"><table class="table align-middle"><thead><tr><th>Reporte</th><th>Incidente</th><th>Fecha UTC</th><th>Estado</th></tr></thead><tbody>
+@foreach(var reporte in Model.Reportes){<tr><td>#@reporte.Id</td><td><strong>@reporte.TipoIncidenteNombre</strong><p class="report-description">@reporte.Descripcion</p></td><td>@reporte.FechaRegistroUtc.ToString("dd/MM/yyyy HH:mm")</td><td><span class="state">@reporte.Estado.Replace('_',' ')</span></td></tr>}
+@if(Model.Reportes.Count==0){<tr><td colspan="4" class="empty-state">Todavía no registraste reportes. Puedes crear uno desde esta pantalla.</td></tr>}
+</tbody></table></div></section>
+}

@@ -9,7 +9,7 @@ CREATE TABLE dbo.VerificacionesInstitucionales (
     motivo NVARCHAR(2000) NOT NULL,
     fecha_hora DATETIME2(0) NOT NULL CONSTRAINT DF_VerificacionInstitucional_fecha DEFAULT SYSUTCDATETIME(),
     CONSTRAINT FK_VerificacionInstitucional_Reporte FOREIGN KEY(id_reporte) REFERENCES dbo.Reportes(id_reporte),
-    CONSTRAINT FK_VerificacionInstitucional_Personal FOREIGN KEY(id_personal) REFERENCES dbo.PersonalAlcaldia(id_usuario),
+    CONSTRAINT FK_VerificacionInstitucional_Responsable FOREIGN KEY(id_personal) REFERENCES dbo.Usuarios(id_usuario),
     CONSTRAINT UQ_VerificacionInstitucional_Reporte UNIQUE(id_reporte),
     CONSTRAINT CK_VerificacionInstitucional_Motivo CHECK(LEN(LTRIM(RTRIM(motivo))) BETWEEN 10 AND 2000)
 );

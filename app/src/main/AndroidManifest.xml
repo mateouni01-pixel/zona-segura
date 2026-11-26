@@ -19,15 +19,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ZONASEGURA">
+        <activity android:name=".InterfacesActivity" android:exported="false" />
         <activity android:name=".CommunityActivity" android:exported="false" />
         <activity android:name=".ReportsActivity" android:exported="false" />
         <activity android:name=".OperationsActivity" android:exported="false" />
         <activity android:name=".RiskMapActivity" android:exported="false" />
         <activity
             android:name=".AdminActivity"
+            android:theme="@style/Theme.ZONASEGURA.Administrador"
             android:exported="false" />
         <activity
             android:name=".MunicipalActivity"
+            android:theme="@style/Theme.ZONASEGURA.Alcaldia"
             android:exported="false" />
         <activity
             android:name=".HomeActivity"

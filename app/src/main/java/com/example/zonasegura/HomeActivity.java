@@ -22,6 +22,7 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if(!InterfaceNavigation.exigir(this,InterfazUsuario.CIUDADANO))return;
         setContentView(R.layout.activity_home);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.homeRoot), (view, insets) -> {
             Insets bars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -63,22 +64,10 @@ public class HomeActivity extends AppCompatActivity {
                 }
                 if (result.status == 200) {
                     if(!offline)SessionStore.remember(this,result);
-                    if ("UNIDAD_OPERATIVA".equals(result.role)) {
-                        startActivity(new Intent(this, OperationsActivity.class).putExtra("page","Bandeja operativa"));finish();return;
-                    }
-                    if ("ADMINISTRADOR".equals(result.role)) {
-                        startActivity(new Intent(this, AdminActivity.class));
-                        finish();
-                        return;
-                    }
-                    if ("PERSONAL_ALCALDIA".equals(result.role)) {
-                        startActivity(new Intent(this, MunicipalActivity.class));
-                        finish();
-                        return;
-                    }
+                    if(!result.hasRole("CIUDADANO")){InterfaceNavigation.selector(this);return;}
                     welcome.setText(getString(R.string.home_welcome, result.name));
-                    status.setText(getString(R.string.home_role, result.role));
-                    if ("CIUDADANO".equalsIgnoreCase(result.role)) {
+                    status.setText(getString(R.string.home_role,"CIUDADANO"));
+                    if (result.hasRole("CIUDADANO")) {
                         CitizenNavigation.attach(this, R.id.nav_inicio);
                         ReportSyncWorker.resume(this,false);
                         if(offline)status.setText("Sin conexión. Puedes guardar reportes pendientes y consultar el historial local.");
@@ -91,6 +80,7 @@ public class HomeActivity extends AppCompatActivity {
                         reports.setVisibility(View.VISIBLE);
                         reports.setOnClickListener(view -> startActivity(
                                 new Intent(this, ReportsActivity.class)));
+                        InterfaceNavigation.agregarSelector(this,R.id.homeStatus);
                     }
                 } else if (result.status == 401 || result.status == 403) {
                     SessionStore.clear(this);

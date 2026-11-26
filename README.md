@@ -1,5 +1,31 @@
 # Zona Segura (Android)
 
+## Colores por interfaz móvil — 25/11/2026
+
+Ciudadano conserva su color actual; Personal de Alcaldía usa azul y Administración morado. El tema acompaña el panel y sus pantallas internas, con tarjetas y botones del selector del mismo color. Se aplican temas derivados de Material, sin cambiar permisos ni los colores de riesgo del mapa. Unidad Operativa conserva la paleta base. Instalar el APK actualizado para ver los cambios.
+
+## Elegir interfaz en web y móvil — 25/11/2026
+
+El login abre un selector con los roles disponibles: Ciudadano, Personal de Alcaldía, Administrador y Unidad Operativa. Se conservan todos los roles de `/api/auth/me`; el usuario elige y puede **Cambiar interfaz** sin cerrar sesión. El catálogo contempla las 15 combinaciones sin crear pantallas por combinación, mediante Strategy y un registro de interfaces. Android mantiene el modo ciudadano sin conexión; las interfaces institucionales requieren comprobar permisos en línea. La web incluye ahora también reportes y mapa ciudadano y la bandeja operativa. Ver [implementación y uso](docs/INTERFACES-POR-ROL.md). Instalar el APK actualizado y recompilar/reiniciar MVC.
+
+## Web con paneles según el rol — 25/11/2026
+
+La web institucional abre `/Admin/Inicio` para Administración y `/Panel` para Personal de Alcaldía, con interfaces, menús y encabezados propios. Las cuentas con ambos roles pueden cambiar de espacio desde el menú. La validación manual sigue siendo administrativa; Alcaldía consulta incidentes y coordina recursos y órdenes. La entrada `/` reconoce la sesión y el acceso sin permisos muestra una pantalla 403 con regreso al panel. Recompilar y reiniciar MVC. Ambas copias del panel compilan y pasaron 48 comprobaciones HTTP con API simulada; no se probaron cuentas reales ni la presentación en navegador. Ver [panel](ZonaSegura.Panel/README.md) y [verificación](pruebas/panel-admin/VERIFICACION-PANELES-2026-11-25.md).
+
+## Administrador/moderador valida manualmente — 25/11/2026
+
+La revisión manual de reportes corresponde al rol `ADMINISTRADOR`. Se trasladó **Verificar reportes** del menú de Personal de Alcaldía al de Administración, usando las rutas `/api/admin/reportes-verificacion` y `/api/admin/reportes/{id}/verificacion`. Las APIs también rechazan llamadas directas de personal municipal, incluidas las rutas antiguas. Personal de Alcaldía conserva mapa, recursos, unidades e intervenciones. Las tres confirmaciones ciudadanas siguen validando automáticamente, según la decisión del usuario.
+
+Recompilar Android y reiniciar el backend actualizado. En Spring, las bases existentes necesitan `backend-spring/sql/sprint3-validacion-administrativa.sql`; se aplicó a `MateoMS/ZonaSegura` después de un respaldo verificado, conservando los reportes y revisiones. El panel web ofrece **Administración > Validar reportes**, además de creación de usuarios, incluidos otros administradores.
+
+## Captura de ubicación en reportes — 25/11/2026
+
+El formulario consulta GPS y ubicación por red, como el mapa. Reutiliza posiciones de esas fuentes de hasta 30 segundos de antigüedad y escucha nuevas posiciones durante un máximo de 45 segundos; una lectura imprecisa no termina la búsqueda. Se mantienen el permiso de ubicación precisa, el límite de 100 m, la vigencia de dos minutos al guardar y la cobertura de los distritos 1–12. La búsqueda se cancela al salir del formulario. El marcador del mapa también admite ubicaciones aproximadas, por lo que verlo no garantiza que cumpla los requisitos del reporte. Validación local: compilación y pruebas unitarias existentes; pendiente comprobar el GPS físico en el teléfono.
+
+## Prueba por Wi-Fi — 24/11/2026
+
+La compilación debug usa por defecto `http://192.168.0.5:8080`, la IP Wi-Fi actual de la PC. Android debug permite HTTP para esa IP. Recompilar e instalar el APK actualizado; abrir `backend-spring/iniciar-wifi.cmd` para iniciar la API sin ADB, con SQL Server activo. Comprobar desde el celular `http://192.168.0.5:8080/api/conexion` antes de iniciar sesión. Ambos equipos deben estar en la misma red y el firewall debe permitir Java en el puerto 8080. Si cambia la IP, actualizar la URL debug y el dominio permitido en `app/src/debug/res/xml/debug_network_security_config.xml`, y volver a compilar. Se conserva la opción `-PzonaApiUrl` para seleccionar otra URL; si usa HTTP, también requiere un dominio permitido en debug. La versión release sigue exigiendo HTTPS.
+
 ## Estructura incluida en Git
 
 Este repositorio incluye Android (`app`), la API Spring (`backend-spring`), el panel MVC (`ZonaSegura.Panel`), certificados públicos (`Certificados`), lanzadores HTTPS y documentos de verificación (`docs/verificacion-v2.2`). Las claves privadas, bases de datos y respaldos no se incluyen. El panel incluido es la copia preparada para esta publicación del proyecto que se desarrolló junto a Android en el espacio de trabajo.

@@ -1,0 +1,12 @@
+@model EliminarUsuarioModel
+@{ViewData["Title"]="Eliminar cuenta";}
+<div class="page-heading"><div><div class="eyebrow">Administración de cuentas</div><h1>Eliminar cuenta #@Model.Id</h1><p class="muted">@Model.Nombre · @Model.Correo</p></div></div>
+<form asp-action="EliminarUsuario" method="post" class="surface form-width">
+    <input asp-for="Id" type="hidden"/>
+    <div asp-validation-summary="All" class="text-danger" role="alert"></div>
+    <div class="alert alert-danger"><strong>Esta acción es definitiva.</strong> Se borrarán la cuenta, sus credenciales y permisos. La persona perderá el acceso a la web y a la app móvil.</div>
+    <p>Las cuentas con reportes, sanciones o actividad institucional vinculada se conservan para mantener el historial. En ese caso puedes desactivar su acceso. La auditoría del cambio se conserva.</p>
+    <label asp-for="Motivo" class="form-label">Motivo de eliminación</label><textarea asp-for="Motivo" class="form-control" rows="3" minlength="10" maxlength="2000" required></textarea><span asp-validation-for="Motivo" class="text-danger"></span>
+    <label asp-for="ConfirmacionId" class="form-label mt-3">Escribe @Model.Id para confirmar la cuenta que quieres eliminar</label><input asp-for="ConfirmacionId" class="form-control" type="number" min="1" required autocomplete="off"/><span asp-validation-for="ConfirmacionId" class="text-danger"></span>
+    <div class="d-flex gap-2 mt-4 flex-wrap"><button type="submit" class="btn btn-danger">Eliminar cuenta definitivamente</button><a asp-action="EditarUsuario" asp-route-id="@Model.Id" class="btn btn-outline-primary">Cancelar</a></div>
+</form>

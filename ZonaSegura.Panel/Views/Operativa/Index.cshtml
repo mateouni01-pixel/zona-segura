@@ -1,0 +1,13 @@
+@model BandejaOperativaModel
+@{ViewData["Title"]="Órdenes de mi unidad";}
+<div class="page-heading"><div><div class="eyebrow">Interfaz Unidad Operativa</div><h1>Órdenes de mi unidad</h1><p class="muted">Consulta las intervenciones asignadas a tu unidad y registra su atención.</p></div><a asp-action="Index" class="btn btn-outline-primary">Actualizar bandeja</a></div>
+@if(Model.Error!=null){<div class="alert alert-danger" role="alert">@Model.Error</div>}
+else{
+<section class="review-grid" aria-label="Órdenes asignadas">
+@foreach(var orden in Model.Ordenes){<article class="surface"><div class="section-heading"><h2>Orden #@orden.Id · @orden.TipoOrden.Replace('_',' ')</h2><span class="state">@orden.EstadoOrden.Replace('_',' ')</span></div><p><strong>@orden.TipoIncidenteNombre</strong> · Reporte #@orden.ReporteId</p><p>@orden.Descripcion</p><dl><dt>Unidad y recurso</dt><dd>@orden.UnidadNombre · @orden.RecursoNombre</dd><dt>Instrucciones</dt><dd>@orden.Instrucciones</dd></dl>
+    @if(orden.AvisoId>0&&orden.EstadoNotificacion!="LEIDA"){<form asp-action="LeerAviso" method="post" class="mb-3"><input name="id" value="@orden.AvisoId" type="hidden"/><button class="btn btn-outline-primary">Marcar aviso como leído</button></form>}
+    @if(orden.EstadoOrden=="ASIGNADA"){<a asp-action="Atender" asp-route-id="@orden.Id" class="btn btn-primary">Registrar atención</a>}else{<p class="muted">Resultado: @orden.Resultado</p>}
+</article>}
+@if(Model.Ordenes.Count==0){<div class="surface empty-state">No hay órdenes asignadas a tu unidad.</div>}
+</section>
+}

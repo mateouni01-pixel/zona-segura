@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/riskMapRoot" android:layout_width="match_parent" android:layout_height="match_parent"
-    android:background="@color/login_background" android:fillViewport="true">
+    android:background="?attr/civicColorBackground" android:fillViewport="true">
     <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent"
         android:orientation="vertical" android:padding="16dp">
         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
@@ -19,12 +19,12 @@
             android:layout_marginTop="12dp">
             <LinearLayout android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:orientation="vertical">
                 <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/map_type"
-                    android:labelFor="@id/riskMapType" android:textColor="@color/login_text" />
+                    android:labelFor="@id/riskMapType" android:textColor="?attr/civicColorText" />
                 <Spinner android:id="@+id/riskMapType" android:layout_width="match_parent" android:layout_height="52dp" />
             </LinearLayout>
             <LinearLayout android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:orientation="vertical">
                 <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/map_period"
-                    android:labelFor="@id/riskMapPeriod" android:textColor="@color/login_text" />
+                    android:labelFor="@id/riskMapPeriod" android:textColor="?attr/civicColorText" />
                 <Spinner android:id="@+id/riskMapPeriod" android:layout_width="match_parent" android:layout_height="52dp" />
             </LinearLayout>
         </LinearLayout>
@@ -33,7 +33,7 @@
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent" android:layout_height="420dp"
             app:cardCornerRadius="8dp" app:cardElevation="0dp"
-            app:strokeColor="@color/civic_border" app:strokeWidth="1dp">
+            app:strokeColor="?attr/civicColorBorder" app:strokeWidth="1dp">
             <WebView android:id="@+id/riskMapWeb" android:layout_width="match_parent" android:layout_height="match_parent"
             android:contentDescription="@string/map_content_description" />
         <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="top|end" android:layout_margin="8dp" android:orientation="vertical"><ImageButton android:id="@+id/riskMapCity" android:layout_width="48dp" android:layout_height="48dp" android:layout_marginBottom="4dp" android:padding="12dp" android:background="@drawable/civic_card" android:src="@drawable/map_city" android:contentDescription="@string/map_city" />

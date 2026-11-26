@@ -12,12 +12,14 @@ try {
     $count=$connection.CreateCommand()
     $count.CommandText='SELECT COUNT(*) FROM dbo.Reportes'
     $before=[int]$count.ExecuteScalar()
-    $script=Get-Content -LiteralPath (Join-Path $PSScriptRoot 'sprint2-verificacion.sql') -Raw
-    foreach($batch in [regex]::Split($script,'(?m)^\s*GO\s*$')){
+    foreach($scriptName in @('sprint2-verificacion.sql','sprint3-validacion-administrativa.sql')){
+      $script=Get-Content -LiteralPath (Join-Path $PSScriptRoot $scriptName) -Raw
+      foreach($batch in [regex]::Split($script,'(?m)^\s*GO\s*$')){
         if($batch.Trim()){
             $command=$connection.CreateCommand();$command.CommandText=$batch
             [void]$command.ExecuteNonQuery();$command.Dispose()
         }
+      }
     }
     $after=[int]$count.ExecuteScalar()
     if($before -ne $after){throw 'El número de reportes cambió durante la actualización.'}

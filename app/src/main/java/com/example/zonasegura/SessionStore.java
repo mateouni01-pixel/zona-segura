@@ -26,7 +26,7 @@ final class SessionStore {
         cipher.init(Cipher.ENCRYPT_MODE, getOrCreateKey());
         byte[] encrypted = cipher.doFinal(token.getBytes(StandardCharsets.UTF_8));
         context.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit()
-                .remove("citizenId").remove("profileName").remove("profileRole")
+                .remove("citizenId").remove("profileName").remove("profileRole").remove("profileRoles").remove("selectedRole")
                 .putString(TOKEN, Base64.encodeToString(encrypted, Base64.NO_WRAP))
                 .putString(IV, Base64.encodeToString(cipher.getIV(), Base64.NO_WRAP))
                 .putString(BACKEND, context.getString(R.string.backend_base_url))
@@ -34,13 +34,23 @@ final class SessionStore {
     }
 
     static void remember(Context context,AuthApi.Profile profile){
-        context.getSharedPreferences(PREFS,Context.MODE_PRIVATE).edit().putInt("citizenId",profile.citizenId)
-                .putString("profileName",profile.name).putString("profileRole",profile.role).apply();
+        var prefs=context.getSharedPreferences(PREFS,Context.MODE_PRIVATE);
+        var edit=prefs.edit().putInt("citizenId",profile.citizenId)
+                .putString("profileName",profile.name).putString("profileRole",profile.role)
+                .putStringSet("profileRoles",new java.util.HashSet<>(profile.roles));
+        if(!profile.roles.contains(prefs.getString("selectedRole","")))edit.remove("selectedRole");
+        edit.apply();
+    }
+    static String selectedRole(Context context){return context.getSharedPreferences(PREFS,Context.MODE_PRIVATE).getString("selectedRole","");}
+    static boolean selectRole(Context context,String role){
+        var prefs=context.getSharedPreferences(PREFS,Context.MODE_PRIVATE);
+        if(load(context)==null||InterfazUsuario.buscar(role)==null||!prefs.getStringSet("profileRoles",java.util.Collections.singleton(prefs.getString("profileRole",""))).contains(role))return false;
+        prefs.edit().putString("selectedRole",role).apply();return true;
     }
     static int citizenId(Context context){
         if(load(context)==null)return 0;
         SharedPreferences prefs=context.getSharedPreferences(PREFS,Context.MODE_PRIVATE);
-        return "CIUDADANO".equals(prefs.getString("profileRole",""))?prefs.getInt("citizenId",0):0;
+        return prefs.getStringSet("profileRoles",java.util.Collections.singleton(prefs.getString("profileRole",""))).contains("CIUDADANO")?prefs.getInt("citizenId",0):0;
     }
     static AuthApi.Profile offlineProfile(Context context){
         int id=citizenId(context);SharedPreferences prefs=context.getSharedPreferences(PREFS,Context.MODE_PRIVATE);

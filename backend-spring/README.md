@@ -1,5 +1,53 @@
 # Zona Segura - API principal Spring Boot
 
+## Eliminación definitiva de cuentas (25/11/2026)
+
+`DELETE /api/admin/usuarios/{id}` recibe `motivo` (10–2000 caracteres) y `confirmacionId` (debe coincidir con la ruta). Solo un administrador vigente puede ejecutarlo. Devuelve 204 tras borrar físicamente la cuenta, roles, pertenencia a unidad y especializaciones; las credenciales desaparecen y los JWT anteriores pierden acceso por `CuentaVigenteFilter`. No se puede eliminar la cuenta propia ni el último administrador activo.
+
+Se bloquea con 409 la eliminación si existen reportes, votos, reputación histórica, verificaciones, órdenes, lecturas de avisos, moderación, sanciones o acciones administrativas realizadas por la cuenta. Los registros de auditoría que la tienen como objetivo se conservan con su ID original. La operación y su motivo se guardan como `USUARIO_ELIMINADO` en la misma transacción; ante error se revierte todo. Se mantienen las FK de actividad y la del responsable de auditoría.
+
+Las bases existentes necesitan `sql/sprint3-eliminacion-cuentas.sql` después de administración y con respaldo previo. Retira únicamente la FK del objetivo histórico de auditoría, conservando sus IDs y filas. Aplicado a `MateoMS/ZonaSegura` tras BACKUP COPY_ONLY con CHECKSUM y RESTORE VERIFYONLY; se conservaron 5 usuarios y 1 auditoría. Respaldo: `C:\Program Files\Microsoft SQL Server\MSSQL17.MSSQLSERVER\MSSQL\Backup\ZonaSegura_antes_eliminacion_cuentas_20261125_1930.bak`. El esquema inicial y el script de administración ya usan el ID histórico sin FK.
+
+La interfaz está en **Usuarios y permisos > Eliminar** y en **Administrar cuenta > Eliminar cuenta**. Requiere motivo y escribir el ID antes del POST MVC, que envía el DELETE a esta misma API compartida por web y Android. No se implementó una pantalla nueva de eliminación en Android ni en la API C# alternativa.
+
+Las pruebas de eliminación incluyen servicios, seguridad HTTP con JWT y SQL Server con cuentas temporales para los cuatro roles y rollback. Ver [verificación](../pruebas/panel-admin/VERIFICACION-ELIMINACION-2026-11-25.md). No se eliminó ninguna cuenta real.
+
+## Corrección del bloqueo administrativo persistente (25/11/2026)
+
+El mensaje **Otra operación administrativa está en curso. Reintenta.** también se producía sin concurrencia: el controlador JDBC usa transacciones implícitas y `sp_getapplock` era la primera consulta de la operación. SQL Server devolvía `-999` porque aún no había una transacción SQL activa. Se reprodujo con el mismo controlador y base, sin modificar datos; al consultar el perfil antes del bloqueo, el resultado fue `0` y `@@TRANCOUNT=1`.
+
+`mutation` ahora consulta primero el perfil administrativo, adquiere el bloqueo global, bloquea al responsable y comprueba nuevamente sus permisos. Se conserva ese orden para evitar cambios con permisos revocados mientras se esperaba. Las cinco operaciones comparten la corrección: crear/editar usuarios, rechazar reportes, sancionar y levantar sanciones. Los resultados `-1/-2/-3` conservan la respuesta 409; `-999` o un resultado ausente se registran como error técnico y devuelven 500, sin atribuirlos a otra operación.
+
+Validación: **40 pruebas aprobadas, sin fallos ni omisiones** (25 de administración, 2 de integración JDBC/SQL Server, 8 de verificación y 5 de seguridad HTTP), más `bootJar` correcto. Las pruebas SQL reproducen el error original, recorren las cinco entradas con datos deliberadamente inválidos antes de escribir, comprueban el bloqueo dentro de una sola transacción y su liberación tras rollback. No alteran cuentas, roles ni auditoría. No sustituyen la prueba del guardado solicitado por el usuario desde la web.
+
+Las pruebas SQL son optativas. Desde esta carpeta, con SQL Server y la DLL JDBC local disponibles:
+
+```powershell
+$env:ZONA_SQLSERVER_CHECKS='true'
+$env:JAVA_TOOL_OPTIONS='-Djava.library.path="'+(Resolve-Path .\auth).Path+'"'
+.\gradlew.bat test --tests '*AdministracionServiceTests' --tests '*AdministracionSqlServerTests' --tests '*VerificacionPermisosTests' --tests '*VerificacionSecurityTests' bootJar --offline
+```
+
+Usan `MateoMS/ZonaSegura` por defecto; `ZONA_SQLSERVER_JDBC` permite seleccionar otra conexión con un administrador activo existente. Sin `ZONA_SQLSERVER_CHECKS=true`, las pruebas SQL se omiten. No requiere migraciones. Reiniciar la API para cargar la corrección; si el lanzador genera otra clave JWT, volver a iniciar sesión en web y móvil.
+
+Referencia: Microsoft documenta que los bloqueos con propietario `Transaction` requieren una transacción activa, y que `-999` indica un error de llamada: [sp_getapplock](https://learn.microsoft.com/en-us/sql/relational-databases/system-stored-procedures/sp-getapplock-transact-sql). Las consultas escalares sin tabla no inician transacciones implícitas: [SET IMPLICIT_TRANSACTIONS](https://learn.microsoft.com/en-us/sql/t-sql/statements/set-implicit-transactions-transact-sql).
+
+## Validación manual por Administrador/moderador (25/11/2026)
+
+La revisión manual se asigna a `ADMINISTRADOR`; `PERSONAL_ALCALDIA` no puede consultar la bandeja de revisión ni validar/rechazar manualmente. Se conservan las tres confirmaciones ciudadanas como vía automática. Rutas vigentes: `GET /api/admin/reportes-verificacion` y `POST /api/admin/reportes/{id}/verificacion`, con `confirma` y motivo de 10 a 2000 caracteres. Los alias antiguos bajo `/api/alcaldia` también requieren administrador, incluso si un token anterior todavía contiene ese rol y ya fue retirado en la base.
+
+Aplicar `sql/sprint3-validacion-administrativa.sql` sobre bases existentes, después de respaldarlas. Conserva `id_personal` y todos los datos históricos; cambia únicamente su FK de `PersonalAlcaldia` a `Usuarios`. No concede permisos ni crea cuentas. Se aplicó localmente a `MateoMS/ZonaSegura` con respaldo verificado; permanecen 3 reportes y 3 revisiones. El esquema inicial ya incluye la relación corregida. La revisión queda además en `AuditoriaAdministrativa`; se mantienen las restricciones de reporte propio y decisión única.
+
+Verificación sin SQL: `./gradlew.bat test --offline --tests '*AdministracionServiceTests' --tests '*VerificacionPermisosTests' --tests '*VerificacionSecurityTests'`. La última suite usa los filtros HTTP reales y JWT de prueba para comprobar rutas nuevas y antiguas, denegación municipal y revocación del permiso. Las suites de servicio comprueban que un administrador sin perfil municipal pueda revisar y que tres ciudadanos sigan validando automáticamente.
+
+## Creación administrativa de cuentas (25/11/2026)
+
+`POST /api/admin/usuarios` recibe `nombre`, `correo`, `password`, `roles` y `motivo`. Solo un administrador vigente puede crear cuentas, incluyendo otros administradores. Los roles admitidos son `CIUDADANO`, `PERSONAL_ALCALDIA`, `ADMINISTRADOR` y `UNIDAD_OPERATIVA`, combinables sin duplicados. La cuenta se crea activa; el correo se normaliza y debe ser único; contraseña de al menos 8 caracteres y como máximo 72 bytes UTF-8; motivo de 10 a 2000 caracteres.
+
+Devuelve `201` con la cuenta y sus roles, sin contraseña ni hash. Valida errores con `400`, correo duplicado con `409` y conserva la protección de autenticación/autorización existente. La creación cifra con BCrypt y guarda cuenta, especializaciones, roles y auditoría `USUARIO_CREADO` en una transacción. Usa las tablas existentes; no necesita otra migración. El registro público sigue asignando exclusivamente `CIUDADANO`. El responsable se obtiene del JWT y de su perfil vigente.
+
+El formulario está en el panel MVC, `/Admin/CrearUsuario`. Reiniciar este backend actualizado y el panel antes de usarlo. Pruebas unitarias sin SQL: `./gradlew.bat test --offline --tests '*AdministracionServiceTests'`. Las comprobaciones HTTP del formulario con API simulada están en `../pruebas/panel-admin`.
+
 ## Estado vigente: administración, territorio y HTTPS
 
 Implementados directorio y edición de usuarios/roles, moderación con motivo, sanciones de acceso, levantamiento explícito y auditoría. Solo un administrador vigente puede ejecutarlos; se protege al propio y al último administrador y no se sobrescriben verificaciones institucionales. Una sanción exige reporte rechazado, autor distinto y ausencia de sanción anterior para ese hecho; no altera reputación. El levantamiento conserva el historial y restaura el estado previo de acceso. Los cambios administrativos se serializan mediante bloqueo transaccional.

@@ -30,6 +30,13 @@ public class AdminController {
         return service.user(jwt.getSubject(), id);
     }
 
+    @PostMapping("/usuarios")
+    @ResponseStatus(org.springframework.http.HttpStatus.CREATED)
+    public AdministracionService.Usuario crear(@AuthenticationPrincipal Jwt jwt,
+            @RequestBody AdministracionService.NuevoUsuario input) {
+        return service.create(jwt.getSubject(), input);
+    }
+
     @PutMapping("/usuarios/{id}")
     public AdministracionService.Usuario actualizar(@AuthenticationPrincipal Jwt jwt, @PathVariable int id,
             @RequestBody AdministracionService.CambioUsuario input) { return service.update(jwt.getSubject(), id, input); }
@@ -41,4 +48,10 @@ public class AdminController {
     @GetMapping("/auditoria")
     public List<AdministracionService.Auditoria> auditoria(@AuthenticationPrincipal Jwt jwt,
             @RequestParam(required=false) Integer usuarioId) { return service.audit(jwt.getSubject(), usuarioId); }
+    @DeleteMapping("/usuarios/{id}")
+    @ResponseStatus(org.springframework.http.HttpStatus.NO_CONTENT)
+    public void eliminar(@AuthenticationPrincipal Jwt jwt, @PathVariable int id,
+            @RequestBody AdministracionService.EliminarUsuario input) {
+        service.delete(jwt.getSubject(), id, input);
+    }
 }

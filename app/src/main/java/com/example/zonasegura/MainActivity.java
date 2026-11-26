@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (SessionStore.load(this) != null) {
-            startActivity(new Intent(this, HomeActivity.class));
+            startActivity(new Intent(this, InterfacesActivity.class));
             finish();
             return;
         }
@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
                     try {
                         SessionStore.save(this, outcome.token);
                         passwordInput.setText("");
-                        startActivity(new Intent(this, HomeActivity.class));
+                        startActivity(new Intent(this, InterfacesActivity.class));
                         finish();
                     } catch (Exception exception) {
                         loginStatus.setText(R.string.login_session_error);

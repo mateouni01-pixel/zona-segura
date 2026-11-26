@@ -20,6 +20,7 @@ public class AdminActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if(!InterfaceNavigation.exigir(this,InterfazUsuario.ADMINISTRADOR))return;
         setContentView(R.layout.activity_admin);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.adminRoot), (view, insets) -> {
             Insets bars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -47,7 +48,8 @@ public class AdminActivity extends AppCompatActivity {
             int access = 0;
             try {
                 profile = AuthApi.profile(getString(R.string.api_base_url), token);
-                if (profile.status == 200 && "ADMINISTRADOR".equals(profile.role)) {
+                if (profile.status == 200 && profile.hasRole("ADMINISTRADOR")) {
+                    SessionStore.remember(this,profile);
                     access = AuthApi.adminAccess(getString(R.string.api_base_url), token);
                 }
             } catch (IOException exception) {
@@ -62,12 +64,13 @@ public class AdminActivity extends AppCompatActivity {
                 if (result.status == 200 && accessResult == 200) {
                     welcome.setText(getString(R.string.admin_welcome, result.name));
                     CommunityActivity.addActions(this, R.id.adminStatus, "admin");
+                    InterfaceNavigation.agregarSelector(this,R.id.adminStatus);
                     status.setText(R.string.admin_authorized);
                 } else if (result.status == 401 || result.status == 403
                         || (result.status == 200 && (accessResult == 401 || accessResult == 403
-                        || !"ADMINISTRADOR".equals(result.role)))) {
-                    SessionStore.clear(this);
-                    openLogin();
+                        || !result.hasRole("ADMINISTRADOR")))) {
+                    if(result.status==401||accessResult==401){SessionStore.clear(this);openLogin();}
+                    else InterfaceNavigation.selector(this);
                 } else {
                     status.setText(R.string.admin_error);
                     retry.setVisibility(View.VISIBLE);

@@ -197,7 +197,7 @@ CREATE TABLE dbo.VerificacionesInstitucionales (
     motivo NVARCHAR(2000) NOT NULL,
     fecha_hora DATETIME2(0) NOT NULL CONSTRAINT DF_VerificacionInstitucional_fecha DEFAULT SYSUTCDATETIME(),
     CONSTRAINT FK_VerificacionInstitucional_Reporte FOREIGN KEY(id_reporte) REFERENCES dbo.Reportes(id_reporte),
-    CONSTRAINT FK_VerificacionInstitucional_Personal FOREIGN KEY(id_personal) REFERENCES dbo.PersonalAlcaldia(id_usuario),
+    CONSTRAINT FK_VerificacionInstitucional_Responsable FOREIGN KEY(id_personal) REFERENCES dbo.Usuarios(id_usuario),
     CONSTRAINT UQ_VerificacionInstitucional_Reporte UNIQUE(id_reporte),
     CONSTRAINT CK_VerificacionInstitucional_Motivo CHECK(LEN(LTRIM(RTRIM(motivo))) BETWEEN 10 AND 2000)
 );
@@ -299,7 +299,7 @@ CREATE TABLE dbo.AuditoriaAdministrativa (
     id_auditoria INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
     accion NVARCHAR(50) NOT NULL,
     objetivo_id INT NOT NULL,
-    id_usuario_objetivo INT NOT NULL REFERENCES dbo.Usuarios(id_usuario),
+    id_usuario_objetivo INT NOT NULL, -- ID historico: se conserva tras eliminar la cuenta.
     id_responsable INT NOT NULL REFERENCES dbo.Usuarios(id_usuario),
     motivo NVARCHAR(2000) NOT NULL,
     detalle NVARCHAR(1500) NOT NULL,

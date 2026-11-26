@@ -4,7 +4,7 @@
     android:id="@+id/municipalRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/login_background"
+    android:background="?attr/civicColorBackground"
     android:fillViewport="true">
 
     <LinearLayout
@@ -44,7 +44,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/civic_profile"
-                android:textColor="@color/login_text"
+                android:textColor="?attr/civicColorText"
                 android:textSize="22sp"
                 android:textStyle="bold" />
 
@@ -70,7 +70,7 @@
             android:layout_marginTop="24dp"
             android:accessibilityLiveRegion="polite"
             android:text="@string/home_checking"
-            android:textColor="@color/login_secondary_text"
+            android:textColor="?attr/civicColorSecondaryText"
             android:textSize="15sp" />
 
         <com.google.android.material.button.MaterialButton

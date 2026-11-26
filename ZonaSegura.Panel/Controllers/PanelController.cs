@@ -44,12 +44,6 @@ public sealed class PanelController(ZonaApi api):SesionController
         catch(HttpRequestException){return StatusCode(502,new{mensaje="No se pudieron cargar los límites de cobertura."});}
         catch(TaskCanceledException)when(!ct.IsCancellationRequested){return StatusCode(504,new{mensaje="La cobertura tardó demasiado en responder."});}
     }
-    [HttpGet]public async Task<IActionResult> Verificar(CancellationToken ct)
-    {try{return View(await api.Get<List<Revision>>("api/alcaldia/reportes-verificacion",ct));}catch(Exception e)when(e is ApiException or HttpRequestException or TaskCanceledException){TempData["Error"]="No se pudo cargar la bandeja de verificación.";return RedirectToAction(nameof(Index));}}
-    [HttpPost]public async Task<IActionResult> Verificar(VerificarModel model,CancellationToken ct)
-    {if(!ModelState.IsValid){TempData["Error"]="Escribe una comprobación de 10 a 2000 caracteres.";return RedirectToAction(nameof(Verificar));}
-        try{await api.Send<string>(HttpMethod.Post,$"api/alcaldia/reportes/{model.Id}/verificacion",new{model.Confirma,model.Motivo},true,ct);TempData["Exito"]="Verificación registrada.";}
-        catch(Exception e)when(e is ApiException or HttpRequestException or TaskCanceledException){TempData["Error"]=e is ApiException?e.Message:"No se pudo confirmar la operación. Actualiza la bandeja.";}return RedirectToAction(nameof(Verificar));}
     [HttpGet]public async Task<IActionResult> Recursos(CancellationToken ct)=>await Listado<Recurso>("api/recursos",ct);
     [HttpGet]public async Task<IActionResult> Unidades(CancellationToken ct)=>await Listado<Unidad>("api/unidades",ct);
     [HttpGet]public async Task<IActionResult> Ordenes(CancellationToken ct)=>await Listado<Orden>("api/intervenciones/ordenes",ct);

@@ -37,7 +37,7 @@ public sealed record Orden(int Id,int ReporteId,string Descripcion,string Estado
 public sealed class VerificarModel
 {
     [Range(1,int.MaxValue)]public int Id{get;set;}
-    public bool Confirma{get;set;}
+    [Required]public bool? Confirma{get;set;}
     [Required,StringLength(2000,MinimumLength=10)] public string Motivo{get;set;}="";
 }
 public sealed class RecursoModel
